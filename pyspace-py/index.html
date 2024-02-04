@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Pyspace.py</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/pyspace-py/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Pyspace.py">
+    <meta property="og:description" content="I got sidetracked while hacking on a Firefox bug this evening. I decided to
+create a tool for myself that would easily strip end of line white space from
+any given file.
+
+It&#x27;s called Pyspace and it&#x27;s really easy to use. Already has made my life
+easier. hope it helps">
+    <meta property="og:url" content="https://chrisdecairos.ca/pyspace-py/">
+    <meta property="article:published_time" content="2012-05-02T22:44:13.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="awesome">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="github">
+    <meta property="article:tag" content="open">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="Seneca">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pyspace.py">
+    <meta name="twitter:description" content="I got sidetracked while hacking on a Firefox bug this evening. I decided to
+create a tool for myself that would easily strip end of line white space from
+any given file.
+
+It&#x27;s called Pyspace and it&#x27;s really easy to use. Already has made my life
+easier. hope it helps">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/pyspace-py/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="awesome, CDOT, github, open, open-source, Seneca">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Pyspace.py",
+    "url": "https://chrisdecairos.ca/pyspace-py/",
+    "datePublished": "2012-05-02T22:44:13.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "awesome, CDOT, github, open, open-source, Seneca",
+    "description": "I got sidetracked while hacking on a Firefox bug this evening. I decided to\ncreate a tool for myself that would easily strip end of line white space from\nany given file.\n\nIt&#x27;s called Pyspace and it&#x27;s really easy to use. Already has made my life\neasier. hope it helps you too. Here&#x27;s the source:\n\nPyspace Source Code [https://github.com/cadecairos/pyspace]",
+    "mainEntityOfPage": "https://chrisdecairos.ca/pyspace-py/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-awesome tag-cdot tag-github tag-open tag-open-source tag-seneca">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-awesome tag-cdot tag-github tag-open tag-open-source tag-seneca no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-05-02">02 May 2012</time> on <a href="/tag/awesome/">awesome</a> | <a href="/tag/cdot/">CDOT</a> | <a href="/tag/github/">github</a> | <a href="/tag/open/">open</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/seneca/">Seneca</a></span>
+
+        <h1 class="post-title">Pyspace.py</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>I got sidetracked while hacking on a Firefox bug this evening. I decided to create a tool for myself that would easily strip end of line white space from any given file.</p>
+<p>It's called Pyspace and it's really easy to use. Already has made my life easier. hope it helps you too. Here's the source:</p>
+<a href="https://github.com/cadecairos/pyspace?ref=chrisdecairos.ca">Pyspace Source Code</a> <!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Pyspace.py&url=https://chrisdecairos.ca/pyspace-py/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/pyspace-py/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/pyspace-py/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

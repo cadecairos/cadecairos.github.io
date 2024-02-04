@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>OWASP Zed Attack Proxy How-To</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <meta name="description" content="Learn how to intercept and modify HTTP traffic from web applications using the OWASP Zed Attack Proxy.">
+    <link rel="canonical" href="https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OWASP Zed Attack Proxy How-To">
+    <meta property="og:description" content="Learn how to intercept and modify HTTP traffic from web applications using the OWASP Zed Attack Proxy.">
+    <meta property="og:url" content="https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/">
+    <meta property="og:image" content="https://chrisdecairos.ca/content/images/2015/08/greatpower-1.jpg">
+    <meta property="article:published_time" content="2015-08-28T18:51:28.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="Security">
+    <meta property="article:tag" content="zaproxy">
+    <meta property="article:tag" content="ZAP">
+    <meta property="article:tag" content="OWASP">
+    <meta property="article:tag" content="proxy">
+    <meta property="article:tag" content="intercepting proxy">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OWASP Zed Attack Proxy How-To">
+    <meta name="twitter:description" content="Learn how to intercept and modify HTTP traffic from web applications using the OWASP Zed Attack Proxy.">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/">
+    <meta name="twitter:image" content="https://chrisdecairos.ca/content/images/2015/08/greatpower-1.jpg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Security, zaproxy, ZAP, OWASP, proxy, intercepting proxy">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    <meta property="og:image:width" content="270">
+    <meta property="og:image:height" content="270">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "OWASP Zed Attack Proxy How-To",
+    "url": "https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/",
+    "datePublished": "2015-08-28T18:51:28.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://chrisdecairos.ca/content/images/2015/08/greatpower-1.jpg",
+        "width": 270,
+        "height": 270
+    },
+    "keywords": "Security, zaproxy, ZAP, OWASP, proxy, intercepting proxy",
+    "description": "Today I&#x27;m going to show you how to use the Zed Attack Proxy\n[https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project] (ZAP) to debug\nand test the security of web applications. ZAP is an intercepting proxy that\nserves as a great tool for security beginners and veterans alike. It provides\ntools to intercept and modify HTTP/HTTPS and WebSocket traffic, as well as an\nassortment of other useful tools.\n\nBefore I continue, I feel obligated to warn you that you should never, ever,\never use this t",
+    "mainEntityOfPage": "https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-security tag-zaproxy tag-zap tag-owasp tag-proxy tag-intercepting-proxy">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-security tag-zaproxy tag-zap tag-owasp tag-proxy tag-intercepting-proxy featured">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2015-08-28">28 Aug 2015</time> on <a href="/tag/security/">Security</a> | <a href="/tag/zaproxy/">zaproxy</a> | <a href="/tag/zap/">ZAP</a> | <a href="/tag/owasp/">OWASP</a> | <a href="/tag/proxy/">proxy</a> | <a href="/tag/intercepting-proxy/">intercepting proxy</a></span>
+
+        <h1 class="post-title">Intercepting HTTP traffic with Zaproxy</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>Today I'm going to show you how to use the <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project?ref=chrisdecairos.ca">Zed Attack Proxy</a> (ZAP) to debug and test the security of web applications. ZAP is an intercepting proxy that serves as a great tool for security beginners and veterans alike. It provides tools to intercept and modify HTTP/HTTPS and WebSocket traffic, as well as an assortment of other useful tools.</p>
+<p>Before I continue, I feel obligated to warn you that you should <strong>never, ever, ever</strong> use this tool on an application you don't own (that would be illegal). Only use it with a program you're hosting yourself or one you've been given explicit permission to test.</p>
+<h2 id="setup">Set-up</h2>
+<h4 id="localproxysettings">Local Proxy Settings</h4>
+<p>After <a href="https://github.com/zaproxy/zaproxy/wiki/Downloads?ref=chrisdecairos.ca">installing ZAP</a>, you're going to need to do a little configuration to get things running. Firstly, you need to figure out your requirements for using it as a proxy. If you want to direct your browser traffic at ZAP you only need to <a href="http://www.wikihow.com/Change-Proxy-Settings?ref=chrisdecairos.ca">change your browser's proxy settings</a> to point at ZAP. In most cases, ZAP listens for connections on <code>http://localhost:8080</code>. If you want to intercept HTTPS traffic, it gets a bit more complicated. Zap can <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpUiDialogsOptionsDynsslcert?ref=chrisdecairos.ca#generate">generate you a custom root CA certificate</a> to install on your machine so that it can proxy secure connections for you.</p>
+<p>To change your local proxy settings, go to <code>tools -&gt; options...</code> in ZAP, and look for the <code>Local Proxy</code> sub-menu. It's also possible to point a device (i.e. Android phone) connected to the same network as your computer to your ZAP proxy. Simply configure ZAP to listen for connections on your IP address, and proxy your device traffic through it.</p>
+<h4 id="contexts">Contexts</h4>
+<p>Now that you've got your proxy set up lets create a new <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsContexts?ref=chrisdecairos.ca">context</a>. Contexts are a way to group relevant URLs, so that ZAP only shows you the traffic you care about. Create a new context by clicking on the &quot;new context button&quot; and giving it a name.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Create_Context.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Create_Context.png" alt="Create Context" loading="lazy"></a></p>
+<p>For the purposes of this demonstration, I'll be proxying requests from the <a href="https://github.com/mozilla/webmaker-android?ref=chrisdecairos.ca">Webmaker app</a> on my Android phone through a ZAP proxy on my computer. I built a debug version of Webmaker for Android that uses <code>localhost:2015</code> for <a href="https://github.com/mozilla/api.webmaker.org?ref=chrisdecairos.ca">storing projects</a> and <code>localhost:6767</code> for <a href="https://github.com/mozilla/id.webmaker.org?ref=chrisdecairos.ca">authentication</a>.</p>
+<p>I added these addresses to my Context by navigating to <code>file -&gt; session properties</code> And opening the Contexts sub-menu. From there, select the context you created and find the &quot;Include in context&quot; tab. Add the URLs you're filtering for in the menu there.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-42-56.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-42-56.png" alt="Edit Include In Context" loading="lazy"></a></p>
+<p>If the hosts already are listed in your Sites tab in ZAP, you can right click and select add to context.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-47-40.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-47-40.png" alt="Include In Context, easier" loading="lazy"></a></p>
+<h4 id="scope">Scope</h4>
+<p>To filter on a configured context, you want to mark it &quot;in scope&quot; and likely mark the &quot;Default Context&quot; as &quot;not in scope&quot;. Do so by right clicking the contexts and selecting <code>add to scope</code> or <code>remove from scope</code> as required. Additionally, you must also enable scope filtering in the various lists you see in the ZAP UI by clicking the little bulls-eye symbol:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_1.png"><img src="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_1.png" alt loading="lazy"></a><br>
+<a href="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_2.png"><img src="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_2.png" alt loading="lazy"></a></p>
+<h4 id="inspectingrequests">Inspecting Requests</h4>
+<p>As your proxy intercepts and forwards traffic, it keeps a running log of all the request and response data it handles. You can view this information by selecting a request from the History tab:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/inspect_request.png"><img src="https://chrisdecairos.ca/content/images/2015/08/inspect_request.png" alt loading="lazy"></a></p>
+<p>This data is invaluable when you're debugging weird issues with external services.</p>
+<h4 id="thefunstuff">The Fun Stuff</h4>
+<p>Now that we can record traffic between a client and a server, lets use the <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsBreakpoints?ref=chrisdecairos.ca">breakpoints</a> feature of ZAP to stop a request in-flight and modify it!</p>
+<p>Continuing with my Webmaker example, lets create a project, and see what the initial payload looks like:</p>
+<pre><code>POST http://localhost:2015/users/1/bulk HTTP/1.1
+Proxy-Connection: keep-alive
+Content-Length: 169
+Accept: application/json
+Origin: file://
+User-Agent: Mozilla/5.0 (Linux; Android 5.0.1; HTC One_M8 Build/LRX22C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Mobile Crosswalk/13.42.319.12 Mobile Safari/537.36
+Authorization: token 5712cf871106f07233cfaff7cfba157b3b647c57487151f9e6de19e274031095
+Content-Type: application/json
+Accept-Language: en-us,en
+Cookie: crumb=bWwSsAfq8bajB0hts05UA_qfeWnqLm5Iny9mjfe3j3x
+Host: localhost:2015
+
+{&quot;actions&quot;:[{&quot;method&quot;:&quot;create&quot;,&quot;type&quot;:&quot;projects&quot;,&quot;data&quot;:{&quot;title&quot;:&quot;My project&quot;}},{&quot;method&quot;:&quot;create&quot;,&quot;type&quot;:&quot;pages&quot;,&quot;data&quot;:{&quot;projectId&quot;:&quot;$0.id&quot;,&quot;x&quot;:0,&quot;y&quot;:0,&quot;styles&quot;:{}}}]}
+</code></pre>
+<p>Here we can see that the app is using the <a href="https://github.com/mozilla/api.webmaker.org/?ref=chrisdecairos.ca#bulk-action-api">bulk endpoint</a> to create a new project and a starter page for it. Let have some fun!</p>
+<p>Firstly we need to right click on the request in the history tab and locate the <code>Break...</code> option (oh how appropriate). In general, the default settings it shows you are fine enough, but there's ways to add conditional breakpoints that you should totally check out!</p>
+<p>Once you set up the break point, use your client to make the request again. You'll notice that ZAP creates a new tab in the interface called &quot;Break&quot;:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-24-31.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-24-31.png" alt loading="lazy"></a></p>
+<p>This tab lets you modify the request headers and body before sending it along to the destination server. Lets add a second page to actions array:</p>
+<pre><code>{
+  &quot;actions&quot;: [{
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;type&quot;: &quot;projects&quot;,
+    &quot;data&quot;: {
+      &quot;title&quot;: &quot;My project&quot;
+    }
+  }, {
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;type&quot;: &quot;pages&quot;,
+    &quot;data&quot;: {
+      &quot;projectId&quot;: &quot;$0.id&quot;,
+      &quot;x&quot;: 0,
+      &quot;y&quot;: 0,
+      &quot;styles&quot;: {}
+    }
+  }, {
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;type&quot;: &quot;pages&quot;,
+    &quot;data&quot;: {
+      &quot;projectId&quot;: &quot;$0.id&quot;,
+      &quot;x&quot;: 1,
+      &quot;y&quot;: 0,
+      &quot;styles&quot;: {}
+    }
+  }]
+}
+</code></pre>
+<p>Send the request along by pressing the step or continue buttons in the top level toolbar:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/step.png"><img src="https://chrisdecairos.ca/content/images/2015/08/step.png" alt loading="lazy"></a></p>
+<p>ZAP will forward the request to its destination with your changes, and then (if configured to do so) intercept the response for modification as well. In the above example, I produce a new project with <em>two</em> pages instead of one. While this isn't very evil, you may be understanding the power of an intercepting proxy right now:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-43-38.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-43-38.png" alt loading="lazy"></a></p>
+<h4 id="dontbetooevil">Don't be <em>too</em> evil</h4>
+<p><img src="https://chrisdecairos.ca/content/images/2015/08/greatpower.jpg" alt loading="lazy"></p>
+<p>So, there you have it. You now have the knowledge and skills to sit an intercepting proxy up between your client and server applications (hopefully for the purpose of making them better!).</p>
+<p>What I've covered today is just a very small part of the things that ZAP is capable of. If you want to learn more, I'd be glad to cover some more topics in the future. In the mean time, you can't go wrong reading the <a href="https://github.com/zaproxy/zap-core-help/wiki?ref=chrisdecairos.ca">official ZAP wiki</a></p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Intercepting HTTP traffic with Zaproxy&url=https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

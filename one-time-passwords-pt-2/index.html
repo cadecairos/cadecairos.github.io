@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>One Time Passwords (Part Two)</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/one-time-passwords-pt-2/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="One Time Passwords (Part Two)">
+    <meta property="og:description" content="In my previous post [https://chrisdecairos.ca/one-time-passwords], I wrote about the new
+login system we&#x27;re working on for Webmaker. In short, the new system facilitates
+the authentication of a user by generating a one time use password and sending
+it to the user&#x27;s email account. The user can then">
+    <meta property="og:url" content="https://chrisdecairos.ca/one-time-passwords-pt-2/">
+    <meta property="article:published_time" content="2014-09-18T03:22:15.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="Mozilla Foundation">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="webmaker">
+    <meta property="article:tag" content="Security">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="One Time Passwords (Part Two)">
+    <meta name="twitter:description" content="In my previous post [https://chrisdecairos.ca/one-time-passwords], I wrote about the new
+login system we&#x27;re working on for Webmaker. In short, the new system facilitates
+the authentication of a user by generating a one time use password and sending
+it to the user&#x27;s email account. The user can then">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/one-time-passwords-pt-2/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Mozilla, Mozilla Foundation, open-source, webmaker, Security">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "One Time Passwords (Part Two)",
+    "url": "https://chrisdecairos.ca/one-time-passwords-pt-2/",
+    "datePublished": "2014-09-18T03:22:15.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "Mozilla, Mozilla Foundation, open-source, webmaker, Security",
+    "description": "In my previous post [https://chrisdecairos.ca/one-time-passwords], I wrote about the new\nlogin system we&#x27;re working on for Webmaker. In short, the new system facilitates\nthe authentication of a user by generating a one time use password and sending\nit to the user&#x27;s email account. The user can then click a link in the email to\nlog them in right away (either for the session only or for one year).\n\nAfter getting some great feedback\n[https://twitter.com/davidascher/status/505451947566972929] about m",
+    "mainEntityOfPage": "https://chrisdecairos.ca/one-time-passwords-pt-2/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-mozilla tag-mozilla-foundation tag-open-source tag-webmaker tag-security">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-mozilla tag-mozilla-foundation tag-open-source tag-webmaker tag-security featured no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2014-09-17">17 Sep 2014</time> on <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/mozilla-foundation/">Mozilla Foundation</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/webmaker/">webmaker</a> | <a href="/tag/security/">Security</a></span>
+
+        <h1 class="post-title">One Time Passwords (Part Two)</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p><a href="https://chrisdecairos.ca/one-time-passwords">In my previous post</a>, I wrote about the new login system we're working on for Webmaker. In short, the new system facilitates the authentication of a user by generating a one time use password and sending it to the user's email account. The user can then click a link in the email to log them in right away (either for the session only or for one year).</p>
+<p>After getting <a href="https://twitter.com/davidascher/status/505451947566972929?ref=chrisdecairos.ca">some great feedback</a> about my last post, I'm going to try and outline the protocol with less noise and more of the important details.</p>
+<h4 id="whatsnew">What's new</h4>
+<p>The latest implementation of the system adds in several things that weren't in the previous iteration.</p>
+<p>Most notably, we've chosen to provide users with the option to disable one time passwords and use a custom set password. You can read more about how these are implemented in the Protocol section below.</p>
+<p>Secondly, I've updated the OTP generation process to create ten character, pronounceable tokens. This new method aids users if they need to type the token on one device, while reading from another.</p>
+<p>Lastly, I have put in rate limiting middleware on the login server routes that handle the new protocol. It is backed by redis, and provides a simple way to control how often someone can use the routes.</p>
+<p>Here's how it works:</p>
+<ol>
+<li>A request comes in!</li>
+<li>Data about rate limits is stored in redis, keyed on <code>&quot;{API_route}:{IP_Address}:{uid}&quot;</code>. The middleware queries redis to see if this IP and uid have been here recently, and if so, increments the hit count <strong>OR</strong> The rate limiting middleware stores the hit count(1) in redis, using the key pattern described, and the key is set to expire after some amount of time.</li>
+<li>Should further requests be made from the same source, the count stored in the key is incremented</li>
+<li>If the count in the key reaches some max value before it expires, any further requests get a 429 response from the API server (until the key expires).</li>
+</ol>
+<h4 id="highleveloverview">High Level Overview</h4>
+<p>I've put together four high level flow charts that show the new actions in the system. For more detail about the  actions, read the Protocol section below.</p>
+<ol>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Create_Account_Flow.png">Create Account Flow</a></li>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Sign_In_Flow.png">Sign In Flow</a></li>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Enable_Disable_Password.png">Enable and Disable Password Flow</a></li>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Reset_Password_Flow.png">Password Reset Flow</a></li>
+</ol>
+<h4 id="protocol">Protocol</h4>
+<h5 id="creatingatoken">Creating a token</h5>
+<ol>
+<li>A request is made to <code>/api/v2/user/request</code> with a JSON post body containing a uid (username or email)</li>
+<li>The server generates 4 random bytes using node's <a href="http://nodejs.org/api/crypto.html?ref=chrisdecairos.ca#crypto_crypto_randombytes_size_callback">crypto.randomBytes function</a></li>
+<li>A module called <a href="https://github.com/deoxxa/proquint?ref=chrisdecairos.ca">proquint</a> turns the random bytes into a pronouncable string, i.e: &quot;joban-ladim&quot;</li>
+<li>The string is stored in the database, and an login email is dispatched</li>
+</ol>
+<h5 id="signinwithtoken">Sign in with Token</h5>
+<ol>
+<li>The user enters clicks a link in a login email. The link includes the following query parameters:
+<ul>
+<li>username=&lt;username&gt;</li>
+<li>token=&lt;OTP&gt;</li>
+<li>validFor=&lt;'session' or 'one-year'&gt;</li>
+</ul>
+</li>
+<li>The page issues a post request to <code>/api/v2/user/authenticateToken</code> with the query params as JSON in the body</li>
+<li>The token is verified, and marked as used.</li>
+<li>The server sends a set-cookie header in the response to the client, that either expires when the browser session ends (public/shared computers), or one that will not expire for one year (for trusted computers)</li>
+</ol>
+<h5 id="signinwithpassword">Sign in with Password</h5>
+<ol>
+<li>The user enters in their uid (email or username) and their password, which are posted to <code>/api/v2/user/verify-password</code></li>
+<li>The server looks up the user's salted and hashed password, and verifies that the provided password produces the same output from <a href="https://github.com/ncb000gt/node.bcrypt.js?ref=chrisdecairos.ca">bcrypt</a></li>
+<li>The server sends a set-cookie header containing the user's session object, which can expire after the session or in one year.</li>
+</ol>
+<h5 id="enablepasswords">Enable Passwords</h5>
+<ol>
+<li>A logged in user provides a unique, secure password (ideally) which is send in to <code>api/v2/user/enable-passwords</code> in the post body.</li>
+<li>The server uses <a href="https://github.com/ncb000gt/node.bcrypt.js?ref=chrisdecairos.ca">bcrypt</a> to salt and hash the password (12 rounds, to slow things down a bit)</li>
+<li>The salt and hash are stored in the database</li>
+</ol>
+<h5 id="disablepasswords">Disable Passwords</h5>
+<ol>
+<li>A logged in user causes the site to post to <code>/api/v2/user/remove-password</code></li>
+<li>The user's password is removed from the database, enabling OTP for the user once again.</li>
+</ol>
+<h5 id="resetpasswordrequest">Reset Password Request</h5>
+<ol>
+<li>A user provides a uid (email or username) which is posted to <code>/api/v2/user/request-reset-code</code></li>
+<li>The server uses <a href="https://github.com/substack/node-hat?ref=chrisdecairos.ca">Hat</a> to generate 256 random bits, which is base 16 encoded, creating a 64 character long string.</li>
+<li>The string is saved to the database and an email is dispatched to the account owner.</li>
+</ol>
+<h5 id="resetpassword">Reset Password</h5>
+<ol>
+<li>A user clicks the reset password link in a reset request email, which links to something like <code>/reset-account?uid={username}&amp;code={reset_code}</code></li>
+<li>The user enters a unique, secure password (every time, right?)</li>
+<li>The code, uid, and password are posted to <code>/api/v2/user/reset-password</code></li>
+<li>The reset code is validated</li>
+<li>The same steps described above are followed to salt and hash the password, which is then stored in the database.</li>
+</ol>
+<h4 id="wrapup">Wrap-up</h4>
+<p>The system we've been working on is an effort to make the sign up and sign on experience on Webmaker easier for our users. We think we've nailed it with the dead-easy sign up flow. However, getting sign in to not suck isn't as easy. As we roll out the new system in the near future, we're going to be watching closely and gathering data about the various ways people interact with the new system. This data will help inform our decisions moving forward as we try to make the Webmaker experience better for everyone.</p>
+<p>If you've made it this far, congratulations! Do you have an opinon on the new system? We'd love to hear from you! There are many ways to get in touch:</p>
+<ol>
+<li>Use the Disqus comments at the end of this post</li>
+<li><a href="https://twitter.com/@ChrisDecairos?ref=chrisdecairos.ca">Tweet @ me</a></li>
+<li>Come talk to us in IRC - <a href="irc://irc.mozilla.org/#webmaker">irc://irc.mozilla.org/#webmaker</a> (I'm &quot;cade&quot;)</li>
+</ol>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=One Time Passwords (Part Two)&url=https://chrisdecairos.ca/one-time-passwords-pt-2/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/one-time-passwords-pt-2/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/one-time-passwords-pt-2/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

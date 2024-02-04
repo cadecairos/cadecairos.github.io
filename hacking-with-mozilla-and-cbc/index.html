@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Hacking with Mozilla and CBC</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Hacking with Mozilla and CBC">
+    <meta property="og:description" content="It&#x27;s been a pretty good week so far for me! On Monday, I traveled to Mozilla
+[http://www.mozilla.org/]&#x27;s new Toronto offices to get started on a two day
+&quot;hackfest&quot;.  The purpose of this event was to help CBC create an HTML5 audio
+puzzle game to go with">
+    <meta property="og:url" content="https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/">
+    <meta property="article:published_time" content="2011-10-05T17:04:15.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="CBC">
+    <meta property="article:tag" content="Popcorn">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Hacking with Mozilla and CBC">
+    <meta name="twitter:description" content="It&#x27;s been a pretty good week so far for me! On Monday, I traveled to Mozilla
+[http://www.mozilla.org/]&#x27;s new Toronto offices to get started on a two day
+&quot;hackfest&quot;.  The purpose of this event was to help CBC create an HTML5 audio
+puzzle game to go with">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="CBC, Popcorn">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Hacking with Mozilla and CBC",
+    "url": "https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/",
+    "datePublished": "2011-10-05T17:04:15.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "CBC, Popcorn",
+    "description": "It&#x27;s been a pretty good week so far for me! On Monday, I traveled to Mozilla\n[http://www.mozilla.org/]&#x27;s new Toronto offices to get started on a two day\n&quot;hackfest&quot;.  The purpose of this event was to help CBC create an HTML5 audio\npuzzle game to go with their upcoming Marshall McLuhan\n[http://en.wikipedia.org/wiki/Marshall_McLuhan] programming. It wasn&#x27;t a\nparticularly large event, with only four coders (Scott Downe\n[http://scottdowne.wordpress.com/], Dave  Seifried\n[http://dseifried.wordpress.co",
+    "mainEntityOfPage": "https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-cbc tag-popcorn">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-cbc tag-popcorn no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2011-10-05">05 Oct 2011</time> on <a href="/tag/cbc/">CBC</a> | <a href="/tag/popcorn/">Popcorn</a></span>
+
+        <h1 class="post-title">Hacking with Mozilla and CBC</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>It's been a pretty good week so far for me! On Monday, I traveled to <a href="http://www.mozilla.org/?ref=chrisdecairos.ca">Mozilla</a>'s new Toronto offices to get started on a two day &quot;hackfest&quot;.  The purpose of this event was to help CBC create an HTML5 audio puzzle game to go with their upcoming <a href="http://en.wikipedia.org/wiki/Marshall_McLuhan?ref=chrisdecairos.ca">Marshall McLuhan</a> programming. It wasn't a particularly large event, with only four coders (<a href="http://scottdowne.wordpress.com/?ref=chrisdecairos.ca">Scott Downe</a>, <a href="http://dseifried.wordpress.com/?ref=chrisdecairos.ca">Dave  Seifried</a> (<a href="http://dseifried.wordpress.com/2011/10/05/working-with-cbc/?ref=chrisdecairos.ca">here's his post about the event</a>), <a href="http://twitter.com/?ref=chrisdecairos.ca#!/secretrobotron">Bob Richter</a>, and myself) with support from <a href="http://www.cbc.ca/radio/?ref=chrisdecairos.ca">CBC</a> employees Angela, Lily and Sean and facilitation of the event provided by <a href="http://www.aspirationtech.org/about/people/gunner?ref=chrisdecairos.ca">Allen Gunn of Aspiration</a>.</p>
+<p>After introductions, we dove right into discussion about what we all thought we needed to do, and sketched a few thoughts onto the windows (yes, we drew on the windows). What we were creating was a small puzzle game that allows the player to drag and drop mixed up words to form Marshall McLuhan quotes.  Each word was to represent a section of an audio recording of McLuhan saying the quote.  If the user were to click the word, they'd hear McLuhan speak the word, and as they lined up words they could play the words in the order they had lined up.  For example, take the following sequence of words: &quot;one two three four&quot;.  Organizing them as &quot;two&quot;, &quot;one&quot;, &quot;four&quot;, &quot;three&quot; and hitting play will play each word from left to right, seeking to the appropriate clip-in times based on their order.</p>
+<p>I started out by experimenting with seeking through audio.  We wanted to make sure that random seeks through an audio file were a viable way to approach creating this game ( if it was not possible we'd have to split up the audio files into chunks..) luckily, my quick test showed that there weren't any issues, as long as the audio was fully loaded. From there, Bob and I took on the task of creating an editing tool that could be used to create <a href="http://json.org/?ref=chrisdecairos.ca">JSON</a> information that the game could use to generate its puzzles. This task was unlike any I've undertaken before with JavaScript so I figured it'd be a rocky road. Surprisingly, by doing things one feature at a time, we were able to create a pretty cool little tool for creating puzzles in the game. Check out <a href="https://chrisdecairos.ca/projects/mcluhan/editor.html">this prototype/demo thingy</a> we threw together.  It's pretty crude and the controls need some serious work.  Once the audio waveform is generated, you can mark different parts of the audio by holding down the 'z' key and releasing when its played back to the correct spot.  you can drag the marker and re-size it using your mouse.  When a marker is selected, press enter to associate a piece of text with it using the textbox.  Pressing enter confirms the text.  Pressing the render output button will show you a data representation of the different clips you have made.</p>
+<p>Scott and Dave were working on the game's logic, enabling drag and drop for the words and creating logic that would play back clips of the audio in any order, based on the position of the words. Being developers, they threw together this <a href="https://chrisdecairos.ca/projects/mcluhan/cbc.html">&quot;beautiful&quot; test page</a>.  Be nice, this code was written in a short period of time and still has a few kinks that need to be worked out. if it messes up, just refresh.  You can find a <a href="https://chrisdecairos.ca/projects/mcluhan/puzzleCSS/">prettier looking one here </a>:D</p>
+<p>All in all, I learned a lot of new stuff and had a great time collaborating with Mozilla and CBC to create something new and original.  Can't wait to see the finished product!</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Hacking with Mozilla and CBC&url=https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/hacking-with-mozilla-and-cbc/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

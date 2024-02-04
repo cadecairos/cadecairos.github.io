@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>How to: Popcorn Maker - YouTube Upload Tool</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/popcorn-maker-webcam/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to: Popcorn Maker - YouTube Upload Tool">
+    <meta property="og:description" content="Over the past 2 months, the Popcorn Maker [http://mozillapopcorn.org] team has
+been working really hard to develop new and exciting features for the app.
+Recently part of this work has involved trying out an experimental feature from
+YouTube [https://developers.google.com/youtube/youtube_upload_widget] that lets">
+    <meta property="og:url" content="https://chrisdecairos.ca/popcorn-maker-webcam/">
+    <meta property="article:published_time" content="2013-03-11T15:28:36.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="JavaScript">
+    <meta property="article:tag" content="Mozilla-popcorn">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="Popcorn">
+    <meta property="article:tag" content="Popcorn Maker">
+    <meta property="article:tag" content="webmaker">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How to: Popcorn Maker - YouTube Upload Tool">
+    <meta name="twitter:description" content="Over the past 2 months, the Popcorn Maker [http://mozillapopcorn.org] team has
+been working really hard to develop new and exciting features for the app.
+Recently part of this work has involved trying out an experimental feature from
+YouTube [https://developers.google.com/youtube/youtube_upload_widget] that lets">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/popcorn-maker-webcam/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="CDOT, JavaScript, Mozilla-popcorn, open-source, Popcorn, Popcorn Maker, webmaker">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "How to: Popcorn Maker - YouTube Upload Tool",
+    "url": "https://chrisdecairos.ca/popcorn-maker-webcam/",
+    "datePublished": "2013-03-11T15:28:36.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "CDOT, JavaScript, Mozilla-popcorn, open-source, Popcorn, Popcorn Maker, webmaker",
+    "description": "Over the past 2 months, the Popcorn Maker [http://mozillapopcorn.org] team has\nbeen working really hard to develop new and exciting features for the app.\nRecently part of this work has involved trying out an experimental feature from\nYouTube [https://developers.google.com/youtube/youtube_upload_widget] that lets\na user record a video from their webcam and upload it to their YouTube account.\nWe have often thought about how awesome it would be to be able to record a video\nin the app and have it re",
+    "mainEntityOfPage": "https://chrisdecairos.ca/popcorn-maker-webcam/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-cdot tag-javascript tag-mozilla-popcorn tag-open-source tag-popcorn tag-popcorn-maker tag-webmaker">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-cdot tag-javascript tag-mozilla-popcorn tag-open-source tag-popcorn tag-popcorn-maker tag-webmaker no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2013-03-11">11 Mar 2013</time> on <a href="/tag/cdot/">CDOT</a> | <a href="/tag/javascript/">JavaScript</a> | <a href="/tag/mozilla-popcorn/">Mozilla-popcorn</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/popcorn/">Popcorn</a> | <a href="/tag/popcorn-maker/">Popcorn Maker</a> | <a href="/tag/webmaker/">webmaker</a></span>
+
+        <h1 class="post-title">How to: Popcorn Maker - YouTube Upload Tool</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>Over the past 2 months, the <a href="http://mozillapopcorn.org/?ref=chrisdecairos.ca">Popcorn Maker</a> team has been working really hard to develop new and exciting features for the app. Recently part of this work has involved trying out an <a href="https://developers.google.com/youtube/youtube_upload_widget?ref=chrisdecairos.ca">experimental feature from YouTube</a> that lets a user record a video from their webcam and upload it to their YouTube account. We have often thought about how awesome it would be to be able to record a video in the app and have it ready to popcorn-ize in minutes. With the YouTube iframe Uploading API, we can easily make that vision a reality. Today we're releasing it for testing in order to see how the tool performs.</p>
+<p>This post will show you how you can use the new feature to upload a video directly to YouTube and have it put right into Popcorn Maker.</p>
+<p><strong>Before I begin, there's a few details that need to be mentioned about the YouTube Uploader</strong></p>
+<p>Firstly, you will need to have a Google account to use the tool, and you will be required to sign in (more on that later). You will also be required to have an up to date version of flash installed.</p>
+<p>Secondly, this is an experimental API from Google, and it's feature-set is lacking. Because of this, videos you create cannot have any custom title or tags associated with them (yet). To better protect your privacy, we tell YouTube to mark all video's uploaded through the tool as &quot;Unlisted&quot;, so that they won't show up in any search results.</p>
+<p>Lastly, the YouTube Uploading API is marked as an experimental feature, meaning <strong>Google can deprecate the service at any time</strong>. While we hope that never happens, it's important for you to understand that if they do deprecate the tool, we will be forced to deprecate the feature from Popcorn Maker.</p>
+<p>With that said, lets look at how you can use the uploader in Popcorn Maker.</p>
+<!--more-->
+<h1></h1>
+&nbsp;
+<h1>Testing the YouTube Upload Tool</h1>
+&nbsp;
+<h3>1. Load <a href="http://webcam.mofostaging.net/templates/basic?ref=chrisdecairos.ca" target="_blank">webcam.mofostaging.net
+</a></h3>
+&nbsp;
+<h3>2. When the app loads, it will not look much different from what is on our production server:</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/978i.png"><img class="size-full wp-image-514 alignnone" alt="YT-Uploader" src="https://chrisdecairos.ca/content/images/2013/03/978i.png" width="523" height="272"></a></h3>
+<h3></h3>
+&nbsp;
+<h3>3. If you look at the <strong>Media Editor</strong> you'll notice a new button (Record From Webcam) below the Media URL input box.</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/mq6e.png"><img class="size-full wp-image-523 alignnone" alt="Media Editor" src="https://chrisdecairos.ca/content/images/2013/03/mq6e.png" width="145" height="374"></a></h3>
+<h3></h3>
+&nbsp;
+<h3>4. Clicking that button will hide the input area, and load in the YouTube uploader tool. When the uploader is ready, There will be a button centred in a dark box that says "Record from webcam". Click it to continue.</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/z_7i.png"><img class="size-full wp-image-522 alignnone" alt="z_7i" src="https://chrisdecairos.ca/content/images/2013/03/z_7i.png" width="348" height="440"></a></h3>
+<h3></h3>
+&nbsp;
+<h3>5. If you aren't signed in to a Google account, you will be prompted to sign in. Otherwise, continue to the next step.</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/f5_6.png"><img class="size-full wp-image-521 alignnone" alt="f5_6" src="https://chrisdecairos.ca/content/images/2013/03/f5_6.png" width="217" height="239"></a></h3>
+<h3></h3>
+&nbsp;
+<h3>6. Flash will now prompt you to give it access to your webcam. Click A<strong>llow</strong> if you consent, or you can Deny it access and leave the tool.</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/y0oh.png"><img class="size-full wp-image-520 alignnone" alt="y0oh" src="https://chrisdecairos.ca/content/images/2013/03/y0oh.png" width="216" height="237"></a></h3>
+<h3></h3>
+&nbsp;
+<h3>7. You will now be able to see your webcam feed in the tool, and can make any adjustments to your webcam/lighting as required. Clicking on <strong>Start Recording</strong> will begin the recording of your video! :)</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/e63g.png"><img class="size-full wp-image-519 alignnone" alt="e63g" src="https://chrisdecairos.ca/content/images/2013/03/e63g.png" width="269" height="351"></a></h3>
+<h3></h3>
+&nbsp;
+<h3>8. Once you're finished, you can click <strong>Stop Recording</strong></h3>
+<h3><strong>
+<a href="https://chrisdecairos.ca/content/images/2013/03/pfg.png"><img class="size-full wp-image-518 alignnone" alt="pfg~" src="https://chrisdecairos.ca/content/images/2013/03/pfg.png" width="300" height="97"></a></strong></h3>
+<h3></h3>
+&nbsp;
+<h3>9. You can review what you've recorded, or begin the upload process to YouTube by clicking <strong>Upload</strong>.</h3>
+<h3></h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/60q.png"><img class="size-full wp-image-517 alignnone" alt="-60q" src="https://chrisdecairos.ca/content/images/2013/03/60q.png" width="301" height="97"></a></h3>
+<h3></h3>
+&nbsp;
+<h3></h3>
+<h3><em>NOTE: This process may take some time. Be careful not to navigate away from the app or switch menus while it uploads.</em></h3>
+&nbsp;
+<h3>10. Once uploaded, YouTube will need to take some time processing/converting the video. <em>This can also take some time, so be patient.</em></h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/2qfq.png"><img class="size-full wp-image-516 alignnone" alt="2qfq" src="https://chrisdecairos.ca/content/images/2013/03/2qfq.png" width="341" height="57"></a></h3>
+&nbsp;
+<p> </p>
+<h3>11. When it's ready, YouTube will give Popcorn Maker the link to your newly uploaded video and it will be added to your media gallery, ready to be popcorn-ized!</h3>
+&nbsp;
+<h3><a href="https://chrisdecairos.ca/content/images/2013/03/9ko.png"><img class="size-full wp-image-515 alignnone" alt="9k~o" src="https://chrisdecairos.ca/content/images/2013/03/9ko.png" width="342" height="200"></a></h3>
+&nbsp;
+<p> </p>
+<p>If you want to remove any uploaded videos, you can do so by going to your Video Manager on YouTube.com.</p>
+<p>If you run into any crashes, <strong>please do submit them using the in-app crash reporter</strong> so that we can address any issues, or <a href="https://webmademovies.lighthouseapp.com/projects/65733-popcorn-maker/tickets/3351-YouTube-Webcam-Uploader-QA-Bug?ref=chrisdecairos.ca">leave a comment on this QA ticket</a>.</p>
+<p>You can also contact us on IRC at irc://irc.mozilla.org/webmaker</p>
+<p>OR</p>
+<p>Join our community email list: <a href="https://mail.mozilla.org/listinfo/community-popcorn?ref=chrisdecairos.ca">https://mail.mozilla.org/listinfo/community-popcorn</a></p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=How to: Popcorn Maker - YouTube Upload Tool&url=https://chrisdecairos.ca/popcorn-maker-webcam/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/popcorn-maker-webcam/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/popcorn-maker-webcam/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

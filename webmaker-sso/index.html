@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Upgrading and Implementing Webmaker SSO</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/webmaker-sso/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Upgrading and Implementing Webmaker SSO">
+    <meta property="og:description" content="For the past three weeks, My teammates and I have been working hard on an
+exciting new enhancement for the Webmaker project [https://webmaker.org]. After
+many hours of researching, whiteboarding
+[https://chrisdecairos.ca/content/images/2014/Mar/wb.png], OMGWTF
+[https://chrisdecairos.ca/content/images/2017/01/ahhhh.gif]">
+    <meta property="og:url" content="https://chrisdecairos.ca/webmaker-sso/">
+    <meta property="article:published_time" content="2014-03-06T04:17:44.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Upgrading and Implementing Webmaker SSO">
+    <meta name="twitter:description" content="For the past three weeks, My teammates and I have been working hard on an
+exciting new enhancement for the Webmaker project [https://webmaker.org]. After
+many hours of researching, whiteboarding
+[https://chrisdecairos.ca/content/images/2014/Mar/wb.png], OMGWTF
+[https://chrisdecairos.ca/content/images/2017/01/ahhhh.gif]">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/webmaker-sso/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Upgrading and Implementing Webmaker SSO",
+    "url": "https://chrisdecairos.ca/webmaker-sso/",
+    "datePublished": "2014-03-06T04:17:44.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "description": "For the past three weeks, My teammates and I have been working hard on an\nexciting new enhancement for the Webmaker project [https://webmaker.org]. After\nmany hours of researching, whiteboarding\n[https://chrisdecairos.ca/content/images/2014/Mar/wb.png], OMGWTF\n[https://chrisdecairos.ca/content/images/2017/01/ahhhh.gif]&#x27;s and many Anakin Skywalkers\n[http://popcorn.webmadecontent.org/4z], we&#x27;ve finally shipped the new system to\nproduction.\n\nIf you want to skip directly to the implementation guide,",
+    "mainEntityOfPage": "https://chrisdecairos.ca/webmaker-sso/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2014-03-05">05 Mar 2014</time> </span>
+
+        <h1 class="post-title">Upgrading and Implementing Webmaker SSO</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>For the past three weeks, My teammates and I have been working hard on an exciting new enhancement for the <a href="https://webmaker.org/?ref=chrisdecairos.ca">Webmaker project</a>. After many hours of researching, <a href="https://chrisdecairos.ca/content/images/2014/Mar/wb.png">whiteboarding</a>,  <a href="https://chrisdecairos.ca/content/images/2017/01/ahhhh.gif">OMGWTF</a>'s and many <a href="http://popcorn.webmadecontent.org/4z?ref=chrisdecairos.ca">Anakin Skywalkers</a>, we've finally shipped the new system to production.</p>
+<p>If you want to skip directly to the implementation guide, click one of the following:</p>
+<h4 id="dependencies"><a href="#dependencies">Dependencies</a></h4>
+<h4 id="serverconfiguration"><a href="#serverconfiguration">Server Configuration</a></h4>
+<h4 id="frontendconfigurationhtmlcss"><a href="#frontendconfigurationhtmlcss">Front End Configuration (HTML+CSS)</a></h4>
+<h4 id="frontendconfigurationjavascript"><a href="#frontendconfigurationjs">Front End Configuration (JavaScript)</a></h4>
+<p>In order to fully understand what we've done, you will need to understand where we came from.</p>
+<p>When we set out to build Webmaker in April of 2013, One of the requirements was to have a single sign on mechanism across the Webmaker site and tools. In order to accomplish this in the time we had, we were forced to move very quickly. The result was a log-in system, built with Persona, that accomplished the task. Unfortunately, it was a nightmare to implement and caused us many issues.</p>
+<p>This log-in system spread its dependencies across two applications. This meant that if you want to develop popcorn maker, you <strong>have</strong> to be running webmaker.org and a Login Server to log in. The limitations of this system became apparent almost immediately.</p>
+<p>Logging in centred around storing a session cookie on one subdomain, and checking for that cookie on all other subdomains through a <a href="https://github.com/mozilla/webmaker.org/tree/bfb5033608348603269307f2c91d38b64031c8b2/views/sso?ref=chrisdecairos.ca">complicated iframe post message API</a>. This created an obvious lag between page load and sign-in and proved to be a complete nightmare to implement.</p>
+<p>Today, I'm going to go over the new Webmaker authentication API, and guide you through an implementation using real, working code (<a href="https://github.com/mozilla/webmaker-login-example?ref=chrisdecairos.ca">available on Github!</a>). This guide will teach you how to implement the system in a node server that's running the express web framework, using nunjucks as the template engine as well as how hook up your front end to the system.</p>
+<p>Before I begin, we need to get a basic understanding of the system, and all the parts involved. In the log-in process, there are four parties.</p>
+<ul>
+<li>The browser or &quot;<strong>client</strong>&quot;</li>
+<li>The App Server or &quot;<strong>App</strong>&quot;</li>
+<li>The &quot;<strong>Login Server</strong>&quot;</li>
+<li>The <a href="https://persona.org/?ref=chrisdecairos.ca">Persona</a> Identity Provider or &quot;<strong>Persona</strong>&quot;</li>
+</ul>
+<p>This scenario will assume the user has already created a Webmaker Account. When the client application initiates the log in process, they will be presented with a typical persona log-in pop-up. After completing the Persona sign in process, the client will get what's known as an assertion (a cryptographically signed piece of text that proves the user is the owner of a specific email address). The Client will send this assertion, along with the email and the App's hostname, to an endpoint on the App, typically '/verify'.</p>
+<p>The verify endpoint will forward the assertion, email and hostname to the Login Server. Upon receipt of the request, the Login Server will verify the assertion with Persona, and determine whether or not this is a valid log-in. If it is, the user's account information (username, email, etc) is returned to the App. If the request checks out, the App will create and sign a session cookie and return the cookie to the client. Once the client has the cookie, the user has successfully logged in!</p>
+<p>The special part of this whole system is that the cookie which is assigned to the client is what we refer to as a &quot;Super Cookie&quot;. The &quot;super&quot; indicates that it can be sent on connections to subdomains of a parent subdomain. For example, a cookie for <code>webmaker.org</code> can be sent on connections to all apps that exist on a subdomain of it - ie. <code>popcorn.webmaker.org</code> and <code>thimble.webmaker.org</code>. This enables apps to detect valid sessions without having to check yuing a complicated iframe post-message API.</p>
+<h2 id="implementation">Implementation</h2>
+<p>Lets implement this login strategy!</p>
+<h3 id="dependencies">Dependencies</h3>
+<p>Lets start with the npm requirements for setting up your express server. At a minimum, you will need:</p>
+<ul>
+<li><a href="https://bower.io/?ref=chrisdecairos.ca">bower</a> (front-end package management)</li>
+<li><a href="https://npmjs.org/package/express?ref=chrisdecairos.ca">express</a> (web app framework)</li>
+<li><a href="https://npmjs.org/less-middleware?ref=chrisdecairos.ca">less-middleware</a> (less middleware)</li>
+<li><a href="http://jlongster.github.io/nunjucks/?ref=chrisdecairos.ca">nunjucks</a> (templating engine and middleware)</li>
+<li><a href="https://github.com/mozilla/webmaker-auth?ref=chrisdecairos.ca">webmaker-auth</a> (middlware and route handlers for webmaker SSO)</li>
+<li><a href="https://github.com/mozilla/node-webmaker-i18n?ref=chrisdecairos.ca">webmaker-i18n</a> (Webmaker focused internationalisation middleware)</li>
+<li><a href="https://www.npmjs.org/package/webmaker-locale-mapping?ref=chrisdecairos.ca">webmaker-locale-mapping</a> (locale mappings for Webmaker)</li>
+</ul>
+<p>Optionally, you can use <a href="https://npmjs.org/package/habitat?ref=chrisdecairos.ca">habitat</a> for managing your environment variables and <a href="https://npmjs.org/package/helmet?ref=chrisdecairos.ca">helmet</a> for adding security header middleware (recommended!)</p>
+<p>The back and front ends of your app will need the <a href="https://github.com/mozilla/webmaker-auth-client?ref=chrisdecairos.ca">webmaker-auth-client</a> library. If you're using a front-end package manager like bower, you can include it in your <code>bower.json</code> file as a dependency.</p>
+<p>A sample implementation lives at <a href="https://github.com/mozilla/webmaker-login-example?ref=chrisdecairos.ca">https://github.com/mozilla/webmaker-login-example</a> and will serve as the basis for this guide. It is not unlikely that one day this guide will be out of date, so be sure to read the documentation of the <a href="https://github.com/mozilla/login.webmaker.org?ref=chrisdecairos.ca">Login Server</a>, <a href="https://github.com/mozilla/webmaker-auth-client?ref=chrisdecairos.ca">webmaker-auth-client</a> and <a href="https://webmaker-auth/?ref=chrisdecairos.ca">webmaker-auth</a> repositories to be sure that nothing has changed significantly.</p>
+<h3 id="serverconfiguration">Server configuration</h3>
+<p>Here I'll describe the important things to do when setting up your server. You can find the <a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca">full app.js file here</a>.</p>
+<h4 id="step1">Step 1:</h4>
+<h5 id="loadthewebmakerauthnpmmodule">Load the Webmaker-auth npm module</h5>
+<pre><code class="language-language-javascript">var WebmakerAuth = require('webmaker-auth');
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L11">View Step 1 on Github</a></p>
+<h4 id="step2">Step 2:</h4>
+<h5 id="addthebower_componentsdirectorytoyournunjuckspath">Add the <code>bower_components</code> directory to your nunjucks path.</h5>
+<p>This will let you include the create-user-form html snippet in your views.</p>
+<pre><code class="language-language-javascript">var nunjucks = require('nunjucks');
+var nunjucksEnv = new nunjucks.Environment([
+  new nunjucks.FileSystemLoader(__dirname + '/views'),
+  new nunjucks.FileSystemLoader(__dirname + '/bower_components')
+], {
+  autoescape: true
+});
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L18">View Step 2 on Github</a></p>
+<h4 id="step3">Step 3:</h4>
+<h5 id="addaninstantiatefiltertoyournunjucksenvironment">Add an instantiate filter to your nunjucks environment</h5>
+<p>This is required because the create-user-form is localised.</p>
+<pre><code class="language-language-javascript">nunjucksEnv.addFilter(&quot;instantiate&quot;, function(input) {
+    var tmpl = new nunjucks.Template(input);
+    return tmpl.render(this.getVariables());
+});
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L30">View Step 3 on Github</a></p>
+<h4 id="step4">Step 4:</h4>
+<h5 id="instantiateandaddthewebmakeri18nandwebmakerlocalemappingmiddlewaretoyourexpressinstance">Instantiate and add the webmaker-i18n and webmaker-locale-mapping middleware to your express instance</h5>
+<pre><code class="language-language-javascript">app.use(i18n.middleware({
+  supported_languages: env.get(&quot;SUPPORTED_LANGS&quot;),
+  default_lang: &quot;en-US&quot;,
+  mappings: require(&quot;webmaker-locale-mapping&quot;),
+  translation_directory: path.resolve(__dirname, &quot;locale&quot;)
+}));
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L38">View Step 4 on Github</a></p>
+<h4 id="step5">Step 5:</h4>
+<h5 id="mergethecreateuserformlocalisationswiththeappslocalisationsusingi18naddlocaleobject">Merge the create user form localisations with the app's localisations using <code>i18n.addLocaleObject()</code>.</h5>
+<pre><code class="language-language-javascript">i18n.addLocaleObject({
+  &quot;en-US&quot;: require(&quot;./bower_components/webmaker-auth-client/locale/en_US/create-user-form.json&quot;)
+}, function (result) {});
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L51">View Step 5 on Github</a></p>
+<h4 id="step6">Step 6:</h4>
+<h5 id="setupthewebmakerauthmiddlewaremodule">Setup the webmaker-auth middleware module.</h5>
+<h6 id="forproductionstagingenvironmentsyoucanspecifyadomainparameterenablingssoforappshostedonthesamedomaintheymustbeconfiguredwiththesamesessionsecretotherwisetheywontbeabletodecryptcookiesissuedbyoneanother">For production/staging environments, you can specify a domain parameter, enabling SSO for apps hosted on the same domain (they must be configured with the same session secret, otherwise they won't be able to decrypt cookies issued by one another.)</h6>
+<pre><code class="language-language-javascript">var login = new WebmakerLogin({
+  loginURL: env.get('LOGIN_URL'),
+  secretKey: env.get('SECRET_KEY'),
+  domain: env.get('DOMAIN', null),
+  forceSSL: env.get('FORCE_SSL', false)
+});
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L68">View Step 6 on Github</a></p>
+<h4 id="step7">Step 7:</h4>
+<h5 id="setupwebmakerauthscookieparserandcookiesessionmiddleware">Set up webmaker-auth's cookie parser and cookie session middleware</h5>
+<pre><code class="language-language-javascript">app.use(login.cookieParser());
+app.use(login.cookieSession());
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L89">View Step 7 on Github</a></p>
+<h4 id="step8">Step 8:</h4>
+<h5 id="setuplessmiddlewaretocompilethewebmakerauthclientscss">Set up less-middleware to compile the webmaker-auth-client's CSS</h5>
+<pre><code class="language-language-javascript">var optimize = env.get('NODE_ENV') !== 'development',
+    tmpDir = path.join(require('os' ).tmpDir(), 'mozilla.webmaker-login-example.build');
+
+app.use(lessMiddleware({
+  once: optimize,
+  debug: !optimize,
+  dest: tmpDir,
+  // NOTE: we'll use a LESS include in our public/css to include the create user form styles
+  src: __dirname + '/public',
+  compress: optimize,
+  yuicompress: optimize,
+  optimization: optimize ? 0 : 2
+}));
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L95">View Step 8 on Github</a></p>
+<h4 id="step9">Step 9:</h4>
+<h5 id="setuproutesforlogginginusingthewebmakerauthroutehandlerfunctions">Set up routes for logging in, using the webmaker-auth route handler functions.</h5>
+<h6 id="ifyoudontneedtoaddmiddlewaretotheloginroutesyoucanusethebindfunctionwhichacceptsyourexpressinstanceasaparameterandautomaticallysetsuproutes">If you don't need to add middleware to the login routes, you can use the <code>.bind()</code> function, which accepts your express instance as a parameter and automatically sets up routes.</h6>
+<pre><code class="language-language-javascript">app.post('/verify', login.handlers.verify);
+app.post('/authenticate', login.handlers.authenticate);
+app.post('/create', login.handlers.create);
+app.post('/logout', login.handlers.logout);
+app.post('/check-username', login.handlers.exists);
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L113">View Step 9 on Github</a></p>
+<h4 id="step10">Step 10:</h4>
+<h5 id="staticallyservethebower_componentsfoldersothefrontendcanloadwebmakerauthclientjs">Statically serve the <code>bower_components</code> folder, so the front end can load <code>webmaker-auth-client.js</code></h5>
+<pre><code class="language-language-javascript">app.use('/bower', express.static(__dirname + '/bower_components'));
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/app.js?ref=chrisdecairos.ca#L131">View Step 10 on Github</a></p>
+<h4 id="step11">Step 11:</h4>
+<h5 id="addtheappshostnameandporttotheloginserversallowed_domainsvariable">Add the app's hostname and port to the <a href="https://github.com/mozilla/login.webmaker.org/blob/41411e01c68c3afc612c858ef5ad04d978aa7c17/env.sample?ref=chrisdecairos.ca#L7">Login Server's <code>ALLOWED_DOMAINS</code> variable</a>.</h5>
+<h6 id="thisisanexternalconfigurationstepthatmustbedonetotheloginserveryouwishtoconnectwith">This is an external configuration step that must be done to the login server you wish to connect with.</h6>
+<h3 id="frontendconfigurationhtmlcss">Front End Configuration (HTML+CSS)</h3>
+<p>Here we'll configure the view to work with our login strategy. Check out the <a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca">full file here</a>, and check out the <a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/css/login-example.less?ref=chrisdecairos.ca">CSS file here</a></p>
+<h4 id="step1">Step 1:</h4>
+<h5 id="loadinthecreateuserformcss">Load in the create user form css</h5>
+<h6 id="inthisexamplethecreateuserformcssisimportedintotheaseparatecssfileusingalessimportdirectiveyoudonotnecessarilyhavetoloadthenewuserformcssinthisway">In this example, the create user form CSS is imported into the a separate CSS file using a <a href="http://lesscss.org/features/?ref=chrisdecairos.ca#import-options-less">less import directive</a> - you do not necessarily have to load the new user form css in this way.</h6>
+<pre><code class="language-language-http">&lt;link href=&quot;/css/login-example.css&quot; rel=&quot;stylesheet&quot;&gt;
+</code></pre>
+<pre><code class="language-language-css">// Import the create user form less.
+// NOTE: the &quot;(less)&quot; import directive forces less to interpret the file as LESS, regardless
+// of the &quot;.css&quot; extension on the file. This means you must use LESS &gt; v1.3
+@import (less) &quot;../../bower_components/webmaker-auth-client/create-user/create-user-form.css&quot;;
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L9">View Step 1 (html) on Github</a></p>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/css/login-example.less?ref=chrisdecairos.ca">View Step 1 (css) on Github</a></p>
+<h4 id="step2">Step 2:</h4>
+<h5 id="addsomeloginandlogoutbuttons">Add some log-in and log-out buttons</h5>
+<pre><code class="language-language-http">&lt;button class=&quot;btn btn-primary login&quot;&gt;Login&lt;/button&gt;
+&lt;button class=&quot;btn btn-warning logout&quot;&gt;Logout&lt;/button&gt;
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L15">View Step 2 on Github</a></p>
+<h4 id="step3">Step 3:</h4>
+<h5 id="usingnunjucksincludethecreateuserform">Using nunjucks, include the create user form</h5>
+<pre><code class="language-language-http">{% include &quot;/webmaker-auth-client/create-user/create-user-form.html&quot; %}
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L21">View Step on Github</a></p>
+<h4 id="step4">Step 4:</h4>
+<h5 id="loadthepersonaincludejsscript">Load the Persona <code>include.js</code> script</h5>
+<h6 id></h6>
+<pre><code class="language-language-http">&lt;script src=&quot;https://login.persona.org/include.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L24">View Step 4 on Github</a></p>
+<h4 id="step5">Step 5:</h4>
+<h5 id="ifnotusingtheminifiedversionofwebmakerauthclientyoumustincludeeventemitterjs">If not using the minified version of webmaker-auth-client, you must include EventEmitter.js</h5>
+<pre><code class="language-language-http">&lt;script src=&quot;/bower/eventEmitter/EventEmitter.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L28">View Step 5 on Github</a></p>
+<h4 id="step6">Step 6:</h4>
+<h5 id="loadwebmakerauthclientjs">Load webmaker-auth-client.js</h5>
+<h6 id="youcanalsoloadwebmakerauthclientwithrequirejs">You can also load webmaker-auth-client with require-js</h6>
+<pre><code class="language-language-http">  &lt;script src=&quot;/bower/webmaker-auth-client/webmaker-auth-client.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L32">View Step 6 on Github</a></p>
+<h4 id="step7">Step 7:</h4>
+<h5 id="loadinthejsforsettingupwebmakerauthactionsandeventlisteners">Load in the JS for setting up webmaker-auth actions and event listeners</h5>
+<pre><code class="language-language-http">&lt;script src=&quot;/js/login-example.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/views/index.html?ref=chrisdecairos.ca#L35">View Step 7 on Github</a></p>
+<h3 id="frontendconfigurationjs">Front End Configuration (JS)</h3>
+<p>Now lets write some JavaScript that uses the webmaker-auth-client to log in a user. <a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/js/login-example.js?ref=chrisdecairos.ca">View the entire file here</a></p>
+<h4 id="step1">Step 1:</h4>
+<h5 id="instantiatethewebmakerauthclient">Instantiate the WebmakerAuthClient</h5>
+<h6 id="foralistofalloptionscheckoutthewebmakerauthclientdocumentation">For a list of all options check out the <a href="https://github.com/mozilla/webmaker-auth-client?ref=chrisdecairos.ca#configure">webmaker-auth-client documentation</a></h6>
+<pre><code class="language-language-javascript">var auth = new WebmakerAuthClient({});
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/js/login-example.js?ref=chrisdecairos.ca#L7">View Step 1 on Github</a></p>
+<h4 id="step2">Step 2:</h4>
+<h5 id="createloginlogoutanderroreventlisteners">Create login, logout and error event listeners</h5>
+<pre><code class="language-language-javascript">auth.on('login', function(data, message) {
+  usernameEl.innerHTML = data.email;
+});
+
+auth.on('logout', function() {
+  usernameEl.innerHTML = '';
+});
+
+auth.on('error', function(err) {
+  console.error(err);
+});
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/js/login-example.js?ref=chrisdecairos.ca#L10-22">View Step 2 on Github</a></p>
+<h4 id="step3">Step 3:</h4>
+<h5 id="calltheverifyfunction">Call the <code>verify</code> function</h5>
+<h6 id="verifycheckswiththeservertoseeiftheclientcurrentlyhasavalidsessionandwilltriggeralogineventorlogouteventbasedontheresult">Verify checks with the server to see if the client currently has a valid session, and will trigger a login event or logout event based on the result.</h6>
+<pre><code class="language-language-javascript">auth.verify();
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/js/login-example.js?ref=chrisdecairos.ca#L26">View Step 3 on Github</a></p>
+<h4 id="step4">Step 4:</h4>
+<h5 id="hookthelogoutandloginfunctionsuptothebuttons">Hook the <code>logout</code> and <code>login</code> functions up to the buttons</h5>
+<pre><code class="language-language-javascript">loginEl.addEventListener('click', auth.login, false);
+logoutEl.addEventListener('click', auth.logout, false);
+</code></pre>
+<p><a href="https://github.com/mozilla/webmaker-login-example/blob/481d1685997e8f628d23e7db966694b6406f42b6/public/js/login-example.js?ref=chrisdecairos.ca#L29-30">View Step 4 on Github</a></p>
+<h3 id="alldone">All Done!</h3>
+<p>The sum of all these steps is a simple app that can log in a webmaker user!</p>
+<p>Some may say that this is still a lot of work, but to be perfectly honest, the previous SSO solution was <em><strong>so bad</strong></em> that I'm certain that simply writing a guide for it would have been a massive undertaking.</p>
+<p>We're always going to be improving, so as we go, hopefully some of the rougher edges here disappear. We're always open to feedback and suggestions, so let us know what you think! And as always, <a href="https://bugzilla.mozilla.org/enter_bug.cgi?product=Webmaker&component=Login&ref=chrisdecairos.ca">file bugs</a> if there are any problems.</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Upgrading and Implementing Webmaker SSO&url=https://chrisdecairos.ca/webmaker-sso/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/webmaker-sso/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/webmaker-sso/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

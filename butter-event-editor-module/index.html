@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Butter Event Editor Module</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/butter-event-editor-module/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Butter Event Editor Module">
+    <meta property="og:description" content="I&#x27;ve spent the majority of this week working on the new Event Editor Module
+[https://webmademovies.lighthouseapp.com/projects/65733/tickets/148-write-track-event-editor-module#ticket-148-3] 
+for our re-write of Butter [http://butterapp.org/edge/].  This modules main
+purpose is to provide the developer of a custom butter application to visually
+edit Popcorn">
+    <meta property="og:url" content="https://chrisdecairos.ca/butter-event-editor-module/">
+    <meta property="article:published_time" content="2011-07-06T19:17:00.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="ButterApp">
+    <meta property="article:tag" content="Butterjs">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="webmademovies">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Butter Event Editor Module">
+    <meta name="twitter:description" content="I&#x27;ve spent the majority of this week working on the new Event Editor Module
+[https://webmademovies.lighthouseapp.com/projects/65733/tickets/148-write-track-event-editor-module#ticket-148-3] 
+for our re-write of Butter [http://butterapp.org/edge/].  This modules main
+purpose is to provide the developer of a custom butter application to visually
+edit Popcorn">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/butter-event-editor-module/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="ButterApp, Butterjs, CDOT, open-source, webmademovies">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Butter Event Editor Module",
+    "url": "https://chrisdecairos.ca/butter-event-editor-module/",
+    "datePublished": "2011-07-06T19:17:00.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "ButterApp, Butterjs, CDOT, open-source, webmademovies",
+    "description": "I&#x27;ve spent the majority of this week working on the new Event Editor Module\n[https://webmademovies.lighthouseapp.com/projects/65733/tickets/148-write-track-event-editor-module#ticket-148-3] \nfor our re-write of Butter [http://butterapp.org/edge/].  This modules main\npurpose is to provide the developer of a custom butter application to visually\nedit Popcorn Events, whether using a custom editor or a default editor built\nautomatically using the plug-in&#x27;s manifest.\n\nThe team has been working on ide",
+    "mainEntityOfPage": "https://chrisdecairos.ca/butter-event-editor-module/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-butterapp tag-butterjs tag-cdot tag-open-source tag-webmademovies">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-butterapp tag-butterjs tag-cdot tag-open-source tag-webmademovies no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2011-07-06">06 Jul 2011</time> on <a href="/tag/butterapp/">ButterApp</a> | <a href="/tag/butterjs/">Butterjs</a> | <a href="/tag/cdot/">CDOT</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/webmademovies/">webmademovies</a></span>
+
+        <h1 class="post-title">Butter Event Editor Module</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>I've spent the majority of this week working on the new <a href="https://webmademovies.lighthouseapp.com/projects/65733/tickets/148-write-track-event-editor-module?ref=chrisdecairos.ca#ticket-148-3">Event Editor Module</a> for our re-write of <a href="http://butterapp.org/edge/?ref=chrisdecairos.ca">Butter</a>.  This modules main purpose is to provide the developer of a custom butter application to visually edit Popcorn Events, whether using a custom editor or a default editor built automatically using the plug-in's manifest.</p>
+<p>The team has been working on identifying exactly how we want to structure Modules for the new Butter API.  After many conversations with <a href="http://scottdowne.wordpress.com/?ref=chrisdecairos.ca">Scott</a> about how we should have this work, today things seem a lot more clear.  Scott wrote a patch for the registerModule() method on Butter that basically allows us to instantiate the modules and pass them an options object.</p>
+<p>I've now got a simple event editor module to work on.  It's fairly basic right now, but proves that I'm on the right track. See a <a href="http://scotland.proximity.on.ca/cadecairos/butter-API/src/modules/eventEditor/test.html?ref=chrisdecairos.ca">simple demo here</a>.  What's happening here is that I set my module up to listen for butter to trigger a &quot;trackeventupdated&quot; event, which calls the beginEditing() method inside of the Editor module.  This method takes a Track Event object and a manifest as parameters.  It then determines whether or not to use a default editor or if it should automatically generate html using the manifest.  In the sample page, it generates what you see according to the manifest and throws in the values for each field in trackEvent.popcornEvent[].</p>
+<p>Its got a long way to go still but I initially just wanted to make sure that our module system was functioning the way I thought it was.</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Butter Event Editor Module&url=https://chrisdecairos.ca/butter-event-editor-module/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/butter-event-editor-module/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/butter-event-editor-module/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>
