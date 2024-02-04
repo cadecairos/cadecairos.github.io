@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>OSD700 Release 0.8</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/osd700-release-0-8/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OSD700 Release 0.8">
+    <meta property="og:description" content="This post is going to detail work I&#x27;ve done over the past two weeks.
+
+Here&#x27;s a list of all the Firefox bugs I&#x27;ve been active on:
+
+ * Bug 495040 [https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;495040] - Implement
+   playbackRate and related bits
+ * Bug 665598 [https://bugzilla.mozilla.org/show_">
+    <meta property="og:url" content="https://chrisdecairos.ca/osd700-release-0-8/">
+    <meta property="article:published_time" content="2012-03-22T23:14:03.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="audio">
+    <meta property="article:tag" content="Firefox">
+    <meta property="article:tag" content="media">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="Seneca">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="OSD700 Release 0.8">
+    <meta name="twitter:description" content="This post is going to detail work I&#x27;ve done over the past two weeks.
+
+Here&#x27;s a list of all the Firefox bugs I&#x27;ve been active on:
+
+ * Bug 495040 [https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;495040] - Implement
+   playbackRate and related bits
+ * Bug 665598 [https://bugzilla.mozilla.org/show_">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/osd700-release-0-8/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="audio, Firefox, media, Mozilla, open-source, Seneca">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "OSD700 Release 0.8",
+    "url": "https://chrisdecairos.ca/osd700-release-0-8/",
+    "datePublished": "2012-03-22T23:14:03.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "audio, Firefox, media, Mozilla, open-source, Seneca",
+    "description": "This post is going to detail work I&#x27;ve done over the past two weeks.\n\nHere&#x27;s a list of all the Firefox bugs I&#x27;ve been active on:\n\n * Bug 495040 [https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;495040] - Implement\n   playbackRate and related bits\n * Bug 665598 [https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;665598] - pref to\n   completely disable html5 video/audio elements/objects\n * Bug 665395 [https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;665395] - there\n   should be a pref to completely disable medi",
+    "mainEntityOfPage": "https://chrisdecairos.ca/osd700-release-0-8/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-audio tag-firefox tag-media tag-mozilla tag-open-source tag-seneca">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-audio tag-firefox tag-media tag-mozilla tag-open-source tag-seneca no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-03-22">22 Mar 2012</time> on <a href="/tag/audio/">audio</a> | <a href="/tag/firefox/">Firefox</a> | <a href="/tag/media/">media</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/seneca/">Seneca</a></span>
+
+        <h1 class="post-title">OSD700 Release 0.8</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>This post is going to detail work I've done over the past two weeks.</p>
+<p>Here's a list of all the Firefox bugs I've been active on:</p>
+<ul>
+	<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=495040&ref=chrisdecairos.ca" target="_blank">Bug 495040</a> - Implement playbackRate and related bits</li>
+	<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=665598&ref=chrisdecairos.ca" target="_blank">Bug 665598</a> - pref to completely disable html5 video/audio elements/objects</li>
+	<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=665395&ref=chrisdecairos.ca" target="_blank">Bug 665395</a> - there should be a pref to completely disable media including disable Audio API extension (window.Audio object)</li>
+	<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=736400&ref=chrisdecairos.ca" target="_blank">Bug 736400</a> - media.[ogg,webm,wave].enabled cannot toggle off media playback</li>
+	<li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=726904&ref=chrisdecairos.ca" target="_blank">Bug 726904</a> - nsVideoFrame::GetVideoIntrinsicSize setting wrong size</li>
+</ul>
+<h3>Implement playbackRate and related bits</h3>
+I started <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=495040&ref=chrisdecairos.ca" target="_blank">this bug</a> after <a href="http://vocamus.net/dave?ref=chrisdecairos.ca" target="_blank">Dave</a> challenged us to implement something new in Firefox, rather than only go about fixing bugs. To be honest when I took it, I knew I was getting in over my head. Despite this, I felt that I should challenge myself. I began this bug by merging in a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=495040&ref=chrisdecairos.ca#attach_406169" target="_blank">2 year old patch</a> into the current code base. Once I fixed all of the conflicts, I had the playbackRate and defaultPlaybackRate attibutes present on HTML5 media elements. I spent several days examining and getting familiar with the process of displaying video frames, but to be honest, the scope of what needed to be done was far beyond my understanding. After discussions with <a href="https://twitter.com/?ref=chrisdecairos.ca#!/chrisryanpearce" target="_blank">Chris Pearce</a>, I determined it to be the right choice to post what I had, and leave the implementation of changing playback speed to someone with more experience in that code. I wouldn't say it was for nothing, not at all. I now have a better understanding of the inner working of media elements, which is no doubt going to be useful in the future.
+<h3>pref to completely disable html5 video/audio elements/objects</h3>
+I was pointed to <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=665598&ref=chrisdecairos.ca" target="_blank">this bug</a> by Chris Pearce, after discussing the above mentioned bug. This bug wants to add a browser wide pref to disable all media types. Currently, there are prefs to disable the individual media types ( ogg, webm, wave, raw ), but no way to disable all of them at once. This one was pretty easy to find my bearings in. I added the pref "media.enabled" and added logic to disable media if the pref were enabled.When testing, I noticed that if I had played a video already, and then disabled the media type, The video would still be able to play. I filed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=736400&ref=chrisdecairos.ca" target="_blank">736400</a> based on this.
+<p>Speaking with Chris Pearce today, we agreed that this pref isn't needed. So The bug will probably be closed. On the bright side, I did file a new bug :D</p>
+<h3>there should be a pref to completely disable media including disable Audio API extension (window.Audio object)</h3>
+<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=665395&ref=chrisdecairos.ca" target="_blank">This bug</a> came to me along with the previous one. This one's looking for a way to disable writing raw audio data in JavaScript, using a user pref. By default, it would be disabled. The usefulness of this pref would be for users of Firefox who are concerned about websites playing audio using JavaScript without their permission. It can be likened to FlashBlock's disabling of Flash objects.
+<p>I've got an experimental patch in the works, but recent talks with Chris Pearce have shown me I need to change the direction I've been moving in. I will likely have a patch ready to go sometime this weekend.</p>
+<h3>media.[ogg,webm,wave].enabled cannot toggle off media playback</h3>
+I filed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=736400&ref=chrisdecairos.ca" target="_blank">this one</a> when I noticed that under specific circumstances, the user prefs to disable media types would not actually disable media. Searching for instances in the code where the pref was checked, I noticed that it was done before instantiating a decoder type. The code there appeared to be solid, and worked if a decoder had not existed previously. I realized there might be a different code path being taken if a decoder previously was instantiated. This proved true, and the problem revealed itself in the clone method of each type of decoder.
+<p>The first time a media element is created, the MIME type of its source is used to check if that type is enabled. When it is cloned however, The check is not performed. I zeroed in on the method used to clone a decoder, and found that by the time the clone method was called, the MIME type of a media was no longer available, thus making it impossible to do the same check. I determined it was then necessary to add the check for each decoder in the clone method of each decoder type. This worked perfectly. you can check out my patch here: <a href="https://bugzilla.mozilla.org/attachment.cgi?id=607031&action=diff&ref=chrisdecairos.ca">https://bugzilla.mozilla.org/attachment.cgi?id=607031&amp;action=diff</a></p>
+<h3>nsVideoFrame::GetVideoIntrinsicSize setting wrong size</h3>
+I've been working on <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=726904&ref=chrisdecairos.ca" target="_blank">this one</a> for quite a while now. You can read more about it in some of my previous posts ( <a href="https://chrisdecairos.ca/osd700-release-post-3-aka-0-6.html" target="_blank">1</a>, <a href="https://chrisdecairos.ca/osd700-release-post-0-7.html" target="_blank">2</a> ). Progress on it the past few weeks included a review of my patch, and some fixes to style in my tests. I also uploaded a <a href="https://bugzilla.mozilla.org/attachment.cgi?id=607011&action=diff&ref=chrisdecairos.ca" target="_blank">corrected patch </a>containing the binaries of images I've used. This bug is likely going to land along with <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=495040&ref=chrisdecairos.ca" target="_blank">bug 517363</a> because they both fix sizing and display issues, and one has the potential to break tests that were fixed in the other.<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=OSD700 Release 0.8&url=https://chrisdecairos.ca/osd700-release-0-8/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/osd700-release-0-8/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/osd700-release-0-8/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

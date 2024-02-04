@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>OSD700 - A Retrospect</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/osd700-a-retrospect/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OSD700 - A Retrospect">
+    <meta property="og:description" content="As this semester comes to a close, I&#x27;d like to take some time to look back on my
+experiences in open source development. To begin, I&#x27;d like to go back to OSD600
+[https://cs.senecac.on.ca/course/osd600], the the prerequisite to taking this 
+OSD700 [https://cs.senecac.on.">
+    <meta property="og:url" content="https://chrisdecairos.ca/osd700-a-retrospect/">
+    <meta property="article:published_time" content="2012-04-11T23:20:45.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="Firefox">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="open">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="Seneca">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="OSD700 - A Retrospect">
+    <meta name="twitter:description" content="As this semester comes to a close, I&#x27;d like to take some time to look back on my
+experiences in open source development. To begin, I&#x27;d like to go back to OSD600
+[https://cs.senecac.on.ca/course/osd600], the the prerequisite to taking this 
+OSD700 [https://cs.senecac.on.">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/osd700-a-retrospect/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Firefox, Mozilla, open, open-source, Seneca">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "OSD700 - A Retrospect",
+    "url": "https://chrisdecairos.ca/osd700-a-retrospect/",
+    "datePublished": "2012-04-11T23:20:45.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "Firefox, Mozilla, open, open-source, Seneca",
+    "description": "As this semester comes to a close, I&#x27;d like to take some time to look back on my\nexperiences in open source development. To begin, I&#x27;d like to go back to OSD600\n[https://cs.senecac.on.ca/course/osd600], the the prerequisite to taking this \nOSD700 [https://cs.senecac.on.ca/course/osd700] course.\n\nWhen I first started in OSD600, I knew next to nothing about the open source\ncommunity, but I was eager to learn more about it ( because I dislike paying for\nsoftware :P ). In the span of a few weeks I h",
+    "mainEntityOfPage": "https://chrisdecairos.ca/osd700-a-retrospect/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-firefox tag-mozilla tag-open tag-open-source tag-seneca">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-firefox tag-mozilla tag-open tag-open-source tag-seneca no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-04-11">11 Apr 2012</time> on <a href="/tag/firefox/">Firefox</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/open/">open</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/seneca/">Seneca</a></span>
+
+        <h1 class="post-title">OSD700 - A Retrospect</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>As this semester comes to a close, I'd like to take some time to look back on my experiences in open source development. To begin, I'd like to go back to <a href="https://cs.senecac.on.ca/course/osd600?ref=chrisdecairos.ca">OSD600</a>, the the prerequisite to taking this <a href="https://cs.senecac.on.ca/course/osd700?ref=chrisdecairos.ca">OSD700</a> course.</p>
+<p>When I first started in OSD600, I knew next to nothing about the open source community, but I was eager to learn more about it ( because I dislike paying for software :P ). In the span of a few weeks I had to get familiar with the tools of the trade ( IRC, Git and GitHub, Version tracking, etc ). I created a now obsolete tool called <a href="http://matrix.senecac.on.ca/~cadecairos/VideoSequencer/0.3/test.html?ref=chrisdecairos.ca">VideoSequencer</a>, using JavaScript. It was designed to take any number of HTML5 videos, and string them together one after the other, as if they were one video. While the tool never saw the light of day, I thoroughly enjoyed the time I spent working on it, and the freedom that having the source open to all gave me when asking for advice on how to solve a problem. I finished OSD600 with a new respect for the open source philosophy and a solid knowledge of the tools.</p>
+<p>After OSD600 ended, I began a a series of three consecutive co-op work terms, two of them placing me at CDOT, where I was able to apply the skill I developed in OSD600 to a new level. I became part of a community of highly skilled developers working on Popcorn.js, Butter.js and Popcorn Maker. The experience I gained from this had me more than ready to take it up a notch when I signed up for OSD700 late last year. Because I was already familiar with the Popcorn.js community, I chose to get myself involved in Firefox development.</p>
+<p>When the semester began, I did initially feel a little nervous. I had been told time and time again that the Firefox source code was large and complex, and I knew I'd face plenty of challenges. Humph pointed me towards a bug that looked like a good starter challenge. <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca">The bug</a> was for a problem with setting the mozFrameBufferLength attribute on media elements. I spent dozens upon dozens of hours tracing through code, debugging, tinkering and waiting for builds to finish all trying to fix this bug. I probably learned the most important lesson on this bug: Ask for help! I finally solved the bug by blogging about it and by seeking help on IRC.</p>
+<p>Another important lesson was taught to me while working on this bug. Although I'd put so much time into it, the fix was incredibly simple. I added a single missing keyword to a function. Even the most simple of solutions can evade someone who's not familiar with a piece of code.</p>
+<p>Following that experience I found myself working on a bug related to scaling poster frames. This was also an area I had no experience in. I did some initial investigation into the code, looking for places where the current poster frame drawing was handled. My familiarity with the code was growing, especially after the time I spent on my first bug, looking through the media code. I did my best to build on what I'd learned on my first bug. I blogged about my issues and asked questions on IRC. I was eventually able to make a work in progress patch and throw it up for some feedback.</p>
+<p>It was around this point where I learned another thing about programming on a project of Firefox's size. When working on a piece of code and testing specific features, 9 times out of 10 you'll end up filing a new bug. I filed a bug based on my poster frame scaling bug, when I discovered that Firefox wasn't behaving according to spec when sizing a video element as a page loads.</p>
+<p>I've since iterated many times on that bug, going though over 10 versions of the patch. I've yet to complete it though. The reason for this is simple: ref tests. Ref tests compare a page to a reference image, ensuring output stays consistent. My problem lies in the fact that I'm changing the natural behaviour of the video element, which had ref tests that enforced the incorrect behaviour. I've been trying my best to get them to pass, but between the poster frame scaling and the video resizing bug, I've been foiled at every turn.</p>
+<p>My experience developing for  Firefox has been a wonderful one. I've been able to contribute to and land code in a widely used application. I've been able to resolve several issues holding the browser back, making it better than ever, and that gives me a real sense of accomplishment. I've learned a lot about collaborating on a project the size of Firefox, and the importance of communication when you're lost in a bug.</p>
+<p>I really enjoy spending time hacking on this code. I'm going to finish the bugs I've been working on even if they don't land before the semester ends. But with some luck and hard work I might be able to get them working in time. A lot of the courses I've taken at Seneca have taught me the things I need to know. Things like object oriented design, algorithms, Database analysis and design, etc. But only OSD700 gave me a real world experience. I've been able to communicate and collaborate with real developers working on a real product. I don't think I could have found this at any other educational institution in the province. When I look back on the time I spent as a Seneca student, I know that I will think of the amazing opportunities that were given to me, especially while in OSD700.</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=OSD700 - A Retrospect&url=https://chrisdecairos.ca/osd700-a-retrospect/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/osd700-a-retrospect/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/osd700-a-retrospect/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

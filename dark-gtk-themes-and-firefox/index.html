@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Fixing Dark GTK Themes In Firefox</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <meta name="description" content="How to fix poorly styled input elements in Firefox when using dark themes in Linux">
+    <link rel="canonical" href="https://chrisdecairos.ca/dark-gtk-themes-and-firefox/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Fixing Dark GTK Themes In Firefox">
+    <meta property="og:description" content="How to fix poorly styled input elements in Firefox when using dark themes in Linux">
+    <meta property="og:url" content="https://chrisdecairos.ca/dark-gtk-themes-and-firefox/">
+    <meta property="og:image" content="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png">
+    <meta property="article:published_time" content="2015-08-06T03:04:44.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="Firefox">
+    <meta property="article:tag" content="GTK">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="dark themes">
+    <meta property="article:tag" content="stylish">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fixing Dark GTK Themes In Firefox">
+    <meta name="twitter:description" content="How to fix poorly styled input elements in Firefox when using dark themes in Linux">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/dark-gtk-themes-and-firefox/">
+    <meta name="twitter:image" content="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Firefox, GTK, Linux, dark themes, stylish">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    <meta property="og:image:width" content="550">
+    <meta property="og:image:height" content="294">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Fixing Dark GTK Themes In Firefox",
+    "url": "https://chrisdecairos.ca/dark-gtk-themes-and-firefox/",
+    "datePublished": "2015-08-06T03:04:44.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png",
+        "width": 550,
+        "height": 294
+    },
+    "keywords": "Firefox, GTK, Linux, dark themes, stylish",
+    "description": "I&#x27;ve been using Linux for some time now, and I&#x27;ve always been partial to dark\nthemes. They&#x27;re easy on the eyes, especially when you spend most of your day\nworking on a computer. The trouble is, Firefox doesn&#x27;t play very nicely with\nthese themes. It seems like it tries to borrow the theme&#x27;s colour palette for\nit&#x27;s user-agent style sheets.\n\nWhile that seems great and all, it becomes impossible to use your browser when\ninput elements (which seem to be the elements affected by dark themes) get dark\n",
+    "mainEntityOfPage": "https://chrisdecairos.ca/dark-gtk-themes-and-firefox/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-firefox tag-gtk tag-linux tag-dark-themes tag-stylish">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-firefox tag-gtk tag-linux tag-dark-themes tag-stylish">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2015-08-05">05 Aug 2015</time> on <a href="/tag/firefox/">Firefox</a> | <a href="/tag/gtk/">GTK</a> | <a href="/tag/linux/">Linux</a> | <a href="/tag/dark-themes/">dark themes</a> | <a href="/tag/stylish/">stylish</a></span>
+
+        <h1 class="post-title">Dark GTK Themes and Firefox</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>I've been using Linux for some time now, and I've always been partial to dark themes. They're easy on the eyes, especially when you spend most of your day working on a computer. The trouble is, Firefox doesn't play very nicely with these themes. It seems like it tries to borrow the theme's colour palette for it's user-agent style sheets.</p>
+<p>While that seems great and all, it becomes impossible to use your browser when input elements (which seem to be the elements affected by dark themes) get dark backgrounds with dark text.</p>
+<p>For example, here's what my blog settings page looks like without a fix applied:<br>
+<img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png" alt="unusable inputs" loading="lazy"></p>
+<p>To fix this problem, I installed a Firefox add-on named <a href="https://addons.mozilla.org/en-US/firefox/addon/stylish?ref=chrisdecairos.ca">Stylish</a>, which allows you to write custom stylesheets to apply to the browser chrome and the content of websites.</p>
+<p>I added a small style sheet to stylish:</p>
+<iframe src="https://gist.github.com/cadecairos/e1a22fc31faaa813693a.pibb" class="post-iframe"></iframe>
+<p>and now I get:</p>
+<p><img src="https://chrisdecairos.ca/content/images/2017/01/XKYCOqN.png" alt="yay, inputs" loading="lazy"></p>
+<p>One problem I'm still running into is that select elements aren't reflecting the fixed background colour settings... If you have a fix or can figure one out, I would love to hear from you!</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Dark GTK Themes and Firefox&url=https://chrisdecairos.ca/dark-gtk-themes-and-firefox/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/dark-gtk-themes-and-firefox/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/dark-gtk-themes-and-firefox/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

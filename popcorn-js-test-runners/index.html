@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Upgrading Popcorn.js Test Runners</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/popcorn-js-test-runners/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Upgrading Popcorn.js Test Runners">
+    <meta property="og:description" content="Late last week I began working on something that we&#x27;d needed on Popcorn
+[http://mozillapopcorn.org] since even before I started at CDOT
+[cdot.senecac.on.ca] last May. For the longest time, when testing for a release,
+we would have to manually click through all of the plug-in, player,">
+    <meta property="og:url" content="https://chrisdecairos.ca/popcorn-js-test-runners/">
+    <meta property="article:published_time" content="2012-05-11T13:20:05.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="automated testing">
+    <meta property="article:tag" content="awesome">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="Mozilla Foundation">
+    <meta property="article:tag" content="Mozilla-popcorn">
+    <meta property="article:tag" content="mozillapopcorn">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="popcorn.js">
+    <meta property="article:tag" content="Seneca">
+    <meta property="article:tag" content="unit tests">
+    <meta property="article:tag" content="video">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Upgrading Popcorn.js Test Runners">
+    <meta name="twitter:description" content="Late last week I began working on something that we&#x27;d needed on Popcorn
+[http://mozillapopcorn.org] since even before I started at CDOT
+[cdot.senecac.on.ca] last May. For the longest time, when testing for a release,
+we would have to manually click through all of the plug-in, player,">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/popcorn-js-test-runners/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="automated testing, awesome, CDOT, Mozilla, Mozilla Foundation, Mozilla-popcorn, mozillapopcorn, open-source, popcorn.js, Seneca, unit tests, video">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Upgrading Popcorn.js Test Runners",
+    "url": "https://chrisdecairos.ca/popcorn-js-test-runners/",
+    "datePublished": "2012-05-11T13:20:05.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "automated testing, awesome, CDOT, Mozilla, Mozilla Foundation, Mozilla-popcorn, mozillapopcorn, open-source, popcorn.js, Seneca, unit tests, video",
+    "description": "Late last week I began working on something that we&#x27;d needed on Popcorn\n[http://mozillapopcorn.org] since even before I started at CDOT\n[cdot.senecac.on.ca] last May. For the longest time, when testing for a release,\nwe would have to manually click through all of the plug-in, player, parser and\nmodule unit tests. This is a very tedious process, as one might expect. Now, we\ndid have a rudimentary test runner for the plug-in directory, but it didn&#x27;t\nrecord and tally any test results. This meant th",
+    "mainEntityOfPage": "https://chrisdecairos.ca/popcorn-js-test-runners/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-automated-testing tag-awesome tag-cdot tag-mozilla tag-mozilla-foundation tag-mozilla-popcorn tag-mozillapopcorn tag-open-source tag-popcorn-js tag-seneca tag-unit-tests tag-video">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-automated-testing tag-awesome tag-cdot tag-mozilla tag-mozilla-foundation tag-mozilla-popcorn tag-mozillapopcorn tag-open-source tag-popcorn-js tag-seneca tag-unit-tests tag-video no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-05-11">11 May 2012</time> on <a href="/tag/automated-testing/">automated testing</a> | <a href="/tag/awesome/">awesome</a> | <a href="/tag/cdot/">CDOT</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/mozilla-foundation/">Mozilla Foundation</a> | <a href="/tag/mozilla-popcorn/">Mozilla-popcorn</a> | <a href="/tag/mozillapopcorn/">mozillapopcorn</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/popcorn-js/">popcorn.js</a> | <a href="/tag/seneca/">Seneca</a> | <a href="/tag/unit-tests/">unit tests</a> | <a href="/tag/video/">video</a></span>
+
+        <h1 class="post-title">Upgrading Popcorn.js Test Runners</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>Late last week I began working on something that we'd needed on <a href="http://mozillapopcorn.org/?ref=chrisdecairos.ca" target="_blank">Popcorn</a> since even before I started at <a href="cdot.senecac.on.ca" target="_blank">CDOT</a> last May. For the longest time, when testing for a release, we would have to manually click through all of the plug-in, player, parser and module unit tests. This is a very tedious process, as one might expect. Now, we did have a rudimentary test runner for the plug-in directory, but it didn't record and tally any test results. This meant that if you looked away for too long, you could miss a test's result entirely.</p>
+<p>I began my task with several key goals for the task:</p>
+<ol>
+	<li>The test runner should look &amp; feel like <a href="http://docs.jquery.com/QUnit?ref=chrisdecairos.ca" target="_blank">QUnit</a> (QUnit is the JS testing framework we use).</li>
+	<li>The test runner should provide results about each test ( Passed, Failed and Total Run ).</li>
+	<li>There should be a link to each individual test, so that the user can navigate to it in the event of a failure.</li>
+	<li>There should be a way to view more information about each test (I.E. expand each test result to view more detail.)</li>
+</ol>
+<!--more-->
+<h3>Look and Feel</h3>
+Making the test runner look and feel like QUnit was simple to accomplish. I copied the core unit test file into a new one, and stripped out the cruft. figuring life would be easier, I just kept the default QUnit CSS file. I then added an iFrame to the page for loading the test pages. From that point on, I needed to make sure that I built the results properly in my JavaScript code, apply the correct classes, and append them to the page. If all went well it'd work perfectly.
+<h3>Building the Test Runner</h3>
+QUnit <a href="http://docs.jquery.com/QUnit?ref=chrisdecairos.ca#Integration_into_Browser_Automation_Tools" target="_blank">provides a mechanism to define methods</a>, which, at certain points in the testing process, are called. An example of this is `testDone`. When a block of assertions completes, QUnit will call the `testDone` method. I took advantage of this by creating a script called `popcorn.inject.js`, which defines two methods: `testDone` and `done`. The latter of the two is called on the completion of all assertions and tests on a QUnit page. In each of these methods, you receive data about the tests that are passing and failing. Using `postMessage`, I can push the results to the iFrame's `parent window`. I made sure that this won't execute if there's no parent window, in the event the test is run individually.
+<p>The structure of the test runner is fairly straight forward and simple. I made an array of JavaScript objects that describe each test. Here's what it looks like:</p>
+<pre><code>This code sample was lost because wordpress
+</code></pre>
+<p>On page load the runner attaches a <code>postMessage</code> handler to the iFrame. The runner will then iterate over the array of objects one at a time. It loads the first test into the iFrame, kick-starting the entire process. As the test in the iFrame executes, it posts messages back to the parent window. My <code>postMessage</code> handler will detect whether the message is a <code>testDone</code> or a <code>done</code> message type. If the message is <code>testDone</code>, it pushes the results from it onto an array. When it receives the <code>done</code> message, It will build the necessary elements based on the array of data collected from <code>testDone</code> events. It then appends them to an outer element, that contains totals about how many tests passed and failed, along with the time it took to ran the tests. These totals are added to global totals I created ( Not global as in attached to window, but global to the test runner :P ), which track passes, fails, totals and run time across all tests that the runner executes. Once it's finished building the result element, it appends it to the test page, and loads the next test in the array. When it has exhausted all of the defined tests, it will output the global results of all run tests, and the total time it took to complete everything.</p>
+<p>Once all of this was completed and working, I decided to go one step further in my work. Not only did I create a plugin test runner, but I was able to create a test runner for every area of our code. That includes runners for Parsers, Players, and Modules. And for the first time ever, a test runner for <strong>all 1600+ tests in the project</strong>!</p>
+<p>Below I've attached screenshots of the before and after transformation of the test runner (click to enlarge)</p>
+<p>[caption id=&quot;attachment_241&quot; align=&quot;alignnone&quot; width=&quot;400&quot;]<a href="https://chrisdecairos.ca/content/images/2012/05/croppedBefore.png" target="_blank"><img class=" wp-image-241   " style="position: relative; border: 2px solid black;" title="Old Test Runner" src="https://chrisdecairos.ca/content/images/2012/05/croppedBefore-300x164.png" alt width="400" height="218"></a> This is what the test runner used to look like[/caption]</p>
+<p>[caption id=&quot;attachment_240&quot; align=&quot;alignnone&quot; width=&quot;400&quot;]<a href="https://chrisdecairos.ca/content/images/2012/05/croppedAfter.png" target="_blank"><img class=" wp-image-240    " style="position: relative; border: 2px solid black;" title="New Test Runner" src="https://chrisdecairos.ca/content/images/2012/05/croppedAfter-300x163.png" alt width="400" height="218"></a> This is the new Test Runner :D[/caption]</p>
+<h3>What Does This Mean?</h3>
+The implications of the work I've done here are pretty significant. By implementing these test runners, the time spent manually testing for releases should drop dramatically. For example, I remember many releases where I had to navigate between the eight parser unit tests manually for at least 4 browsers, on multiple platforms. It was tedious work, for sure. But with the new parser test runner, you can automatically run all the parser tests in 4-8 seconds, and have the results reported back to you cleanly and efficiently.
+<p>I really hope the community loves the new test runners, I know I already do! Moving forward, I will focus my efforts on developing the integrated testing system for Popcorn.</p>
+<p>Cheers!</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Upgrading Popcorn.js Test Runners&url=https://chrisdecairos.ca/popcorn-js-test-runners/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/popcorn-js-test-runners/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/popcorn-js-test-runners/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

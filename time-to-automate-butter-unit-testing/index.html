@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Time to Automate Butter Unit Testing</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/time-to-automate-butter-unit-testing/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Time to Automate Butter Unit Testing">
+    <meta property="og:description" content="For the past 5 weeks, the Popcorn team has been churning out hundreds upon
+hundreds of tickets in preparation for last weekends&#x27; Popcorn Story Camp
+[http://maker.mozillapopcorn.org/storycamp/]. While ultimately satisfying that
+we achieved our goal, every team member was absolutely drained of all energy by
+the end">
+    <meta property="og:url" content="https://chrisdecairos.ca/time-to-automate-butter-unit-testing/">
+    <meta property="article:published_time" content="2012-06-28T14:16:38.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="automated testing">
+    <meta property="article:tag" content="butter">
+    <meta property="article:tag" content="Butter.js">
+    <meta property="article:tag" content="ButterApp">
+    <meta property="article:tag" content="Butterjs">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="Mozilla Foundation">
+    <meta property="article:tag" content="Mozilla-popcorn">
+    <meta property="article:tag" content="mozillapopcorn">
+    <meta property="article:tag" content="open">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="popcorn.js">
+    <meta property="article:tag" content="Seneca">
+    <meta property="article:tag" content="unit tests">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Time to Automate Butter Unit Testing">
+    <meta name="twitter:description" content="For the past 5 weeks, the Popcorn team has been churning out hundreds upon
+hundreds of tickets in preparation for last weekends&#x27; Popcorn Story Camp
+[http://maker.mozillapopcorn.org/storycamp/]. While ultimately satisfying that
+we achieved our goal, every team member was absolutely drained of all energy by
+the end">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/time-to-automate-butter-unit-testing/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="automated testing, butter, Butter.js, ButterApp, Butterjs, CDOT, Mozilla, Mozilla Foundation, Mozilla-popcorn, mozillapopcorn, open, open-source, popcorn.js, Seneca, unit tests">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Time to Automate Butter Unit Testing",
+    "url": "https://chrisdecairos.ca/time-to-automate-butter-unit-testing/",
+    "datePublished": "2012-06-28T14:16:38.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "automated testing, butter, Butter.js, ButterApp, Butterjs, CDOT, Mozilla, Mozilla Foundation, Mozilla-popcorn, mozillapopcorn, open, open-source, popcorn.js, Seneca, unit tests",
+    "description": "For the past 5 weeks, the Popcorn team has been churning out hundreds upon\nhundreds of tickets in preparation for last weekends&#x27; Popcorn Story Camp\n[http://maker.mozillapopcorn.org/storycamp/]. While ultimately satisfying that\nwe achieved our goal, every team member was absolutely drained of all energy by\nthe end of last week. It&#x27;s something we&#x27;re looking to never repeat. In order to\nprevent another month of endless ticket queues, regressions, hot fixes and late\nnights at the office, we&#x27;re going",
+    "mainEntityOfPage": "https://chrisdecairos.ca/time-to-automate-butter-unit-testing/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-automated-testing tag-butter tag-butter-js tag-butterapp tag-butterjs tag-cdot tag-mozilla tag-mozilla-foundation tag-mozilla-popcorn tag-mozillapopcorn tag-open tag-open-source tag-popcorn-js tag-seneca tag-unit-tests">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-automated-testing tag-butter tag-butter-js tag-butterapp tag-butterjs tag-cdot tag-mozilla tag-mozilla-foundation tag-mozilla-popcorn tag-mozillapopcorn tag-open tag-open-source tag-popcorn-js tag-seneca tag-unit-tests no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-06-28">28 Jun 2012</time> on <a href="/tag/automated-testing/">automated testing</a> | <a href="/tag/butter/">butter</a> | <a href="/tag/butter-js/">Butter.js</a> | <a href="/tag/butterapp/">ButterApp</a> | <a href="/tag/butterjs/">Butterjs</a> | <a href="/tag/cdot/">CDOT</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/mozilla-foundation/">Mozilla Foundation</a> | <a href="/tag/mozilla-popcorn/">Mozilla-popcorn</a> | <a href="/tag/mozillapopcorn/">mozillapopcorn</a> | <a href="/tag/open/">open</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/popcorn-js/">popcorn.js</a> | <a href="/tag/seneca/">Seneca</a> | <a href="/tag/unit-tests/">unit tests</a></span>
+
+        <h1 class="post-title">Time to Automate Butter Unit Testing</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>For the past 5 weeks, the Popcorn team has been churning out hundreds upon hundreds of tickets in preparation for last weekends' <a href="http://maker.mozillapopcorn.org/storycamp/?ref=chrisdecairos.ca" target="_blank">Popcorn Story Camp</a>. While ultimately satisfying that we achieved our goal, every team member was absolutely drained of all energy by the end of last week. It's something we're looking to never repeat. In order to prevent another month of endless ticket queues, regressions, hot fixes and late nights at the office, we're going to try to examine our processes and re-write our roadmap to 1.0. By putting together a new roadmap, we'll be able to look back at what we've achieved since January and set clear and attainable goals for each of our remaining milestones.</p>
+<p>This project is an amazing one, and our app is ground breaking, and I'm sure every one of us is immensely proud of what we've created. But there's one thing we are severely lacking which would help us to stand 100% behind our code. That missing piece is unit testing. We do have some unit tests, but they cover a very small slice of code. The core of the problem is that we're not emphasizing the need for tests enough. We've been landing feature after feature without writing a single unit test to ensure they work, and do not break in the future. Due to that failure in demanding tests be provided, we get burned over and over again when a feature is modified or expanded, and breaks previous functionality.</p>
+<!--more-->
+<p>I've been tasked to assist in changing this &quot;tests are optional&quot; culture we've grown to hate so much. I won't be focusing on writing tests, and I won't be checking each commit for tests. What I am going to do will not only enforce that every single commit has a full suite of tests run on multiple browsers and multiple operating systems, It will also encourage our developers, myself included, to run the tests <strong>before</strong> we try to merge the code into our master branch.</p>
+<p>This system will rely on a couple of different components. The first component will be <a href="https://github.com/arturadib/botio?ref=chrisdecairos.ca" target="_blank">Bot.io</a> . Bot.io is a &quot;Fully scriptable build/test bot for Github projects&quot;. We currently use this tool in our Butter pull requests for previewing the app live and for running JSHint and CSS Lint on our code. I'm going to be creating new command scripts that will interface with the second component of the system in order to queue unit test runs on specific branches of our code.</p>
+<p>The second component will be <a href="https://github.com/jquery/testswarm/?ref=chrisdecairos.ca" target="_blank">Test Swarm</a>. Test Swarm provides &quot;Distributed continuous integration for Javascript&quot;. For example, I will enable a whitelisted developer to comment on a pull request: &quot;/botio try&quot; and botio will command the swarm to queue unit tests on all of it's connected clients. Clients are simply browsers that I will set up in Virtual machines that will run any unit tests that the swarm has available. Eventually, I wish to expand on the syntax, so something like &quot;/botio try -tests {type}&quot; will tell botio to only ask the swarm to run the core unit tests. This could even be expanded to target specific browsers and platforms.</p>
+<p>To make the above possible, I'll need to efficiently manage my time and set goals for myself. Here it goes:</p>
+<ul>
+	<li><strong>Bot.io</strong>
+<ul>
+	<li>Write command scripts</li>
+	<li>When code is merged into master, it should trigger botio to tell the swarm to run all tests
+<ul>
+	<li>explore if I can post in the related pull request, a link to the new job</li>
+</ul>
+</li>
+	<li>Explore possibility for having botio post if tests fail</li>
+	<li>Add Try command for on demand test runs.</li>
+</ul>
+</li>
+	<li><strong>Test Swarm</strong>
+<ul>
+	<li>Creation of user accounts and public joining of the swarm needs to be disabled</li>
+	<li>Only Botio will have the credentials to run Test Swarm jobs</li>
+</ul>
+</li>
+	<li><strong>Servers and  Test Environments</strong>
+<ul>
+	<li>Most of the work is done</li>
+	<li>All three servers will need to have VMs with different browsers running.</li>
+	<li>Performance of these servers and their respective VM's will need to be monitored.</li>
+	<li>Small chance we might need more test machines for better coverage and to distribute the work load.</li>
+</ul>
+</li>
+	<li><strong>Cleanup Jobs</strong>
+<ul>
+	<li>Disk space is limited, and Butter and Popcorn Maker will quickly eat it up, so cron jobs will need to be set up to run several times daily.
+<ul>
+	<li>They will delete any folders and files that are over 24 hours old on the botio machine and on the Test Swarm machine.</li>
+	<li>Might make sense to have one cron job run on botio, and command it to tell the swarm to clean up (synchronize jobs)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+I'll no doubt need to solve more problems than the ones listed, but for now I feel the above outline the biggest and most crucial things I should focus on. I'm going to go ahead and commit now to giving brief and regular updates on my progress. I can't wait to get started!
+<p>Thanks for reading!</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Time to Automate Butter Unit Testing&url=https://chrisdecairos.ca/time-to-automate-butter-unit-testing/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/time-to-automate-butter-unit-testing/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/time-to-automate-butter-unit-testing/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

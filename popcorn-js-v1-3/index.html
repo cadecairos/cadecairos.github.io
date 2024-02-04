@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Popcorn.js v1.3</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/popcorn-js-v1-3/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Popcorn.js v1.3">
+    <meta property="og:description" content="We&#x27;ve just released Popcorn.js 1.3
+[https://github.com/mozilla/popcorn-js/zipball/v1.3]!
+[http://popcornjs.org]It&#x27;s been over 4 months since 1.2 and we&#x27;ve resolved many
+tickets over that time period. One of the reasons it&#x27;s taken so long is that
+much of the team and">
+    <meta property="og:url" content="https://chrisdecairos.ca/popcorn-js-v1-3/">
+    <meta property="article:published_time" content="2012-07-25T12:56:41.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="audio">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="JavaScript">
+    <meta property="article:tag" content="media">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="Mozilla Foundation">
+    <meta property="article:tag" content="mozillapopcorn">
+    <meta property="article:tag" content="open">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="popcorn.js">
+    <meta property="article:tag" content="release">
+    <meta property="article:tag" content="Seneca">
+    <meta property="article:tag" content="video">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Popcorn.js v1.3">
+    <meta name="twitter:description" content="We&#x27;ve just released Popcorn.js 1.3
+[https://github.com/mozilla/popcorn-js/zipball/v1.3]!
+[http://popcornjs.org]It&#x27;s been over 4 months since 1.2 and we&#x27;ve resolved many
+tickets over that time period. One of the reasons it&#x27;s taken so long is that
+much of the team and">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/popcorn-js-v1-3/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="audio, CDOT, JavaScript, media, Mozilla, Mozilla Foundation, mozillapopcorn, open, open-source, popcorn.js, release, Seneca, video">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Popcorn.js v1.3",
+    "url": "https://chrisdecairos.ca/popcorn-js-v1-3/",
+    "datePublished": "2012-07-25T12:56:41.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "audio, CDOT, JavaScript, media, Mozilla, Mozilla Foundation, mozillapopcorn, open, open-source, popcorn.js, release, Seneca, video",
+    "description": "We&#x27;ve just released Popcorn.js 1.3\n[https://github.com/mozilla/popcorn-js/zipball/v1.3]!\n[http://popcornjs.org]It&#x27;s been over 4 months since 1.2 and we&#x27;ve resolved many\ntickets over that time period. One of the reasons it&#x27;s taken so long is that\nmuch of the team and community has been focused on our development of Butter &amp;\nPopcorn Maker [http://mozillapopcorn.org/popcorn-maker/]. This release brings a\nton of bug fixes and several new features. There have also been some structural\nmodification of",
+    "mainEntityOfPage": "https://chrisdecairos.ca/popcorn-js-v1-3/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-audio tag-cdot tag-javascript tag-media tag-mozilla tag-mozilla-foundation tag-mozillapopcorn tag-open tag-open-source tag-popcorn-js tag-release tag-seneca tag-video">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-audio tag-cdot tag-javascript tag-media tag-mozilla tag-mozilla-foundation tag-mozillapopcorn tag-open tag-open-source tag-popcorn-js tag-release tag-seneca tag-video no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-07-25">25 Jul 2012</time> on <a href="/tag/audio/">audio</a> | <a href="/tag/cdot/">CDOT</a> | <a href="/tag/javascript/">JavaScript</a> | <a href="/tag/media/">media</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/mozilla-foundation/">Mozilla Foundation</a> | <a href="/tag/mozillapopcorn/">mozillapopcorn</a> | <a href="/tag/open/">open</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/popcorn-js/">popcorn.js</a> | <a href="/tag/release/">release</a> | <a href="/tag/seneca/">Seneca</a> | <a href="/tag/video/">video</a></span>
+
+        <h1 class="post-title">Popcorn.js v1.3</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><h2>We've just released <a href="https://github.com/mozilla/popcorn-js/zipball/v1.3?ref=chrisdecairos.ca" target="_blank">Popcorn.js 1.3</a>!</h2>
+<a href="http://popcornjs.org/?ref=chrisdecairos.ca"><img class="aligncenter size-medium wp-image-347" title="popcorn-logo" src="https://chrisdecairos.ca/content/images/2012/07/popcorn-logo-300x228.png" alt width="300" height="228"></a>
+<p>It's been over 4 months since 1.2 and we've resolved many tickets over that time period. One of the reasons it's taken so long is that much of the team and community has been focused on our development of <a href="http://mozillapopcorn.org/popcorn-maker/?ref=chrisdecairos.ca" target="_blank">Butter &amp; Popcorn Maker</a>. This release brings a ton of bug fixes and several new features. There have also been some structural modification of the repo that I will go over.</p>
+<!--more-->
+<p>Lets get down to the stats:</p>
+<p>Total tickets: 143</p>
+<p>Resolved tickets: 18</p>
+<p>Staged Tickets: 125</p>
+<p>Not too bad I would say, that's a solid size for a release that was on the back burner for several months.</p>
+<p>Some of the newest features in this release include:</p>
+<ul>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/478?ref=chrisdecairos.ca" target="_blank">#478</a> - New HTML5 Soundcloud player:New HTML5 Soundcloud player</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/915?ref=chrisdecairos.ca" target="_blank">#915</a> - MediaSpawner Plugin</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/981?ref=chrisdecairos.ca" target="_blank">#981</a> - Stamen Tile support in Google Maps plugin</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/990?ref=chrisdecairos.ca" target="_blank">#990</a> - One time track events using a "once" attribute</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1011?ref=chrisdecairos.ca" target="_blank">#1011</a> &amp; <a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1089?ref=chrisdecairos.ca" target="_blank">#1089</a>  - New Text plugin is a hybrid of footnote and subtitle</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1015?ref=chrisdecairos.ca" target="_blank">#1015</a>  -Plugin time ranges</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1037?ref=chrisdecairos.ca" target="_blank">#1037</a> - Standard element query function Popcorn.dom.find()</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1045?ref=chrisdecairos.ca" target="_blank">#1045</a> - A new test runner for all the projects' unit tests</li>
+	<li><a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1064?ref=chrisdecairos.ca" target="_blank">#1064</a> - "attrchange" Event for popcorn instances</li>
+	<li> <a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1084?ref=chrisdecairos.ca" target="_blank">#1084</a> - A new cue API that allows modifications after a cue has been set</li>
+</ul>
+That's a lot of cool new stuff! You can see our full changelog <a href="https://github.com/mozilla/popcorn-js/blob/master/CHANGELOG.md?ref=chrisdecairos.ca#13-release---july-24-2012" target="_blank">here</a>.
+<p>We've also gone and done something we needed to do for a long, long time. A bunch of plugins have been <a href="https://webmademovies.lighthouseapp.com/projects/63272/tickets/1225?ref=chrisdecairos.ca" target="_blank">moved</a> from the plugins directory into an &quot;unsupported&quot; directory. We will not prioritize the development of these plugins any longer, and they will be just provided &quot;as-is&quot;. This move has been made to help us put more focus on the core plugins that we want to be available to Popcorn Maker. Plugins that have been moved are:</p>
+<ul>
+	<li>attribution</li>
+	<li>facebook</li>
+	<li>gml</li>
+	<li>lastfm</li>
+	<li>linkedin</li>
+	<li>lowerthird</li>
+	<li>processing</li>
+	<li>rdio</li>
+	<li>tagthisperson</li>
+	<li>tumblr</li>
+</ul>
+We've still got a lot of work to do on our <a href="popcornjs.org/popcorn-docs/" target="_blank">documentation</a>, time's a resource we don't have a lot of these days in Popcorn-land. But as always, we've got a very active <a href="https://mail.mozilla.org/listinfo/community-popcorn?ref=chrisdecairos.ca" target="_blank">community mailing list</a> and <a href="https://lists.mozilla.org/listinfo/dev-popcorn?ref=chrisdecairos.ca" target="_blank">Developer Mailing List</a>. You can also talk to us developers on IRC on <a href="irc://irc.mozilla.org/popcorn" target="_blank">moznet in #popcorn</a>. There's always someone in there between 9AM and 6PM EST and you may find others lurking in the channel outside those times. If you'd like to help us document, or want to contribute to the development of Popcorn feel free to ask on the mailing lists or on IRC, and visit our <a href="https://webmademovies.lighthouseapp.com/projects/63272-popcornjs/overview?ref=chrisdecairos.ca" target="_blank">public bug tracker</a> ( an account is needed to participate in the development, but bugs can be filed anonymously ).
+<p>Some important links:</p>
+<p><a href="http://popcornjs.org/?ref=chrisdecairos.ca" target="_blank">popcornjs.org</a></p>
+<p><a href="http://mozillapopcorn.org/?ref=chrisdecairos.ca" target="_blank">mozilla popcorn</a></p>
+<p><a href="http://github.com/mozilla/popcorn-js?ref=chrisdecairos.ca" target="_blank">Popcorn on Github</a></p>
+<h3>Enjoy Popcorn!</h3><!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Popcorn.js v1.3&url=https://chrisdecairos.ca/popcorn-js-v1-3/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/popcorn-js-v1-3/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/popcorn-js-v1-3/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

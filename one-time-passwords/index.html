@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>One Time Passwords</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/one-time-passwords/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="One Time Passwords">
+    <meta property="og:description" content="Webmaker [https://webmaker.org] users currently sign in to their accounts using 
+Persona [https://persona.org], Mozilla&#x27;s privacy respecting authentication
+system. It&#x27;s fairly simple, and has worked really well since our rewrite this
+past march [https://chrisdecairos.ca/webmaker-sso]. You can read the details of the
+implementation in the blog">
+    <meta property="og:url" content="https://chrisdecairos.ca/one-time-passwords/">
+    <meta property="article:published_time" content="2014-08-29T18:46:30.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="webmaker">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="One Time Passwords">
+    <meta name="twitter:description" content="Webmaker [https://webmaker.org] users currently sign in to their accounts using 
+Persona [https://persona.org], Mozilla&#x27;s privacy respecting authentication
+system. It&#x27;s fairly simple, and has worked really well since our rewrite this
+past march [https://chrisdecairos.ca/webmaker-sso]. You can read the details of the
+implementation in the blog">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/one-time-passwords/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Mozilla, open-source, webmaker">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "One Time Passwords",
+    "url": "https://chrisdecairos.ca/one-time-passwords/",
+    "datePublished": "2014-08-29T18:46:30.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "Mozilla, open-source, webmaker",
+    "description": "Webmaker [https://webmaker.org] users currently sign in to their accounts using \nPersona [https://persona.org], Mozilla&#x27;s privacy respecting authentication\nsystem. It&#x27;s fairly simple, and has worked really well since our rewrite this\npast march [https://chrisdecairos.ca/webmaker-sso]. You can read the details of the\nimplementation in the blog post I&#x27;ve just linked.\n\nToday, we&#x27;re experimenting with alternative methods for users to log in and sign\nup. One such method, which Matthew Wilse [https://",
+    "mainEntityOfPage": "https://chrisdecairos.ca/one-time-passwords/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-mozilla tag-open-source tag-webmaker">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-mozilla tag-open-source tag-webmaker featured no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2014-08-29">29 Aug 2014</time> on <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/webmaker/">webmaker</a></span>
+
+        <h1 class="post-title">One Time Passwords</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p><a href="https://webmaker.org/?ref=chrisdecairos.ca">Webmaker</a> users currently sign in to their accounts using <a href="https://persona.org/?ref=chrisdecairos.ca">Persona</a>, Mozilla's privacy respecting authentication system. It's fairly simple, and has worked really well since our <a href="https://chrisdecairos.ca/webmaker-sso">rewrite this past march</a>. You can read the details of the implementation in the blog post I've just linked.</p>
+<p>Today, we're experimenting with alternative methods for users to log in and sign up. One such method, which <a href="https://github.com/xmatthewx?ref=chrisdecairos.ca">Matthew Wilse</a> has <a href="http://xmatthewx.github.io/webmaker-login/?ref=chrisdecairos.ca">built prototypes for</a>, has been called the &quot;Passwordless&quot; or &quot;Handshake&quot; method. I would argue that calling the system passwordless is a bit misleading and that handshake is not clear about what it really is, so I'll refer to it from here on out as the One Time Password(OTP) system.</p>
+<p>For the past several weeks I've been building this system into existing Webmaker applications. We're hoping to deploy it to a limited number of people and gather some feedback and statistics, particularly whether or not it improves successful signup/signins (Persona is great, but <em>a lot</em> of users just give up trying to make it work).</p>
+<p>Another benefit of the work I've been doing is a huge improvement on the account creation process. Here's some background on how it currently works:</p>
+<p>1: A user clicks &quot;Sign Up&quot; somewhere on Webmaker<br>
+2: A persona pop-up appears<br>
+3: A user who does not have a Persona account must now create one. <strong>If they have one already, Go To 5</strong><br>
+4: Verify email with Persona.org<br>
+5: Sign into Persona<br>
+6: A new user modal pops up, Asks for a username, among other things.<br>
+7: Yay, a new user!</p>
+<p>At every step above number 7, some significant percentage of users just simply gives up. I don't blame them, it's incredibly confusing to have to create two accounts as well as verify an email address.</p>
+<p>Matthew's prototypes provided a sign-up flow that looked a little bit like this:</p>
+<ol>
+<li>A user clicks &quot;Sign Up&quot; somewhere on Webmaker</li>
+<li>They provide an email and a username</li>
+<li>Yay, a new user!</li>
+</ol>
+<p>Wow, that sounds really nice! So I'<img src="https://chrisdecairos.ca/content/images/sign-up.gif" alt="Sign up GIF" loading="lazy">](<strong>GHOST_URL</strong>/content/images/sign-up.gif)</p>
+<p>I've also made the OTP sig<img src="https://chrisdecairos.ca/content/images/sign-in.gif" alt="Sign In GIF" loading="lazy">](<strong>GHOST_URL</strong>/content/images/sign-in.gif)</p>
+<p>During the early stages of this work, I build the front end bits as best I could, but my CSS-Fu has never been that strong. Recently, <a href="http://vazquez.io/?ref=chrisdecairos.ca">Ricardo Vazquez</a> has come on board the login train to make the prototype modal dialogs beautiful to see and use. Stay tuned to my blog and Webmaker demos in the near future to see the project evolve!</p>
+<h4 id="howotpswork">How OTP's work</h4>
+<p>Here's a list of steps that describes the whole One Time Password protocol (shown above, second image), from start to end.</p>
+<ol>
+<li>The User-Agent POSTs: <code>{ email: &quot;chris@example.com&quot; }</code> to <code>/auth/v2/request</code> on the app server (lets use webmaker.org)</li>
+<li>The Webmaker.org server should forward the post body to the Basic Auth protected route <code>/auth/v2/request</code> on login.webmaker.org</li>
+<li>The login server will look up the user account by the provided email address. If none is found, responds to the request with a 400: &quot;User not found&quot;</li>
+<li>A one time password is generated using <a href="https://github.com/substack/node-hat?ref=chrisdecairos.ca">Hat</a>.</li>
+<li>The password is 24 random bits and is converted to base 36. This generates a five character string of letters and/or digits.</li>
+<li>The password is set to expire thirty minutes after creation, and is passed to Webmaker's event processing queue <a href="https://github.com/mozilla/sawmill?ref=chrisdecairos.ca">Sawmill</a>. Its powered by Amazon's Simple Queue Service (SQS), and messages are sent using <a href="https://github.com/jbuck/hatchet?ref=chrisdecairos.ca">Hatchet</a>, which uses <a href="https://github.com/aws/aws-sdk-js?ref=chrisdecairos.ca">Amazon's aws-sdk module</a>.</li>
+<li>From Sawmill, The event is converted into an email using a template, and is forwarded to lumberyard</li>
+<li>Lumberyard sends the email to the one stored in User account the OTP was generated for. This uses the aws-sdk and Amazon's Simple Email Service (SES)</li>
+<li>Once the User gives the User-Agent the OTP it POSTs: <code>{ email: &quot;chris@example.com&quot;, token: &quot;s34xa&quot; }</code> to <code>/auth/v2/authenticateToken</code> on the app server</li>
+<li>The Server will forward the post body to <code>/auth/v2/authenticateToken</code> on login.webmaker.org</li>
+<li>The login server will attempt to fetch the user and login token from the database, ensuring that the fetched token was 1. created no more that thirty minutes from the system time on the server and 2. has not been used to log in already.</li>
+<li>Should the criteria not be met, a 401 reponse it returned to the app server, who should not issue a session cookie.</li>
+<li>If all criteria is met, the token is marked used and saved, and the user account object is serialized into session format and returned to the app server.</li>
+<li>The app server should then send a SET-COOKIE header to the User-Agent. It should be set to https only and be encrypted with a session secret.</li>
+</ol>
+<h1 id="whatnow">What Now?</h1>
+<p>With the code in a working state, it's just a matter of iteration. Code review, fixes + optimizations, repeat. We also have folks working on copy for the emails and modal dialogs. One thing that I think is going to be the most challenging for us when we roll out the new system is clearly communicating to users the new changes. Whether it be through email comms, banners on the homepage or a first-run log-in experience, I feel it's incredibly important to get this right.</p>
+<p>We've been thinking about keeping Persona as an optional log-in method (+1) and implementing an opt-in, run-of-the-mill password login system (I have implemented this fully, but it was cut from this iteration D:). I've also experimented (successfully) with turning login.webmaker.org into an OAuth2 provider - but havent actually gotten any resources or scopes set up to work with the oauth tokens I can generate.</p>
+<p>I've also reached out to the security gurus in the organization, with the goal of going over the new protocol with them and getting feedback on the right and the wrong.</p>
+<p>That said, what do you think? Have you had experience with log-in flow like this? What challenges did you face or forsee this flow facing? Feel free to use the comment section below, drop some comments in the <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1049943&ref=chrisdecairos.ca">Bugzilla bug</a> or <a href="mailto:cade@mozillafoundation.org">email me</a></p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=One Time Passwords&url=https://chrisdecairos.ca/one-time-passwords/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/one-time-passwords/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/one-time-passwords/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

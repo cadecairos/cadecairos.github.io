@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Hapi: The Good Parts</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/hapi-the-good-parts/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Hapi: The Good Parts">
+    <meta property="og:description" content="Recently, I&#x27;ve been working with a new framework called Hapi [http://hapijs.com] 
+to build an API for Webmaker [http://github.com/mozilla/api.webmaker.org]. This
+is a bit of a departure from the past, where we traditionally would have used
+Express to build the our server applications. The">
+    <meta property="og:url" content="https://chrisdecairos.ca/hapi-the-good-parts/">
+    <meta property="article:published_time" content="2015-06-05T16:15:56.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Hapi: The Good Parts">
+    <meta name="twitter:description" content="Recently, I&#x27;ve been working with a new framework called Hapi [http://hapijs.com] 
+to build an API for Webmaker [http://github.com/mozilla/api.webmaker.org]. This
+is a bit of a departure from the past, where we traditionally would have used
+Express to build the our server applications. The">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/hapi-the-good-parts/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Hapi: The Good Parts",
+    "url": "https://chrisdecairos.ca/hapi-the-good-parts/",
+    "datePublished": "2015-06-05T16:15:56.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "description": "Recently, I&#x27;ve been working with a new framework called Hapi [http://hapijs.com] \nto build an API for Webmaker [http://github.com/mozilla/api.webmaker.org]. This\nis a bit of a departure from the past, where we traditionally would have used\nExpress to build the our server applications. The decision to use Hapi was based\non several features that we found in our experimentation with the framework. I&#x27;d\nlike to outline these features, and give examples about how we&#x27;re using them.\n\nTests\nWe wanted our",
+    "mainEntityOfPage": "https://chrisdecairos.ca/hapi-the-good-parts/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2015-06-05">05 Jun 2015</time> </span>
+
+        <h1 class="post-title">Hapi: The Good Parts</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>Recently, I've been working with a new framework called <a href="http://hapijs.com/?ref=chrisdecairos.ca">Hapi</a> to build <a href="http://github.com/mozilla/api.webmaker.org?ref=chrisdecairos.ca">an API for Webmaker</a>. This is a bit of a departure from the past, where we traditionally would have used Express to build the our server applications. The decision to use Hapi was based on several features that we found in our experimentation with the framework. I'd like to outline these features, and give examples about how we're using them.</p>
+<h4 id="tests">Tests</h4>
+<p>We wanted our services to be highly testable. Hapi's Server API makes this a cinch. Its configuration-centric approach to building servers means you can split all of your configuration (like routes) into require-able modules that can be tested in isolation:</p>
+<iframe class="post-iframe" src="https://gist.github.com/cadecairos/881bf337ec4282adf836.pibb"></iframe>
+<p>As you can see above, we can test the routes' configuration outside of actually building a running Hapi server. While the tests above don't cover situations where <em>more</em> configuration is added, you can use libraries like <a href="https://www.npmjs.com/package/joi?ref=chrisdecairos.ca">Joi</a> to provide far more strict assertions on the configuration object.</p>
+<p>One other key Hapi feature is it's <a href="http://hapijs.com/api?ref=chrisdecairos.ca#serverinjectoptions-callback">inject function</a>, which lets you simulate receiving a request. It is invaluable when testing, because it enables you to do very cool things like providing credentials that step over the authentication of your routes.</p>
+<iframe src="https://gist.github.com/cadecairos/56c4a5f79ee296576e6f.pibb" class="post-iframe"></iframe>
+<h4 id="plugins">Plugins</h4>
+<p>Hapi provides a plugin API, which makes separating your application into independent units <em>very easy</em>. This separation consequently makes testing really easy too. In your tests, you can register the plugin on a bare Hapi server, with whatever test specific configuration you desire, and test it's behaviour in isolation.</p>
+<iframe src="https://gist.github.com/cadecairos/cf22b634c94e047b84c2.pibb" class="post-iframe"></iframe>
+<h4 id="servermethods">Server Methods</h4>
+<p>In the last gist I embedded, I added something called a <a href="http://hapijs.com/tutorials/server-methods?ref=chrisdecairos.ca">server method</a>. Server methods are a way to expose functions on your server object, which removes the need to require a common module everywhere a function is needed. Basically, if you define your server methods in a plugin, you register it once, and it's available everywhere!</p>
+<p>Another really handy feature that server methods have is caching. Hapi is compatible with <a href="https://www.npmjs.com/package/catbox?ref=chrisdecairos.ca">catbox</a>, a multi-strategy key-value store, and Hapi leverages it for easy caching. This is extremely useful if the server method requests data from a database:</p>
+<iframe src="https://gist.github.com/cadecairos/1218c4ba12d34c1d9ea8.pibb" class="post-iframe"></iframe>
+<h4 id="validation">Validation</h4>
+<p>Hapi provides an interface for enforcing strict rules on the data coming into your application. This validation functionality works perfectly with the <a href="https://www.npmjs.com/package/joi?ref=chrisdecairos.ca">Joi</a> library. It can be applied to route params (<code>/foo/{bar}</code>) request payload (<code>{foo: 'bar'}</code>) or query params (<code>/foo/bar?fizz=buzz</code>).</p>
+<iframe src="https://gist.github.com/cadecairos/8350e329c1f656e4c889.pibb" class="post-iframe"></iframe>
+<p>In summary, I'm very impressed with Hapi. With it (and with the help of a couple other great libraries called <a href="http://sinonjs.org/?ref=chrisdecairos.ca">sinon</a> and <a href="https://github.com/pgte/nock?ref=chrisdecairos.ca#nock">nock</a>), I was able to achieve <a href="https://coveralls.io/r/mozilla/api.webmaker.org?ref=chrisdecairos.ca">100% test coverage</a> on api.webmaker.org. All without having any external dependencies (other than PostgreSQL, but I can live with that, since the tests feel more real if they use an actual database)</p>
+<p>Here's the part where I engage with you:</p>
+<p><strong>Do you use Hapi?</strong> <br><br>
+<strong>What do you think of it?</strong> <br><br>
+<strong>What are your favourite features or tricks when developing applications with Hapi?</strong></p>
+<p>edit: I didn't realize until this morning that a recent theme update disabled disqus. It's working now, should you wish to chat.</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Hapi: The Good Parts&url=https://chrisdecairos.ca/hapi-the-good-parts/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/hapi-the-good-parts/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/hapi-the-good-parts/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

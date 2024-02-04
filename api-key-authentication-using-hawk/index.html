@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>API Key Authentication using Hawk</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/api-key-authentication-using-hawk/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="API Key Authentication using Hawk">
+    <meta property="og:description" content="[https://chrisdecairos.ca/content/images/2013/07/webmaker.png]
+
+I&#x27;ve spent the better part of my last two weeks working on implementing a new
+form of authentication for the Make API. This post is going to detail what has
+changed, how it works, and how you can set up your">
+    <meta property="og:url" content="https://chrisdecairos.ca/api-key-authentication-using-hawk/">
+    <meta property="article:published_time" content="2013-07-25T15:08:15.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="JavaScript">
+    <meta property="article:tag" content="Make API">
+    <meta property="article:tag" content="MakeAPI">
+    <meta property="article:tag" content="Mozilla Foundation">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="webmaker">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="API Key Authentication using Hawk">
+    <meta name="twitter:description" content="[https://chrisdecairos.ca/content/images/2013/07/webmaker.png]
+
+I&#x27;ve spent the better part of my last two weeks working on implementing a new
+form of authentication for the Make API. This post is going to detail what has
+changed, how it works, and how you can set up your">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/api-key-authentication-using-hawk/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="JavaScript, Make API, MakeAPI, Mozilla Foundation, open-source, webmaker">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "API Key Authentication using Hawk",
+    "url": "https://chrisdecairos.ca/api-key-authentication-using-hawk/",
+    "datePublished": "2013-07-25T15:08:15.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "JavaScript, Make API, MakeAPI, Mozilla Foundation, open-source, webmaker",
+    "description": " [https://chrisdecairos.ca/content/images/2013/07/webmaker.png]\n\nI&#x27;ve spent the better part of my last two weeks working on implementing a new\nform of authentication for the Make API. This post is going to detail what has\nchanged, how it works, and how you can set up your local webmaker-dev\nenvironment to use it. It may also be helpful to anyone who&#x27;s interested in\nimplementing Hawk&#x27;s authentication scheme in their own app.\n\nBackground\nAt the Mozilla Foundation, I&#x27;m a part of the Webmaker.org [h",
+    "mainEntityOfPage": "https://chrisdecairos.ca/api-key-authentication-using-hawk/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-javascript tag-make-api tag-makeapi tag-mozilla-foundation tag-open-source tag-webmaker">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-javascript tag-make-api tag-makeapi tag-mozilla-foundation tag-open-source tag-webmaker no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2013-07-25">25 Jul 2013</time> on <a href="/tag/javascript/">JavaScript</a> | <a href="/tag/make-api/">Make API</a> | <a href="/tag/makeapi/">MakeAPI</a> | <a href="/tag/mozilla-foundation/">Mozilla Foundation</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/webmaker/">webmaker</a></span>
+
+        <h1 class="post-title">API Key Authentication using Hawk</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p><a href="https://chrisdecairos.ca/content/images/2013/07/webmaker.png"><img class="aligncenter size-full wp-image-615" alt="webmaker" src="https://chrisdecairos.ca/content/images/2013/07/webmaker.png" width="505" height="185"></a></p>
+<p>I've spent the better part of my last two weeks working on implementing a new form of authentication for the Make API. This post is going to detail what has changed, how it works, and how you can set up your local webmaker-dev environment to use it. It may also be helpful to anyone who's interested in implementing Hawk's authentication scheme in their own app.</p>
+<h3 id="background">Background</h3>
+<p>At the Mozilla Foundation, I'm a part of the <a href="http://webmaker.org/?ref=chrisdecairos.ca" target="_blank">Webmaker.org</a> engineering team. For some time now, I've been focusing my efforts on developing the <a href="http://github.com/mozilla/MakeAPI?ref=chrisdecairos.ca" target="_blank">Make API</a>. The Make API is a service for indexing things that have been created on the web (or even off the web, in some cases), exposing them through a search API backed by <a href="http://elasticsearch.org/?ref=chrisdecairos.ca" target="_blank">Elastic Search</a>. The general idea is that when applications like <a href="https://thimble.webmaker.org/?ref=chrisdecairos.ca" target="_blank">Thimble</a> and <a href="https://popcorn.webmaker.org/?ref=chrisdecairos.ca" target="_blank">Popcorn Maker</a>  publish content, they can then send meta data about the make to the Make API. The MakeAPI takes this metadata and Indexes it into an ElasticSearch cluster. We unified user accounts in these tools using a custom implementation of single sign on using <a href="https://login.persona.org/about?ref=chrisdecairos.ca" target="_blank">Persona</a>. The result of this work was a single place for Webmaker.org to query for data about makes, enabling the creation of <a href="https://webmaker.org/teach?ref=chrisdecairos.ca" target="_blank">galleries</a> and <a title="Deploying the MakeAPI to Heroku" href="http://webmaker.org/search?ref=chrisdecairos.ca" target="_blank">search tools</a> on Webmaker.org. Not only that, but for the first time, users have their own personal galleries of things they've made.</p>
+<h3 id="theproblem">The Problem</h3>
+<p>During our initial push to release the new Webmaker, we did some quick and dirty things. Some would call it &quot;technical debt&quot;. Early on, I realised that the Make API would need to protect its create, update and delete paths, in order to prevent abusive behaviours. We agreed that the minimum viable product (MVP) was to have only the three applications that needed these route use basic authentication over SSL to authenticate calls. While this works great, It doesn't scale at all to a system that accepts metadata about makes from applications outside of the Webmaker universe.</p>
+<h3 id="thesolution">The Solution</h3>
+<p>The obvious solution was to create an API key system for authentication. With a system like this in place, we can receive requests from apps that wish to index their user's creations on the MakeAPI and issue them keys that grant access. I've got no previous experience doing something like this, so it was going to be a learning experience. A colleague of mine suggested using Hawk. Hawk is an HTTP authentication scheme that can be used to verify the authenticity of messages using cryptographically generated message authentication codes (MACs). I chose to give hawk a try as it provides us with several other wins as well, such as: replay protection, payload and response payload validation and most notably, the shared secret never gets transferred between the client and server.</p>
+<h3 id="wat">WAT?</h3>
+<p><a href="https://chrisdecairos.ca/content/images/2013/07/wat.jpg"><img class="size-full wp-image-606 aligncenter" alt="WAT." src="https://chrisdecairos.ca/content/images/2013/07/wat.jpg" width="238" height="173"></a></p>
+<p>To give you a better idea of what Hawk is doing I'll use my somewhat limited understanding of the protocol to breakdown the steps. (assuming a client-server set up where both implement the Hawk protocol)</p>
+<ol>
+	<li>The server generates and stores an ID and a secret key. The ID and key are sent to the client over some secure channel.</li>
+	<li>To make a request to the server, the client generates an Authorization header using hawk, passing Hawk its ID, key, request URL, payload, a nonce, and a time stamp. Behind the scenes, Hawk uses this information to generate a MAC. The header looks something like this:
+<ul>
+	<li><code>Authorization: Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="</code></li>
+</ul>
+</li>
+	<li>Notice that the Key is not a part of the Authorization header!</li>
+	<li>The request is sent to the server. Upon receipt of the request, the server must parse this header, grabbing the secret key from its database for the specified ID.</li>
+	<li>Using the information in the header, it does the same cryptographic steps the client did to generate another MAC.</li>
+	<li>If the two MACs match, the request is valid!</li>
+</ol>
+<h3 id="thehow">The How</h3>
+<p>Implementing Hawk in the Make API was not too difficult. After specifying Hawk as a dependency, I created a middleware function that would authenticate requests using the steps I outline above (4-6). I created a function to DRY out attaching SERVER-AUTHORIZATION headers to responses, and wrote a small script to test out the new authentication model using static keys and ids. Once I had success here, I <a href="https://gist.github.com/cadecairos/6082315?ref=chrisdecairos.ca#file-apiuser-js">defined a simple Mongo model</a> to store the key pairs and make them available for look-up by the Hawk authenticate middleware.</p>
+<p><strong>It's worth mentioning that I decided to go with a public/private key naming convention. In my description of the Hawk protocol, I described the use an ID and a key. The MakeAPI refers to the ID as the &quot;public key&quot; and the key as the &quot;private key&quot;. Both of these pairs are UUID's generated by the <a href="https://github.com/shtylman/node-uuid?ref=chrisdecairos.ca">node-uuid module</a>.</strong></p>
+<p>Once that was in place I put the pieces together. In the interest of reducing inline code, I've linked several gists below with the specific bits of code that make up the resulting implementation.</p>
+<p><a href="https://gist.github.com/cadecairos/6081326?ref=chrisdecairos.ca#file-hawkmiddleware-js" target="_blank">This Middleware show how I authenticate requests with Hawk</a>. I've added extra comments to make the code clearer</p>
+<p><a href="https://gist.github.com/cadecairos/6081426?ref=chrisdecairos.ca#file-hawkrespond-js" target="_blank">This is the respond function</a> that us used to generate MACs for server responses.</p>
+<p><a href="https://gist.github.com/cadecairos/6082023?ref=chrisdecairos.ca#file-hawkclientauth-js">This is how the makeapi-client code to generate MACs.</a></p>
+<p>With this code in place, applications and sites like Thimble, Popcorn Maker and Webmaker.org can be issued keys to use when they do create/update/delete actions with the Make API!</p>
+<p>All this would be useless if there was no way to generate these keys, so I built two ways to do this. The first way is using a very simple tool on the Make Editor page. If you scroll below the Make grid view, you'll see an input box, a button and a text area. The input box accepts an email address to associate with a pair of keys. Clicking the button instructs the server to generate a key pair for you, which is presented to you as a JSON object in the text area.</p>
+<p>The second (and recommended) method for generating keys is to use the command line script I wrote. It can be located in the <a href="https://github.com/mozilla/MakeAPI/tree/master/scripts?ref=chrisdecairos.ca" target="_blank">scripts folder</a> and is invoked with two parameters. The fist indicates the email address to use with the key pairs, the second indicates the number of pairs you wish to generate (great for issuing keys in bulk).</p>
+<pre><code>node scripts/generateKeys chris@chrisdecairos.ca 3
+</code></pre>
+<p>This will generate 3 pairs of keys associated to the email address in the example. Output of the program is sent to stdout and returns exit codes based on the result, so it can be used in scripts.</p>
+<p>Setting up an app to use the key pairs is really easy. You just place the credentials in the apps respective environment variable/config file ( or invoke it with the variables on the command line ). Your best bet to figuring out the expected name of the variable in webmaker apps is to look in there sample/default environment variable files.</p>
+<h3 id="icanhazkeys">I CAN HAZ KEYS?</h3>
+<p><strong>Not Yet</strong>.</p>
+<p>There's still more to do before we can issue keys to third parties. We need to implement response validation for the client code. Also, we need to implement server logic that prevents a key pair from being used to delete a make that it did not create. That will prevent a third party app from deleting makes from any and everyone using the API.</p>
+<p>We also have to determine how tightly coupled makes will be with Webmaker accounts. To be clearer: How do third party makes determine who &quot;owns&quot; them? Does the consuming app have to link their users account to a valid Webmaker account via some API we have yet to write? are they &quot;anonymous&quot;? How do third party apps update the metadata in an already published make?</p>
+<p>These are some of the questions I'll be asking over the next few weeks while we work out the details. For now, I'm just glad we're taking a big step towards a real, open API for sharing and showcasing all the awesome stuff people create around the world!</p>
+<p>Questions, Comments and Suggestions are welcome! If you would like to get involved, visit <a href="https://webmaker.org/getinvolved?ref=chrisdecairos.ca" target="_blank">webmaker.org/getinvolved</a> and check out all the ways you can help <strong>make the web!</strong></p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=API Key Authentication using Hawk&url=https://chrisdecairos.ca/api-key-authentication-using-hawk/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/api-key-authentication-using-hawk/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/api-key-authentication-using-hawk/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

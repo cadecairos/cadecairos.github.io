@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Diving into Firefox Media Code</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/diving-into-firefox-media-code/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Diving into Firefox Media Code">
+    <meta property="og:description" content="I&#x27;ve spent the better part of this weekend working on bug 686137
+[https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;686137]: Setting
+audio.mozFrameBufferLength has no effect on
+MozAudioAvailable.frameBuffer.length.
+
+Whats going on in this regression is easy to spot. The default frameBufferLength
+for a given Audio stream is">
+    <meta property="og:url" content="https://chrisdecairos.ca/diving-into-firefox-media-code/">
+    <meta property="article:published_time" content="2012-01-22T18:02:36.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="audio">
+    <meta property="article:tag" content="Firefox">
+    <meta property="article:tag" content="media">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="Seneca">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Diving into Firefox Media Code">
+    <meta name="twitter:description" content="I&#x27;ve spent the better part of this weekend working on bug 686137
+[https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;686137]: Setting
+audio.mozFrameBufferLength has no effect on
+MozAudioAvailable.frameBuffer.length.
+
+Whats going on in this regression is easy to spot. The default frameBufferLength
+for a given Audio stream is">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/diving-into-firefox-media-code/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="audio, Firefox, media, Mozilla, open-source, Seneca">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Diving into Firefox Media Code",
+    "url": "https://chrisdecairos.ca/diving-into-firefox-media-code/",
+    "datePublished": "2012-01-22T18:02:36.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "audio, Firefox, media, Mozilla, open-source, Seneca",
+    "description": "I&#x27;ve spent the better part of this weekend working on bug 686137\n[https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;686137]: Setting\naudio.mozFrameBufferLength has no effect on\nMozAudioAvailable.frameBuffer.length.\n\nWhats going on in this regression is easy to spot. The default frameBufferLength\nfor a given Audio stream is 1024 * the number of channels. ( for example, stereo\nhas 2). When a media element sets up it calculates the default\nFrameBufferLength.  On an audio element, you can set the mozFram",
+    "mainEntityOfPage": "https://chrisdecairos.ca/diving-into-firefox-media-code/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-audio tag-firefox tag-media tag-mozilla tag-open-source tag-seneca">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-audio tag-firefox tag-media tag-mozilla tag-open-source tag-seneca no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-01-22">22 Jan 2012</time> on <a href="/tag/audio/">audio</a> | <a href="/tag/firefox/">Firefox</a> | <a href="/tag/media/">media</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/seneca/">Seneca</a></span>
+
+        <h1 class="post-title">Diving into Firefox Media Code</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>I've spent the better part of this weekend working on <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca">bug 686137</a>: Setting audio.mozFrameBufferLength has no effect on MozAudioAvailable.frameBuffer.length.</p>
+<p>Whats going on in this regression is easy to spot. The default frameBufferLength for a given Audio stream is 1024 * the number of channels. ( for example, stereo has 2). When a media element sets up it calculates the default FrameBufferLength.  On an audio element, you can set the mozFrameBufferLength attribute to change it from the default value. The range of values is from 512 to 16384. If one were to listen to the &quot;MozAudioAvailable&quot; event after changing the length, you'd notice that the value reported by the event is incorrect.<a href="https://chrisdecairos.ca/projects/bug686137/audiobug.html"> Here's a test case</a> of it not working.</p>
+<p>I spent some time looking through the audio code for clues on what was causing this issue but ultimately made no progress. After this, I decided to find out where and when this regression got into the code. I started with the major releases. Testing showed me this bug was not present in Firefox 4 but appeared in Firefox 5. Next, I tested in the betas and found it appeared somewhere between beta 7 and the full Firefox 5 release. This narrowed down to a roughly 30 day span in April, 2011. Testing against each nightly revealed the bug appeared on the night of April 11, 2011. It was difficult work looking through the lists of commits, but I eventually found the culprit: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=638807&ref=chrisdecairos.ca">bug 638807</a>, Conveniently titled: Data race on nsBuiltinDecoder::mFrameBufferLength. Now I knew exactly which files to focus my attention on.</p>
+<p>I started looking through the <a href="https://bugzilla.mozilla.org/attachment.cgi?id=525029&action=diff&ref=chrisdecairos.ca">diff of the patch</a> that was landed, to try to find clues to why this issue was arising, but that proved fruitless.  The new code was placed there in an attempt to stop a data race on the value. Whatever had been done wasn't revealing anything obvious to me. I decided to fire up gdb and start setting up breakpoints to see what was going on.</p>
+<p>This is where thing get interesting. I noticed a couple things. The first thing I noticed was that when the audio element started up, the frameBufferLength value gets set by calling <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/nsBuiltinDecoder.cpp?ref=chrisdecairos.ca#232">nsBuiltinDecoder::RequestFrameBufferLength</a>. From there it's passed into <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/nsBuiltinDecoderStateMachine.cpp?ref=chrisdecairos.ca#1472">nsBuiltinDecoderStateMachine::setFrameBufferLength</a>, which then sets it inside of <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/nsAudioAvailableEventManager.cpp?ref=chrisdecairos.ca#254">nsAudioAvailabaleEventManager::setSignalBufferLength</a>. The second thing I noticed was that setting mozFrameBufferLength set the frameBufferLength inside of <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/nsMediaDecoder.cpp?ref=chrisdecairos.ca#111">nsMediaDecoder::RequestFrameBufferLength</a>.</p>
+<p>I'm not 100% sure if my account of events above is correct, but if it is, that means there's a bit of a disconnect between the elements reported FrameBufferLength, and the one being used internally by the decoder and the AudioAvailableEventManager.  I'm not entirely sure yet how to fix it, but I will keep working on finding the solution. It's in there somewhere...</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Diving into Firefox Media Code&url=https://chrisdecairos.ca/diving-into-firefox-media-code/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/diving-into-firefox-media-code/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/diving-into-firefox-media-code/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>OSD700 Release post 1</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/osd700-release-post-1/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OSD700 Release post 1">
+    <meta property="og:description" content="Before I get started here&#x27;s some formalities for the course:
+
+My work on this release can be found here:
+
+bug 686137 - Setting audio.mozFrameBufferLength has no effect on
+MozAudioAvailable.frameBuffer.length
+[https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;686137]
+
+https://github.com/cadecairos/mozilla-central/tree/bugs/686137
+
+And">
+    <meta property="og:url" content="https://chrisdecairos.ca/osd700-release-post-1/">
+    <meta property="article:published_time" content="2012-01-26T12:54:42.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="audio">
+    <meta property="article:tag" content="Firefox">
+    <meta property="article:tag" content="media">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="Seneca">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="OSD700 Release post 1">
+    <meta name="twitter:description" content="Before I get started here&#x27;s some formalities for the course:
+
+My work on this release can be found here:
+
+bug 686137 - Setting audio.mozFrameBufferLength has no effect on
+MozAudioAvailable.frameBuffer.length
+[https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;686137]
+
+https://github.com/cadecairos/mozilla-central/tree/bugs/686137
+
+And">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/osd700-release-post-1/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="audio, Firefox, media, Mozilla, open-source, Seneca">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "OSD700 Release post 1",
+    "url": "https://chrisdecairos.ca/osd700-release-post-1/",
+    "datePublished": "2012-01-26T12:54:42.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "audio, Firefox, media, Mozilla, open-source, Seneca",
+    "description": "Before I get started here&#x27;s some formalities for the course:\n\nMy work on this release can be found here:\n\nbug 686137 - Setting audio.mozFrameBufferLength has no effect on\nMozAudioAvailable.frameBuffer.length\n[https://bugzilla.mozilla.org/show_bug.cgi?id&#x3D;686137]\n\nhttps://github.com/cadecairos/mozilla-central/tree/bugs/686137\n\nAnd now, the story:\n\nAs I described in my previous post\n[https://chrisdecairos.ca/diving-into-firefox-media-code.html], I&#x27;ve been hacking on\nFirefox media code for my OSD700",
+    "mainEntityOfPage": "https://chrisdecairos.ca/osd700-release-post-1/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-audio tag-firefox tag-media tag-mozilla tag-open-source tag-seneca">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-audio tag-firefox tag-media tag-mozilla tag-open-source tag-seneca no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-01-26">26 Jan 2012</time> on <a href="/tag/audio/">audio</a> | <a href="/tag/firefox/">Firefox</a> | <a href="/tag/media/">media</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/seneca/">Seneca</a></span>
+
+        <h1 class="post-title">OSD700 Release post 1</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>Before I get started here's some formalities for the course:</p>
+<p>My work on this release can be found here:</p>
+<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca">bug 686137 - Setting audio.mozFrameBufferLength has no effect on MozAudioAvailable.frameBuffer.length</a></p>
+<p><a href="https://github.com/cadecairos/mozilla-central/tree/bugs/686137?ref=chrisdecairos.ca">https://github.com/cadecairos/mozilla-central/tree/bugs/686137</a></p>
+<p>And now, the story:</p>
+<p>As I described in <a href="https://chrisdecairos.ca/diving-into-firefox-media-code.html">my previous post</a>, I've been hacking on Firefox media code for my <a href="http://zenit.senecac.on.ca/wiki/index.php/OSD700?ref=chrisdecairos.ca">OSD700</a> class.  This post is going to detail more about the bug I was working on and how things went with it.</p>
+<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca">Bug 686137</a> was an audio API related issue where the MozAudioAvailable event on an audio element would report an incorrect frameBufferLength value. This happened after it had been manually changed through the mozFrameBufferLength attribute on the &lt;audio&gt; element. The first thing I did was create a test case using code that <a href="http://vocamus.net/dave/?ref=chrisdecairos.ca">David Humphrey</a> included in his bug report. Using this test I <a href="http://hg.mozilla.org/mozilla-central/pushloghtml?fromchange=09b605eb3e0d&tochange=a174b86200d6&ref=chrisdecairos.ca">narrowed down the list of possible bugs</a> that caused this regression and eventually discovered the bug that created it. From there I zeroed in on the <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/?ref=chrisdecairos.ca">content/media</a> folder within mozilla-central, where all the media code lives. Using the <a href="http://mxr.mozilla.org/mozilla-central?ref=chrisdecairos.ca">Mozilla Cross-Reference website</a>, I searched for a couple of keywords: <a href="http://mxr.mozilla.org/mozilla-central/search?string=mozFrameBufferLength&ref=chrisdecairos.ca">mozFrameBufferLength</a> and <a href="http://mxr.mozilla.org/mozilla-central/search?string=MozAudioAvailable&ref=chrisdecairos.ca">MozAudioAvailable</a>.</p>
+<p>This search led me to more files than I'd have liked to have seen. I spent the majority of my time last week reading through these files trying to familiarize myself with what was going on in them, but this ultimately got me no closer to a fix. I spoke with Jon Buckley, who told me that in his experience, using <a href="http://www.gnu.org/software/gdb/?ref=chrisdecairos.ca">GDB</a> was the best way to trace the execution of the bug down. I hadn't used GDB since OOP344 with <a href="https://cs.senecac.on.ca/~fardad.soleimanloo/?ref=chrisdecairos.ca">Fardad</a>, where I and two other team members created a simple text editor in C/C++ called Bite. After a simple search, I found a wiki detailing techniques for debugging Firefox with GDB.</p>
+<p>The obvious thing for me to do here was find all the places in the code where the frameBufferLength was being handled in some manner. My plan was to set break points at parts where I thought it was being set and do some checking of the data from within GDB. For your information, the test case I was using used a default buffer length of 2048 Bytes, which was set in JavaScript to 4096 Bytes. When debugging against this test case, I found it very curious that at all the break points I had set, the frame buffer length was always 2048. There was no trace of the 4096 value in the test case.</p>
+<p>What this told me is that I needed to follow the path that the value 4096 was taking. Using MXR I located the <a href="http://mxr.mozilla.org/mozilla-central/source/content/html/content/src/nsHTMLMediaElement.cpp?ref=chrisdecairos.ca#1281">setter method for the mozFrameBufferLength attribute</a> and using GDB, set a break point within the function. Stepping through the code, it looked as if everything was being set properly.  At this point in my investigation, I found myself completely stumped.  I spent many hours stepping through the code trying to find the difference in the initial setting of the buffer length on the</p>
+<p>Then I noticed it. The key to the puzzle was a class called nsBuiltinDecoder. This class inherited from a base class named nsMediaDecoder. Each one contains a RequestFrameBufferLength() method that accepts a 32 bit integer for the new buffer size and handle it in slightly different ways. Why is this important? Well, When the <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/nsBuiltinDecoder.cpp?ref=chrisdecairos.ca#232">nsBuiltinDecoder::RequestFrameBufferLength()</a>. On the other hand, when setting the buffer length from the element, it passes the argument into <a href="http://mxr.mozilla.org/mozilla-central/source/content/media/nsBuiltinDecoder.cpp?ref=chrisdecairos.ca#234">nsMediaDecoder::RequestFrameBufferLength</a>! I opened the header file for nsMediaDecoder and found the function definition, and lo and behold, there was no &quot;virtual&quot; keyword! By this point I'd spent over 6 hours that day tracing this thing down, and I was quite fatigued. I made the addition and using a tool called &quot;<a href="http://www.joshmatthews.net/blog/2011/05/build-smarter-not-harder/?ref=chrisdecairos.ca">smartmake</a>&quot; suggested to me by a Mozillian in #introduction on Moznet, began an incremental build. I was 100% sure it would work. I opened up Nightly and navigated to my test page and.... nothing changed. What. The. Fudge.</p>
+<p>It was a huge let down. But I wasn't let down for long. After posting about where I was, a developer named Yuri posted<a href="https://chrisdecairos.ca/diving-into-firefox-media-code.html#comment-166"> a comment</a>, indicating that the virtual keyword was the problem. After discussions with him and Dave Humphrey on IRC, it became clear that I should perform a top-level build. I'm not gonna lie, I was pretty excited. After my top-level build completed, the test case finally passed! Vindication at last.</p>
+<p>Now that I had a fix I needed to create a patch for it. Matthew Schranz posted<a href="http://mschranz.wordpress.com/2012/01/12/mozilla-bug-process-using-git/?ref=chrisdecairos.ca"> a guide on developing for Firefox using GIT</a> (which is what I was doing) and he had included a command that would create a properly formatted patch. Using that, I created <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca#c5">this attachment</a> on the bug. I then set out to write a test for it so that it would never break unknowingly again.  Using existing tests as a base, and after reading several guides on writing tests for Firefox, I produced <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca#c6">this attachment</a> to the bug.</p>
+<p>From there, my navigation through the review process was a little rocky. I found that upon setting an attachment for review, I should set a person responsible for it (something I did not do). Luckily it got picked up by <a href="http://blog.mjg.im/?ref=chrisdecairos.ca">Matthew Gregan AKA kinetik</a> who r+ the first patch. He also gave me some pointers for the future. In my patch I didn't follow the regular commit message conventions, something I won't do again. The second patch needed some work done before it could be approved. They were just minor issues relating to comments I'd forgotten to remove and unneeded listeners I'd used. I also took his advice and added a second assertion for a case I had not considered. After wrestling with git for an hour trying to get the patch right I posted a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca#c11">new attachment</a> with the fixes, and a commit message that met the expectation I mentioned above.</p>
+<p>This new attachment got a positive review from <a href="http://blog.mjg.im/?ref=chrisdecairos.ca">Kinetik</a>. The next day, after discussion about the bug I was advised to set the bug to have the checkin-needed flag. I also uploaded <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca#c11">a new attachment</a> with a conforming commit message, obsoleting the first attachment I posted. Later that evening the patches were merged into <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca#c15">mozilla-inbound</a>. I learned that this is a sort of staging area, where new patches have the tests run on multiple platforms to make sure that they don't break the entire program. While driving to work the next morning I got an email notification that my patches were now <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686137&ref=chrisdecairos.ca#c16">merged into mozilla-central</a>.</p>
+<p>Hacking on this bug taught me a lot. I got a great introduction to some of the media code and its inner workings. I got a nice refresh on using GDB. I now have a deeper understanding of building Firefox from the source (when in doubt, do a top-level build). I learned more about the firefox review process (what NOT to do). And I personally learned that even the simplest of fixes can take a ridiculous amount of time to track down. Especially when you're not familiar with the code like I was. Coming out of this thing I feel I'm in a better position to take on more bugs.</p>
+<p>My plan for the next two weeks is to get on a couple other bugs I've been looking at ( <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=715323&ref=chrisdecairos.ca">bug 715323</a> and <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=711742&ref=chrisdecairos.ca">bug 711742</a> ). I'm also going to find more bugs to work on related to the media code.</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=OSD700 Release post 1&url=https://chrisdecairos.ca/osd700-release-post-1/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/osd700-release-post-1/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/osd700-release-post-1/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

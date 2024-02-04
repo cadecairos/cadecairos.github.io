@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>PDF.js &amp; Popcorn Maker</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/pdf-js-and-popcorn-maker/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="PDF.js &amp; Popcorn Maker">
+    <meta property="og:description" content="In the weeks after MozFest [http://mozillafestival.org/blog/], the Popcorn team
+has been focusing on fixing up as many crash bugs ( crash &#x3D; app breaking script
+errors ) as we can. In the down time between bugs we were given some free time
+to work on experimental features.
+
+One feature that">
+    <meta property="og:url" content="https://chrisdecairos.ca/pdf-js-and-popcorn-maker/">
+    <meta property="article:published_time" content="2012-12-04T16:53:30.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta property="article:tag" content="butter">
+    <meta property="article:tag" content="Butter.js">
+    <meta property="article:tag" content="CDOT">
+    <meta property="article:tag" content="JavaScript">
+    <meta property="article:tag" content="Mozilla">
+    <meta property="article:tag" content="Mozilla Festival">
+    <meta property="article:tag" content="Mozilla Foundation">
+    <meta property="article:tag" content="Mozilla-popcorn">
+    <meta property="article:tag" content="mozillapopcorn">
+    <meta property="article:tag" content="open-source">
+    <meta property="article:tag" content="popcorn.js">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PDF.js &amp; Popcorn Maker">
+    <meta name="twitter:description" content="In the weeks after MozFest [http://mozillafestival.org/blog/], the Popcorn team
+has been focusing on fixing up as many crash bugs ( crash &#x3D; app breaking script
+errors ) as we can. In the down time between bugs we were given some free time
+to work on experimental features.
+
+One feature that">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/pdf-js-and-popcorn-maker/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="butter, Butter.js, CDOT, JavaScript, Mozilla, Mozilla Festival, Mozilla Foundation, Mozilla-popcorn, mozillapopcorn, open-source, popcorn.js">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "PDF.js &amp; Popcorn Maker",
+    "url": "https://chrisdecairos.ca/pdf-js-and-popcorn-maker/",
+    "datePublished": "2012-12-04T16:53:30.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "keywords": "butter, Butter.js, CDOT, JavaScript, Mozilla, Mozilla Festival, Mozilla Foundation, Mozilla-popcorn, mozillapopcorn, open-source, popcorn.js",
+    "description": "In the weeks after MozFest [http://mozillafestival.org/blog/], the Popcorn team\nhas been focusing on fixing up as many crash bugs ( crash &#x3D; app breaking script\nerrors ) as we can. In the down time between bugs we were given some free time\nto work on experimental features.\n\nOne feature that David Humphrey [http://vocamus.net/dave/] suggested we should\nlook into is a way to include PDF&#x27;s in Popcorn Maker. A while back, humph made a\nplugin for Popcorn.js that used the pdf.js library\n[http://mozilla",
+    "mainEntityOfPage": "https://chrisdecairos.ca/pdf-js-and-popcorn-maker/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-butter tag-butter-js tag-cdot tag-javascript tag-mozilla tag-mozilla-festival tag-mozilla-foundation tag-mozilla-popcorn tag-mozillapopcorn tag-open-source tag-popcorn-js">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-butter tag-butter-js tag-cdot tag-javascript tag-mozilla tag-mozilla-festival tag-mozilla-foundation tag-mozilla-popcorn tag-mozillapopcorn tag-open-source tag-popcorn-js no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2012-12-04">04 Dec 2012</time> on <a href="/tag/butter/">butter</a> | <a href="/tag/butter-js/">Butter.js</a> | <a href="/tag/cdot/">CDOT</a> | <a href="/tag/javascript/">JavaScript</a> | <a href="/tag/mozilla/">Mozilla</a> | <a href="/tag/mozilla-festival/">Mozilla Festival</a> | <a href="/tag/mozilla-foundation/">Mozilla Foundation</a> | <a href="/tag/mozilla-popcorn/">Mozilla-popcorn</a> | <a href="/tag/mozillapopcorn/">mozillapopcorn</a> | <a href="/tag/open-source/">open-source</a> | <a href="/tag/popcorn-js/">popcorn.js</a></span>
+
+        <h1 class="post-title">PDF.js &amp; Popcorn Maker</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>In the weeks after <a href="http://mozillafestival.org/blog/?ref=chrisdecairos.ca" target="_blank">MozFest</a>, the Popcorn team has been focusing on fixing up as many crash bugs ( crash = app breaking script errors ) as we can. In the down time between bugs we were given some free time to work on experimental features.</p>
+<p>One feature that <a href="http://vocamus.net/dave/?ref=chrisdecairos.ca" target="_blank">David Humphrey</a> suggested we should look into is a way to include PDF's in Popcorn Maker. A while back, humph made a plugin for Popcorn.js that used the <a href="http://mozilla.github.com/pdf.js/?ref=chrisdecairos.ca" target="_blank">pdf.js library</a> from Mozilla. It was the best place to start. I checked out the code, and tested it out. The plugin had some minor issues that needed to be worked out. I fixed up the plugin, fixing some loading issues and display issues, then I headed into Popcorn Maker to hack up an editor.</p>
+<!--more-->
+<p><a href="https://chrisdecairos.ca/content/images/2012/12/Screen-Shot-2012-12-04-at-2.18.26-PM.png" rel="attachment wp-att-385"><img class="aligncenter  wp-image-385" title="Popcorn PDF plugin Demo" src="https://chrisdecairos.ca/content/images/2012/12/Screen-Shot-2012-12-04-at-2.18.26-PM.png" alt width="388" height="586"></a></p>
+<p>I &quot;borrowed&quot; the editor for the PDF plugin from the text and image editors. I used the simple layout from the text editor and pulled in the elements and styling for the image drag and drop from the image editor. To start, I used a simple URL input to test that the plugin was actually able to get the PDF to load into the app. It worked, but I had a serious problem. In the image I have above, the canvas that the PDF is being rendered in is the same size of the document. In Popcorn Maker, a plugin's overlay area can be of varying heights and widths, and will likely never be exactly the same size of the PDF. I hacked on it for a bit, but ultimately switched focus when I realized I had no idea what I was doing.</p>
+<p>Putting the resizing issue aside, I started working on PDF uploading. Due to cross origin restrictions, it would be impossible to have a user simply drop a document into their browser and have it load in the app. Because the file originates from their local filesystem, the browser would not allow pdf.js to read the contents of the file. What I needed was a way for the PDF to be uploaded to cornfield (Popcorn Makers node.js based server). This wouldn't be too hard to accomplish, because we do something similar with images in the image editor. I created an API endpoint in cornfield that would listen for POST requests containing PDF files. The PDF would be saved into a folder on the server, and the response back to the app would contain the new URL to the resource. The editor could then take that URL and give it to the PDF plugin to load.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2012/12/Screen-Shot-2012-12-04-at-3.35.20-PM.png" rel="attachment wp-att-387"><img class="size-medium wp-image-387" title="PDF plugin editor" src="https://chrisdecairos.ca/content/images/2012/12/Screen-Shot-2012-12-04-at-3.35.20-PM-300x165.png" alt width="300" height="165"></a></p>
+<p style="text-align: left;">I did hit a few issues while attempting to upload the file to the server. Every time I tried to display the uploaded file, it seemed that somewhere in the transfer to cornfield the file was corrupted. It turned out that I was calling a function I didn't need to when sending the file via XHR. Simply passing the File object itself as the POST requests data was enough to have it upload to the server properly.</p>
+<p style="text-align: left;">Once file uploading was working I hooked up the drag and drop code to it so that I could just drop a PDF file into the editor and it would automatically upload. All I had left to do was set up the plugin to automatically scale the PDF before rendering it on the canvas.  To get some headway on fixing the problem, I contacted a guy named Yury (<a href="https://twitter.com/yurydelendik?ref=chrisdecairos.ca" target="_blank"><s>@</s>yurydelendik</a>) in the <a href="irc://irc.mozilla.org/pdf">#pdf channel on IRC</a>.  With Yury's help I was eventually able to work out the kinks in the plugin.  It's now able to render PDF's on any canvas size, while maintaining it's aspect ratio and rotation.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2012/12/Screen-Shot-2012-12-04-at-4.30.31-PM.png" rel="attachment wp-att-388"><img class="size-large wp-image-388" title="PDF in Popcorn Maker!" src="https://chrisdecairos.ca/content/images/2012/12/Screen-Shot-2012-12-04-at-4.30.31-PM-1024x552.png" alt width="470" height="253"></a></p>
+<p>So that's where I am right now. I still need to fix up some styling issues and add more features to the editor. I also need to make the PDF uploading in cornfield better, by ensuring that each PDF is never uploaded more than once. This will probably be achieved by getting a SHA of the file and setting it as the file name on the server, so that it can be compared to incoming data.</p>
+<p>The code is up on Github for anyone who want's to try it out: <a href="http://github.com/cadecairos/butter/tree/pdf?ref=chrisdecairos.ca" target="_blank">http://github.com/cadecairos/butter/tree/pdf</a> (the actual plugin can be <a href="https://github.com/cadecairos/butter/blob/pdf/templates/assets/plugins/pdf/popcorn.pdf.js?ref=chrisdecairos.ca" target="_blank">found here</a>)</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=PDF.js &amp; Popcorn Maker&url=https://chrisdecairos.ca/pdf-js-and-popcorn-maker/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/pdf-js-and-popcorn-maker/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/pdf-js-and-popcorn-maker/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

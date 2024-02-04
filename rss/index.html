@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Chris DeCairos]]></title><description><![CDATA[Software, and Other Stuff]]></description><link>https://chrisdecairos.ca/</link><image><url>https://chrisdecairos.ca/favicon.png</url><title>Chris DeCairos</title><link>https://chrisdecairos.ca/</link></image><generator>Ghost 5.62</generator><lastBuildDate>Tue, 09 Jan 2024 21:21:44 GMT</lastBuildDate><atom:link href="https://chrisdecairos.ca/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[How To: Mass S3 Object Creation with Terraform]]></title><description><![CDATA[How to efficiently create lots of objects in AWS S3 with the correct content types using Terraform.]]></description><link>https://chrisdecairos.ca/s3-objects-terraform/</link><guid isPermaLink="false">6213d91efa1a311a1f5d255d</guid><category><![CDATA[terraform]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Thu, 30 Jul 2020 20:18:41 GMT</pubDate><content:encoded><![CDATA[<p>I&apos;ve been working a bit with Terraform recently to support managing some of our infrastructure at the Mozilla Foundation. In doing so I came across a problem I couldn&apos;t find a documented solution for, so today I&apos;m going to publish a bit of a how-to in the hopes that folks in similar problems might find it helpful.</p><p>Let&apos;s say you have one hundred files in the &quot;src&quot; directory, and you need to upload them to S3. You could add a resource entry for each file, but that would be tedious and repetitive:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">
+locals {
+  src_dir      = &quot;${path.module}/src&quot;
+}
+
+
+resource &quot;aws_s3_bucket_object&quot; &quot;index&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;index.html&quot;
+  source        = &quot;${local.src_dir}/index.html&quot;
+  content_type  = &quot;text/html&quot;l
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;about&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;about.html&quot;
+  source        = &quot;${local.src_dir}/about.html&quot;
+  content_type  = &quot;text/html&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;main_css&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;main.css&quot;
+  source        = &quot;${local.src_dir}/main.css&quot;
+  content_type  = &quot;text/css&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;javascript&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;main.js&quot;
+  source        = &quot;${local.src_dir}/main.js&quot;
+  content_type  = &quot;application/javascript&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;favicon&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;favicon.ico&quot;
+  source        = &quot;${local.src_dir}/favicon.ico&quot;
+  content_type  = &quot;image/x-icon&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;header_image&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;header.png&quot;
+  source        = &quot;${local.src_dir}/header.png&quot;
+  content_type  = &quot;image/png&quot;
+}
+
+# and so on, 90+ more times
+
+</code></pre>
+<!--kg-card-end: markdown--><p>Thankfully, Terraform has the <a href="https://www.terraform.io/docs/configuration/resources.html?ref=chrisdecairos.ca#for_each-multiple-resource-instances-defined-by-a-map-or-set-of-strings">for_each meta-argument</a> which lets us pass a map or set of strings to create an instance of a resource for each element in the meta-argument. Pairing this functionality with the <a href="https://www.terraform.io/docs/configuration/functions/fileset.html?ref=chrisdecairos.ca">fileset built-in function</a> allows us to generate all these objects in far fewer lines of configuration:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">
+locals {
+  src_dir      = &quot;${path.module}/src&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;site_files&quot; {
+  # Enumerate all the files in ./src
+  for_each = fileset(local.src_dir, &quot;**&quot;)
+
+  # Create an object from each
+  bucket        = aws_s3_bucket.bucket.id
+  key           = each.value
+  source        = &quot;${local.src_dir}/${each.value}&quot;
+  
+  # Uh oh, what should we do here?
+  # content_type  = ???
+}
+</code></pre>
+<!--kg-card-end: markdown--><p>There is one small problem though, as indicated above: content_type. How can we set the content type correctly for each file? Well, there&apos;s a few built-ins to help us out here. Firstly, there&apos;s the <a href="https://www.terraform.io/docs/configuration/functions/lookup.html?ref=chrisdecairos.ca">lookup built-in</a>, which returns the value from a map given a key, and can set a default if no key is found. So, if we define a content type map like so:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">locals {
+  content_type_map = {
+    html        = &quot;text/html&quot;,
+    js          = &quot;application/javascript&quot;,
+    css         = &quot;text/css&quot;,
+    svg         = &quot;image/svg+xml&quot;,
+    jpg         = &quot;image/jpeg&quot;,
+    ico         = &quot;image/x-icon&quot;,
+    png         = &quot;image/png&quot;,
+    gif         = &quot;image/gif&quot;,
+    pdf         = &quot;application/pdf&quot;
+  }
+}
+</code></pre>
+<!--kg-card-end: markdown--><p>We can use lookup get the content type by extracting the file extension from the filename. To accomplish that, we use the <a href="https://www.terraform.io/docs/configuration/functions/regex.html?ref=chrisdecairos.ca">regex built-in function</a>:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">regex(&quot;\\.(?P&lt;extension&gt;[A-Za-z0-9]+)$&quot;, filename).extension
+</code></pre>
+<!--kg-card-end: markdown--><p>So, if we put it all together, we get:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">locals {
+  src_dir      = &quot;${path.module}/src&quot;,
+  content_type_map = {
+    html        = &quot;text/html&quot;,
+    js          = &quot;application/javascript&quot;,
+    css         = &quot;text/css&quot;,
+    svg         = &quot;image/svg+xml&quot;,
+    jpg         = &quot;image/jpeg&quot;,
+    ico         = &quot;image/x-icon&quot;,
+    png         = &quot;image/png&quot;,
+    gif         = &quot;image/gif&quot;,
+    pdf         = &quot;application/pdf&quot;
+  }
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;site_files&quot; {
+  # Enumerate all the files in ./src
+  for_each = fileset(local.src_dir, &quot;**&quot;)
+
+  # Create an object from each
+  bucket        = aws_s3_bucket.bucket.id
+  key           = each.value
+  source        = &quot;${local.src_dir}/${each.value}&quot;
+  
+  content_type  = lookup(local.content_type_map, regex(&quot;\\.(?P&lt;extension&gt;[A-Za-z0-9]+)$&quot;, each.value).extension, &quot;application/octet-stream&quot;)
+}
+</code></pre>
+<!--kg-card-end: markdown--><p>And there you have it! all the files in your &quot;src&quot; directory should now have an associated S3 resource managed using terraform, and each has the appropriate content type, so you can serve the files up via S3&apos;s static site functionality or via a CloudFront CDN.</p>]]></content:encoded></item><item><title><![CDATA[TabSweeper For Firefox]]></title><description><![CDATA[Tabsweeper for Firefox lets you manage your tabs quickly and efficiently. Here's why I built it.]]></description><link>https://chrisdecairos.ca/tabsweeper/</link><guid isPermaLink="false">6213d91efa1a311a1f5d255a</guid><category><![CDATA[Firefox]]></category><category><![CDATA[Tabs]]></category><category><![CDATA[Extension]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Sat, 22 Jul 2017 16:56:12 GMT</pubDate><media:content url="https://chrisdecairos.ca/content/images/2017/07/XjgGGDm.png" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://chrisdecairos.ca/content/images/2017/07/XjgGGDm.png" alt="TabSweeper For Firefox"><p>TLDR;</p>
+<p><a href="https://github.com/cadecairos/TabSweeper/releases?ref=chrisdecairos.ca">you can download TabSweeper here</a></p>
+<h3 id="whatistabsweeper">What is TabSweeper</h3>
+<p>I can&apos;t stand it when I&apos;ve got more tabs open than I can see. Firefox (and basically all browsers for that matter) just doesn&apos;t have a useful way to manage tabs that is also compatible with its new multiprocess architecture. I used to use one-tab, but it&apos;s a legacy add-on and as far as I can see it will cease to work this November with the release of Firefox 57.</p>
+<p>I took a look at the documentation for Firefox&apos;s web extension APIs and figured I&apos;d give writing my first extension a try. This extension would re-implement the core functionality of one-tab - which closes all your open tabs and stored the URLs for later viewing,  where you can either restore them or delete them from memory.</p>
+<p>One-tab uses a special tab interface to manage your saved sessions, but I decided to use Firefox&apos;s new sidebar feature instead.  It&apos;s easy to toggle visibility in and off,  and you can still see what you&apos;ve got open in your active tab. The sidebar can be toggled using a keyboard shortcut or through the sidebar button on the browser toolbar. The tab cleaning function is also bound to a keyboard shortcut,  making cleaning tabs up really easy.</p>
+<p>The sidebar is very basic at the moment,  but it&apos;s functional. I plan to optimize the interface and how it&apos;s updated. I also plan on removing bootstrap and using some custom CSS, since bootstrap was only used for MVP purposes.</p>
+<p>If you&apos;re interested in trying out TabSweeper, the signed add-on can be <a href="https://github.com/cadecairos/TabSweeper/releases?ref=chrisdecairos.ca">downloaded from the GitHub releases page</a>. I hope to get it up on the Mozilla add-ons site,  but that&apos;s blocked for now while the add-on awaits a code and security review.</p>
+<p>If you have any feedback, suggestions,  or bugs to report, <a href="https://github.com/cadecairos/TabSweeper/issues/new?ref=chrisdecairos.ca">file an issue in GitHub</a> or <a href="mailto:chris@chrisdecairos.ca">send me an email</a></p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Introducing Autoku]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>I&apos;ve just made my latest project public: <a href="https://github.com/cadecairos/autoku?ref=chrisdecairos.ca">Autoku</a></p>
+<p><img src="https://chrisdecairos.ca/content/images/2017/02/Peek-2017-02-21-23-56.gif" alt="Autoku Demo" loading="lazy"><br>
+(Watch closely above, you might notice a little guest!)</p>
+<p>Autoku is a command line tool for creating and configuring Heroku applications using configuration files i.e. &quot;Infrastructure as Code&quot;. It allows you to specify exactly how your application</p>]]></description><link>https://chrisdecairos.ca/introducing-autoku/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2559</guid><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Tue, 21 Feb 2017 23:26:47 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p>I&apos;ve just made my latest project public: <a href="https://github.com/cadecairos/autoku?ref=chrisdecairos.ca">Autoku</a></p>
+<p><img src="https://chrisdecairos.ca/content/images/2017/02/Peek-2017-02-21-23-56.gif" alt="Autoku Demo" loading="lazy"><br>
+(Watch closely above, you might notice a little guest!)</p>
+<p>Autoku is a command line tool for creating and configuring Heroku applications using configuration files i.e. &quot;Infrastructure as Code&quot;. It allows you to specify exactly how your application should be configured, and modifies it to reflect that.</p>
+<p>The tool has reached a point where I&apos;m comfortable sharing it, but be forewarned that it&apos;s still in need of plenty of work. There are some quirks that need to be worked out and plenty of automated testing to get done. Seeing as this tool is open source, <a href="https://github.com/cadecairos/autoku/issues?ref=chrisdecairos.ca">I welcome any and all contributions</a>.</p>
+<h4 id="install">Install</h4>
+<p><code>yarn global add autoku</code> or <code>npm install -g autoku</code></p>
+<h4 id="usage">Usage</h4>
+<p>Given this yaml file <code>sample.yaml</code>:</p>
+<pre><code class="language-yaml">name: sample-app
+
+region: us
+
+maintenance: false
+
+stack: cedar-14
+
+configVars:
+  SOME_VAR: foo 
+
+addons:
+  heroku-postgresql: hobby-dev
+
+collaborators:
+  - person@example.com
+
+features:
+  - log-runtime-metrics
+  - http-session-affinity
+
+formation:
+  web:
+    quantity: 1
+    size: hobby
+  worker:
+    quantity: 1
+    size: hobby
+
+logDrains:
+  - https://example.com:7000
+
+domains:
+  - mydomain.example.com
+
+sni:
+  - certificate-chain: &quot;-----BEGIN CERTIFICATE----- ...&quot;
+    private-key: &quot;-----BEGIN RSA PRIVATE KEY----- ...&quot;
+
+buildpacks:
+  - heroku/python
+</code></pre>
+<p>Execute <code>autoku deploy ./sample.yaml -k $HEROKU_KEY</code> to have Autoku create (if needed) and configure your application.</p>
+<p>Subsequent calls will update the application if <code>sample.yaml</code> changes.</p>
+<p>Using Autoku you can maintain the following parts of your Heroku app using configuration files:</p>
+<ul>
+<li>maintenance status</li>
+<li>Configuration Variables</li>
+<li>addons</li>
+<li>collaborators</li>
+<li>platform features</li>
+<li>formations</li>
+<li>log drains</li>
+<li>domains</li>
+<li>sni endpoints</li>
+<li>buildpacks</li>
+</ul>
+<p>Again, this is a very new piece of software and so it has flaws. There&apos;s plenty of problems to solve, like how to store and retrieve sensitive variables, for example. <strong>On that note: don&apos;t use an Autoku config file to store secrets in a public repository</strong></p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Deploying Mattermost To Heroku]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>At Mozilla, we&apos;ve been using <a href="https://mattermost.com/?ref=chrisdecairos.ca">Mattermost</a> to facilitate communication between employees and contributors for the better part of this year. Mattermost is an open source (more like open core - but the team edition is still awesome), self hosted Slack alternative. It&apos;s been really great so</p>]]></description><link>https://chrisdecairos.ca/deploying-mattermost-to-heroku/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2558</guid><category><![CDATA[heroku]]></category><category><![CDATA[Mozilla]]></category><category><![CDATA[mattermost]]></category><category><![CDATA[nginx]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Fri, 16 Sep 2016 03:13:36 GMT</pubDate><media:content url="https://i.imgur.com/BJeCvH3.png" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://i.imgur.com/BJeCvH3.png" alt="Deploying Mattermost To Heroku"><p>At Mozilla, we&apos;ve been using <a href="https://mattermost.com/?ref=chrisdecairos.ca">Mattermost</a> to facilitate communication between employees and contributors for the better part of this year. Mattermost is an open source (more like open core - but the team edition is still awesome), self hosted Slack alternative. It&apos;s been really great so far, and Mattermost has really improved its stability and features over this time period.</p>
+<p>I&apos;d like to take the time today to share with you how I&apos;ve deployed a reliable Mattermost instance to Heroku (200+ users and going strong!), so your teams can benefit from Mattermost just like we have!</p>
+<h1 id="tldr">TLDR?</h1>
+<p>If you have a Heroku account, click the button below and you&apos;ll have a custom Mattermost instance in <strong>less than one minute</strong></p>
+<p><a href="https://heroku.com/deploy?template=https%3A%2F%2Fgithub.com%2Fmozilla%2Fmattermost-heroku%2Ftree%2F1.0.3&amp;ref=chrisdecairos.ca"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploying Mattermost To Heroku" loading="lazy"></a></p>
+<p>You&apos;re welcome. <a href="https://github.com/mozilla/mattermost-heroku?ref=chrisdecairos.ca#configuration-options">Read the docs</a> to customize further!</p>
+<h2 id="howitworks">How it works</h2>
+<p>The Heroku app is configured to use two cusom buildpacks:</p>
+<ol>
+<li>
+<p><a href="https://github.com/cadecairos/nginx-buildpack?ref=chrisdecairos.ca">cadecairos/nginx-buildpack</a> - a fork of <a href="https://github.com/beanieboi/nginx-buildpack?ref=chrisdecairos.ca">beanieboi/nginx-buildpack</a> that installs NGINX and configures it as a reverse proxy to Mattermost. The fork modifies the NGINX config to expect a connection on a port and not on a socket. The NGINX proxy will automatically 301 http connections to https. Hooray!</p>
+</li>
+<li>
+<p><a href="https://github.com/mozilla/mattermost-heroku?ref=chrisdecairos.ca">mozilla/mattermost-heroku</a> - a fork of <a href="https://github.com/tommyvn/mattermost-heroku?ref=chrisdecairos.ca">tommyvn/mattermost-heroku</a> which improves on the build process and adds in a large variety of configuration options over the original.</p>
+</li>
+</ol>
+<p>Both of these forks are interested in having their changes upstreamed.</p>
+<h2 id="gettingmattermosttorunonheroku">Getting Mattermost to run on Heroku</h2>
+<p>The mechanics of the buildpack are what allows Mattermost to run on Heroku. Mattermost uses file based configuration, which is a big issue when you try to run it on Heroku - there&apos;s no way to tell Mattermost how it&apos;s configured using only environment variables. Enter the inline buildpack: A buildpack that you <em>deploy</em> to Heroku, which uses <em>itself</em> as a buildpack.</p>
+<p>This affords one major capability: We can provide a <a href="https://github.com/mozilla/mattermost-heroku/blob/master/config/config-heroku-template.json?ref=chrisdecairos.ca">template config</a>, and <a href="https://github.com/mozilla/mattermost-heroku/blob/4769c1e5a4c1bcd25baee6d4e14f804893f31089/start.sh?ref=chrisdecairos.ca#L80-L83">render in environment variables</a> before we run the Mattermost executable, <a href="https://github.com/mozilla/mattermost-heroku/blob/4769c1e5a4c1bcd25baee6d4e14f804893f31089/start.sh?ref=chrisdecairos.ca#L80-L83">pointing it to the fresh configuration file</a>. This means that no matter what, it&apos;s always got the latest settings from your environment.</p>
+<p>Unfortunately, that means you can&apos;t use the Mattermost admin console to change environment variables, because they&apos;ll be written to disk, and if the dyno reboots (which it will every 24 hours) - you lose that config setting due to the ephemeral nature of the dyno&apos;s filesystem.</p>
+<p>Another awesome feature of the buildpack is the ability to run enterprise Mattermost on Heroku. Just set the <code>MATTERMOST_TYPE=&quot;enterprise&quot;</code> on your environment and build/rebuild the app. You can then install your license for Mattermost e10/e20 as <a href="https://docs.mattermost.com/install/ee-install.html?ref=chrisdecairos.ca">per the instructions here</a></p>
+<h2 id="onemorething">One more thing</h2>
+<p>The easiest way to deploy new versions of Mattermost using the above setup is to go to the &quot;Deploy&quot; tab of your Heroku app and link the app to <a href="https://github.com/mozilla/mattermost-heroku?ref=chrisdecairos.ca">mozilla/mattermost-heroku</a>. You&apos;ll then be able to deploy specific branches from that repo. I&apos;ve set up branches that point to the same commits as their tag counterparts (minus the &apos;v&apos;).</p>
+<p>Another strategy is to use the <a href="https://devcenter.heroku.com/articles/platform-api-reference?ref=chrisdecairos.ca#build-create">build API</a>:</p>
+<pre><code> curl -n -X POST https://api.heroku.com/apps/$APP_ID_OR_NAME/builds \
+  -d &apos;{
+  &quot;buildpacks&quot;: [
+    {
+      &quot;url&quot;: &quot;https://github.com/cadecairos/nginx-buildpack.git#v1.0.0&quot;
+    },
+    {
+      &quot;url&quot;: &quot;http://github.com/mozilla/mattermost-heroku.git#v1.0.3&quot;
+    }
+  ],
+  &quot;source_blob&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mozilla/mattermost-heroku/archive/v1.0.3.tar.gz&quot;,
+    &quot;version&quot;: &quot;v1.0.3&quot;
+  }
+}&apos; \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Accept: application/vnd.heroku+json; version=3&quot;
+</code></pre>
+<h2 id="nextup">Next up</h2>
+<p>I&apos;ll be following up this post sometime in the future with details on how to get your Mattermost instance a kick-ass Chat bot that can do whatever your mind can make it do!</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Finding my Calling]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p><a href="https://chrisdecairos.ca/greetings-open-source-community/">Five or so years ago, I began an incredible journey</a>. My professor at the time, <a href="http://blog.humphd.org/?ref=chrisdecairos.ca">David Humphrey</a>, introduced me to the concept of open source software and the Mozilla Project, and I dove right in. Thanks to my explorations in open source software development (and to David!), I had the</p>]]></description><link>https://chrisdecairos.ca/finding-my-calling/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2557</guid><category><![CDATA[Mozilla]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Wed, 20 Apr 2016 02:03:00 GMT</pubDate><media:content url="https://chrisdecairos.ca/content/images/2016/04/cheers-1.gif" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://chrisdecairos.ca/content/images/2016/04/cheers-1.gif" alt="Finding my Calling"><p><a href="https://chrisdecairos.ca/greetings-open-source-community/">Five or so years ago, I began an incredible journey</a>. My professor at the time, <a href="http://blog.humphd.org/?ref=chrisdecairos.ca">David Humphrey</a>, introduced me to the concept of open source software and the Mozilla Project, and I dove right in. Thanks to my explorations in open source software development (and to David!), I had the good fortune of getting involved in a FOSS research team at the <a href="http://cdot.senecacollege.ca/?ref=chrisdecairos.ca">Centre for Development of Open Technology</a> (CDOT). Through this co-op placement, and a one year contract with CDOT after graduation, I helped develop two amazing open source projects: <a href="https://github.com/mozilla/popcorn.js?ref=chrisdecairos.ca">popcorn.js</a> and  <a href="https://github.com/mozilla/popcorn.webmaker.org?ref=chrisdecairos.ca">Popcorn Maker</a>.</p>
+<p>Through this work, I got to collaborate with <a href="https://mozillafoundation.org/?ref=chrisdecairos.ca">The Mozilla Foundation</a>, a non-profit with <a href="https://mozilla.org/mission?ref=chrisdecairos.ca">a mission to keep the web open</a>. When my time at CDOT was nearing it&apos;s end, I reached out to the powers that be at the foundation to see if I could make their mission my career... And they said yes!</p>
+<p>Thus began three years of hard work, learning, successes, failures, imposter syndrome and most importantly, making an impact in people&apos;s lives. This time involved me doing a considerable amount of client side (early on) and server side (last two years) application development. I enjoyed the latter, didn&apos;t care so much for the former (but I have improved my skills in that area!). Despite enjoying my work, I&apos;ve always felt like I wanted more, but I wasn&apos;t sure what it was.</p>
+<p>During the last few weeks, my role in the foundation has shifted to Operations Engineer (role name not final). This role shift will have me working with a much wider group of people inside and outside the organization to build, deploy, monitor and maintain our applications, services and networks. I will work to improve our development and deployment tools, and be tasked with sharing the knowledge of these processes and tools with our team and collaborators.</p>
+<p>Had I been approached with this position a year ago, I don&apos;t think I&apos;d have been ready to say yes, but I&apos;m currently at a point in my life and career where I want to push myself to become a better engineer. From the beginning of my time at Mozilla, I&apos;ve worked closely with my predecessors in ops, <a href="https://github.com/jdotpz?ref=chrisdecairos.ca">JP Schneider</a> and <a href="https://github.com/jbuck?ref=chrisdecairos.ca">Jon Buckley</a>. They&apos;re both incredibly intelligent and resourceful people, and much of my knowledge was gained through constant IRC pings, impromptu white boarding sessions and coffee break chats. It was through these interactions I&apos;ve built up a familiarity with our systems here at the foundation, giving me confidence in my ability to serve in this capacity to the highest degree.</p>
+<p>I&apos;m excited to continue being a MoFo, to evolve my skills and to share my knowledge, all while helping protect the worlds largest public resource. <strong>This is my calling</strong>, and it&apos;s something I&apos;m extremely humbled and proud to be a part of.</p>
+<h3 id="herestoanotherfiveyearsoflearningchallengessuccessesfailuresandmostimportantlysharingreactionsusinganimatedgifs">Here&apos;s to another five years of learning, challenges, successes, failures, and most importantly, sharing reactions using animated GIFs!</h3>
+<p><img src="https://chrisdecairos.ca/content/images/2016/04/cheers.gif" alt="Finding my Calling" loading="lazy"></p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Webmaker Services In a Box]]></title><description><![CDATA[Find out how to run Webmaker services using Docker Compose, without any dependencies on Node, NPM, Postgres, MySQL, and Redis!]]></description><link>https://chrisdecairos.ca/webmaker-services-in-a-box/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2556</guid><category><![CDATA[Mozilla]]></category><category><![CDATA[webmaker]]></category><category><![CDATA[Docker]]></category><category><![CDATA[docker-compose]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Fri, 20 Nov 2015 19:11:17 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p>Configuring and running services for Webmaker is a real pain in the ass.</p>
+<p>(Webmaker services = Webmaker API, Webmaker ID, and Webmaker LoginAPI)</p>
+<p>There&apos;s database and caching services to install and configure, npm dependencies to install, native NodeJS bindings to compile (sorry, Windows), and database scripts/migrations to run. This makes life difficult for many. Particularly those who don&apos;t handle these things on a day to day basis, like front-end focused developers or designers. I wanted to make life easier for them, so I took some time to fix that problem.</p>
+<p>I decided to fix this problem using <a href="https://docker.com/?ref=chrisdecairos.ca">Docker</a>. Docker is a platform for building self contained applications that have their own filesystem, runtimes, system libraries, and more. What this basically means is that you can build a Docker image once, and expect it to run anywhere (...that can run Docker).</p>
+<p><a href="https://github.com/cadecairos/webmaker-docker?ref=chrisdecairos.ca">Webmaker-Docker</a> is a new repo I&apos;ve created to contain everything you need to run Webmaker Services, without needing to install <strong>anything</strong> except git, Docker, and Docker Compose. That&apos;s right, no need to install NodeJS, npm, Postgres, MySQL, SQLite, Redis. No need to run <code>npm install</code> or <code>bower install</code>. We&apos;re finally living the dream, folks.</p>
+<p>This development will enable something we&apos;ve never had before: The ability to give front end devs and designers simple and easy access to services they can use when prototyping and developing new features. It&apos;s even possible to create dockerized feature branches for team mates to use new service features to develop front end parts in paralell! (Follow up post on that another time)</p>
+<h4 id="howtorun">How To Run</h4>
+<p>Okay, so you&apos;re super excited about this, but not sure exactly what to do next. Let&apos;s go over the set-up (subject to changes :P). I should note that docker will automatically download container images from <a href="https://hub.docker.com/?ref=chrisdecairos.ca">Docker Hub</a>, so make sure you&apos;ve got a decent internet connection or time (or both) - but don&apos;t worry, this will only happen  the first time.</p>
+<ol>
+<li>Install Docker and Docker Compose (available for Linux, Mac and Windows) - <a href="https://docs.docker.com/?ref=chrisdecairos.ca">Installation instructions</a></li>
+<li>Clone the git repository: <code>git clone git@github.com:cadecairos/webmaker-docker</code></li>
+<li>Go to the <code>data-services</code> directory and run <code>docker-compose up -d</code> to start the database services Webmaker needs.</li>
+</ol>
+<ul>
+<li>They&apos;re started in the background by passing the <code>-d</code> flag, omit it if you want to see container logs.</li>
+</ul>
+<ol start="4">
+<li>Go to the <code>services</code> directory and run <code>docker-compose up -d</code> to start the Webmaker services.</li>
+</ol>
+<ul>
+<li>omit -d to see logs from the Applications (helpful for debugging)</li>
+</ul>
+<ol start="5">
+<li>To shut down the containers when they&apos;re detached, go to the two directories mentioned above and run <code>docker-compose stop</code>, otherwise, <code>ctrl-c</code> does the trick.</li>
+</ol>
+<h6 id="nowwhat">Now what?</h6>
+<p>That&apos;s up to you! You&apos;ve got fully functional services running that you can use to do whatever you please. Wanna prototype a new feature or site that depends on one of these services? Go for it! Here&apos;s a rundown on what services are exposed, and where:</p>
+<ul>
+<li>Postgres is listening on <strong>localhost:5432</strong>
+<ul>
+<li><strong>username</strong>: &apos;webmaker&apos;</li>
+<li><strong>password</strong>: &apos;webmaker&apos;</li>
+<li><strong>database</strong>: &apos;webmaker&apos;</li>
+</ul>
+</li>
+<li>MariaDB is listening on <strong>localhost:3306</strong>
+<ul>
+<li><strong>username</strong>: &apos;wmlogin&apos;</li>
+<li><strong>password</strong>: &apos;wmlogin&apos;</li>
+<li><strong>database</strong>: &apos;wmlogin&apos;</li>
+<li><strong>root password</strong> :&apos;root_wmlogin&apos;</li>
+</ul>
+</li>
+<li>Redis is listening on <strong>localhost:6379</strong>
+<ul>
+<li><strong>There aren&apos;t any credentials to worry about</strong></li>
+</ul>
+</li>
+<li>Webmaker API is listening on <strong>localhost:2015</strong></li>
+<li>Webmaker ID is listening on <strong>localhost:1234</strong>
+<ul>
+<li>there&apos;s a client and secret already in the database for you
+<ul>
+<li><strong>client_id</strong>: &apos;webmaker&apos;</li>
+<li><strong>secret</strong>: &apos;webmaker&apos;</li>
+<li><strong>all grant types and response types allowed.</strong></li>
+<li><strong>redirect_url</strong> is &apos;example.com&apos; - You can manually change it or insert a new one if you desire</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Legacy Login is listening on <strong>localhost:3000</strong>, but don&apos;t touch it if you know what&apos;s good for you.</li>
+</ul>
+<h4 id="letsgettechnical">Let&apos;s get technical</h4>
+<p>Let&apos;s talk about how this all is put together. The base of all this magic is two files known as <a href="https://docs.docker.com/compose/compose-file/?ref=chrisdecairos.ca">Compose files</a>. Compose files use <a href="http://yaml.org/?ref=chrisdecairos.ca">YAML</a> to define a collection of Docker Images to build/download/execute. It defines what ports to expose, what kind of networking to use and lets you pull in env files to configure the applications running within.</p>
+<p>Here&apos;s the data-services Compose file:</p>
+<iframe src="https://gist.github.com/cadecairos/22c0cf3788f9960263cd.pibb#file-data-services-yml" style="width: 100%; height: 400px"></iframe>
+<p>Here&apos;s the Webmaker services Compose file:</p>
+<iframe src="https://gist.github.com/cadecairos/22c0cf3788f9960263cd.pibb#file-webmaker-services-yml" style="width: 100%; height: 400px"></iframe>
+<p>Each of the services is put together with a <a href="https://docs.docker.com/engine/reference/builder/?ref=chrisdecairos.ca">Dockerfile</a>. Dockerfiles are text files that automate the creation of images. Here&apos;s the Dockerfile for Webmaker API:</p>
+<iframe src="https://gist.github.com/cadecairos/22c0cf3788f9960263cd.pibb#file-webmaker-api-dockerfile" style="width: 100%; height: 400px"></iframe>
+<p>There&apos;s plenty more to find <a href="https://github.com/cadecairos/webmaker-docker?ref=chrisdecairos.ca">in the repo</a>, so go take a look!</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Intercepting HTTP traffic with Zaproxy]]></title><description><![CDATA[Learn how to intercept and modify HTTP traffic from web applications using the OWASP Zed Attack Proxy.]]></description><link>https://chrisdecairos.ca/intercepting-traffic-with-zaproxy/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2555</guid><category><![CDATA[Security]]></category><category><![CDATA[zaproxy]]></category><category><![CDATA[ZAP]]></category><category><![CDATA[OWASP]]></category><category><![CDATA[proxy]]></category><category><![CDATA[intercepting proxy]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Fri, 28 Aug 2015 18:51:28 GMT</pubDate><media:content url="https://chrisdecairos.ca/content/images/2015/08/greatpower-1.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://chrisdecairos.ca/content/images/2015/08/greatpower-1.jpg" alt="Intercepting HTTP traffic with Zaproxy"><p>Today I&apos;m going to show you how to use the <a href="https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project?ref=chrisdecairos.ca">Zed Attack Proxy</a> (ZAP) to debug and test the security of web applications. ZAP is an intercepting proxy that serves as a great tool for security beginners and veterans alike. It provides tools to intercept and modify HTTP/HTTPS and WebSocket traffic, as well as an assortment of other useful tools.</p>
+<p>Before I continue, I feel obligated to warn you that you should <strong>never, ever, ever</strong> use this tool on an application you don&apos;t own (that would be illegal). Only use it with a program you&apos;re hosting yourself or one you&apos;ve been given explicit permission to test.</p>
+<h2 id="setup">Set-up</h2>
+<h4 id="localproxysettings">Local Proxy Settings</h4>
+<p>After <a href="https://github.com/zaproxy/zaproxy/wiki/Downloads?ref=chrisdecairos.ca">installing ZAP</a>, you&apos;re going to need to do a little configuration to get things running. Firstly, you need to figure out your requirements for using it as a proxy. If you want to direct your browser traffic at ZAP you only need to <a href="http://www.wikihow.com/Change-Proxy-Settings?ref=chrisdecairos.ca">change your browser&apos;s proxy settings</a> to point at ZAP. In most cases, ZAP listens for connections on <code>http://localhost:8080</code>. If you want to intercept HTTPS traffic, it gets a bit more complicated. Zap can <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpUiDialogsOptionsDynsslcert?ref=chrisdecairos.ca#generate">generate you a custom root CA certificate</a> to install on your machine so that it can proxy secure connections for you.</p>
+<p>To change your local proxy settings, go to <code>tools -&gt; options...</code> in ZAP, and look for the <code>Local Proxy</code> sub-menu. It&apos;s also possible to point a device (i.e. Android phone) connected to the same network as your computer to your ZAP proxy. Simply configure ZAP to listen for connections on your IP address, and proxy your device traffic through it.</p>
+<h4 id="contexts">Contexts</h4>
+<p>Now that you&apos;ve got your proxy set up lets create a new <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsContexts?ref=chrisdecairos.ca">context</a>. Contexts are a way to group relevant URLs, so that ZAP only shows you the traffic you care about. Create a new context by clicking on the &quot;new context button&quot; and giving it a name.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Create_Context.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Create_Context.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<p>For the purposes of this demonstration, I&apos;ll be proxying requests from the <a href="https://github.com/mozilla/webmaker-android?ref=chrisdecairos.ca">Webmaker app</a> on my Android phone through a ZAP proxy on my computer. I built a debug version of Webmaker for Android that uses <code>localhost:2015</code> for <a href="https://github.com/mozilla/api.webmaker.org?ref=chrisdecairos.ca">storing projects</a> and <code>localhost:6767</code> for <a href="https://github.com/mozilla/id.webmaker.org?ref=chrisdecairos.ca">authentication</a>.</p>
+<p>I added these addresses to my Context by navigating to <code>file -&gt; session properties</code> And opening the Contexts sub-menu. From there, select the context you created and find the &quot;Include in context&quot; tab. Add the URLs you&apos;re filtering for in the menu there.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-42-56.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-42-56.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<p>If the hosts already are listed in your Sites tab in ZAP, you can right click and select add to context.</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-47-40.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-13-47-40.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<h4 id="scope">Scope</h4>
+<p>To filter on a configured context, you want to mark it &quot;in scope&quot; and likely mark the &quot;Default Context&quot; as &quot;not in scope&quot;. Do so by right clicking the contexts and selecting <code>add to scope</code> or <code>remove from scope</code> as required. Additionally, you must also enable scope filtering in the various lists you see in the ZAP UI by clicking the little bulls-eye symbol:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_1.png"><img src="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_1.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a><br>
+<a href="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_2.png"><img src="https://chrisdecairos.ca/content/images/2015/08/scope_toggle_2.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<h4 id="inspectingrequests">Inspecting Requests</h4>
+<p>As your proxy intercepts and forwards traffic, it keeps a running log of all the request and response data it handles. You can view this information by selecting a request from the History tab:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/inspect_request.png"><img src="https://chrisdecairos.ca/content/images/2015/08/inspect_request.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<p>This data is invaluable when you&apos;re debugging weird issues with external services.</p>
+<h4 id="thefunstuff">The Fun Stuff</h4>
+<p>Now that we can record traffic between a client and a server, lets use the <a href="https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsBreakpoints?ref=chrisdecairos.ca">breakpoints</a> feature of ZAP to stop a request in-flight and modify it!</p>
+<p>Continuing with my Webmaker example, lets create a project, and see what the initial payload looks like:</p>
+<pre><code>POST http://localhost:2015/users/1/bulk HTTP/1.1
+Proxy-Connection: keep-alive
+Content-Length: 169
+Accept: application/json
+Origin: file://
+User-Agent: Mozilla/5.0 (Linux; Android 5.0.1; HTC One_M8 Build/LRX22C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Mobile Crosswalk/13.42.319.12 Mobile Safari/537.36
+Authorization: token 5712cf871106f07233cfaff7cfba157b3b647c57487151f9e6de19e274031095
+Content-Type: application/json
+Accept-Language: en-us,en
+Cookie: crumb=bWwSsAfq8bajB0hts05UA_qfeWnqLm5Iny9mjfe3j3x
+Host: localhost:2015
+
+{&quot;actions&quot;:[{&quot;method&quot;:&quot;create&quot;,&quot;type&quot;:&quot;projects&quot;,&quot;data&quot;:{&quot;title&quot;:&quot;My project&quot;}},{&quot;method&quot;:&quot;create&quot;,&quot;type&quot;:&quot;pages&quot;,&quot;data&quot;:{&quot;projectId&quot;:&quot;$0.id&quot;,&quot;x&quot;:0,&quot;y&quot;:0,&quot;styles&quot;:{}}}]}
+</code></pre>
+<p>Here we can see that the app is using the <a href="https://github.com/mozilla/api.webmaker.org/?ref=chrisdecairos.ca#bulk-action-api">bulk endpoint</a> to create a new project and a starter page for it. Let have some fun!</p>
+<p>Firstly we need to right click on the request in the history tab and locate the <code>Break...</code> option (oh how appropriate). In general, the default settings it shows you are fine enough, but there&apos;s ways to add conditional breakpoints that you should totally check out!</p>
+<p>Once you set up the break point, use your client to make the request again. You&apos;ll notice that ZAP creates a new tab in the interface called &quot;Break&quot;:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-24-31.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-24-31.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<p>This tab lets you modify the request headers and body before sending it along to the destination server. Lets add a second page to actions array:</p>
+<pre><code>{
+  &quot;actions&quot;: [{
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;type&quot;: &quot;projects&quot;,
+    &quot;data&quot;: {
+      &quot;title&quot;: &quot;My project&quot;
+    }
+  }, {
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;type&quot;: &quot;pages&quot;,
+    &quot;data&quot;: {
+      &quot;projectId&quot;: &quot;$0.id&quot;,
+      &quot;x&quot;: 0,
+      &quot;y&quot;: 0,
+      &quot;styles&quot;: {}
+    }
+  }, {
+    &quot;method&quot;: &quot;create&quot;,
+    &quot;type&quot;: &quot;pages&quot;,
+    &quot;data&quot;: {
+      &quot;projectId&quot;: &quot;$0.id&quot;,
+      &quot;x&quot;: 1,
+      &quot;y&quot;: 0,
+      &quot;styles&quot;: {}
+    }
+  }]
+}
+</code></pre>
+<p>Send the request along by pressing the step or continue buttons in the top level toolbar:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/step.png"><img src="https://chrisdecairos.ca/content/images/2015/08/step.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<p>ZAP will forward the request to its destination with your changes, and then (if configured to do so) intercept the response for modification as well. In the above example, I produce a new project with <em>two</em> pages instead of one. While this isn&apos;t very evil, you may be understanding the power of an intercepting proxy right now:</p>
+<p><a href="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-43-38.png"><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-28-14-43-38.png" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></a></p>
+<h4 id="dontbetooevil">Don&apos;t be <em>too</em> evil</h4>
+<p><img src="https://chrisdecairos.ca/content/images/2015/08/greatpower.jpg" alt="Intercepting HTTP traffic with Zaproxy" loading="lazy"></p>
+<p>So, there you have it. You now have the knowledge and skills to sit an intercepting proxy up between your client and server applications (hopefully for the purpose of making them better!).</p>
+<p>What I&apos;ve covered today is just a very small part of the things that ZAP is capable of. If you want to learn more, I&apos;d be glad to cover some more topics in the future. In the mean time, you can&apos;t go wrong reading the <a href="https://github.com/zaproxy/zap-core-help/wiki?ref=chrisdecairos.ca">official ZAP wiki</a></p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Dark GTK Themes and Firefox]]></title><description><![CDATA[How to fix poorly styled input elements in Firefox when using dark themes in Linux]]></description><link>https://chrisdecairos.ca/dark-gtk-themes-and-firefox/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2554</guid><category><![CDATA[Firefox]]></category><category><![CDATA[GTK]]></category><category><![CDATA[Linux]]></category><category><![CDATA[dark themes]]></category><category><![CDATA[stylish]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Thu, 06 Aug 2015 03:04:44 GMT</pubDate><media:content url="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: markdown--><img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png" alt="Dark GTK Themes and Firefox"><p>I&apos;ve been using Linux for some time now, and I&apos;ve always been partial to dark themes. They&apos;re easy on the eyes, especially when you spend most of your day working on a computer. The trouble is, Firefox doesn&apos;t play very nicely with these themes. It seems like it tries to borrow the theme&apos;s colour palette for it&apos;s user-agent style sheets.</p>
+<p>While that seems great and all, it becomes impossible to use your browser when input elements (which seem to be the elements affected by dark themes) get dark backgrounds with dark text.</p>
+<p>For example, here&apos;s what my blog settings page looks like without a fix applied:<br>
+<img src="https://chrisdecairos.ca/content/images/2015/08/Screenshot-from-2015-08-05-22-42-22.png" alt="Dark GTK Themes and Firefox" loading="lazy"></p>
+<p>To fix this problem, I installed a Firefox add-on named <a href="https://addons.mozilla.org/en-US/firefox/addon/stylish?ref=chrisdecairos.ca">Stylish</a>, which allows you to write custom stylesheets to apply to the browser chrome and the content of websites.</p>
+<p>I added a small style sheet to stylish:</p>
+<iframe src="https://gist.github.com/cadecairos/e1a22fc31faaa813693a.pibb" class="post-iframe"></iframe>
+<p>and now I get:</p>
+<p><img src="https://chrisdecairos.ca/content/images/2017/01/XKYCOqN.png" alt="Dark GTK Themes and Firefox" loading="lazy"></p>
+<p>One problem I&apos;m still running into is that select elements aren&apos;t reflecting the fixed background colour settings... If you have a fix or can figure one out, I would love to hear from you!</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Hapi: The Good Parts]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>Recently, I&apos;ve been working with a new framework called <a href="http://hapijs.com/?ref=chrisdecairos.ca">Hapi</a> to build <a href="http://github.com/mozilla/api.webmaker.org?ref=chrisdecairos.ca">an API for Webmaker</a>. This is a bit of a departure from the past, where we traditionally would have used Express to build the our server applications. The decision to use Hapi was based on several</p>]]></description><link>https://chrisdecairos.ca/hapi-the-good-parts/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2553</guid><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Fri, 05 Jun 2015 16:15:56 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p>Recently, I&apos;ve been working with a new framework called <a href="http://hapijs.com/?ref=chrisdecairos.ca">Hapi</a> to build <a href="http://github.com/mozilla/api.webmaker.org?ref=chrisdecairos.ca">an API for Webmaker</a>. This is a bit of a departure from the past, where we traditionally would have used Express to build the our server applications. The decision to use Hapi was based on several features that we found in our experimentation with the framework. I&apos;d like to outline these features, and give examples about how we&apos;re using them.</p>
+<h4 id="tests">Tests</h4>
+<p>We wanted our services to be highly testable. Hapi&apos;s Server API makes this a cinch. Its configuration-centric approach to building servers means you can split all of your configuration (like routes) into require-able modules that can be tested in isolation:</p>
+<iframe class="post-iframe" src="https://gist.github.com/cadecairos/881bf337ec4282adf836.pibb"></iframe>
+<p>As you can see above, we can test the routes&apos; configuration outside of actually building a running Hapi server. While the tests above don&apos;t cover situations where <em>more</em> configuration is added, you can use libraries like <a href="https://www.npmjs.com/package/joi?ref=chrisdecairos.ca">Joi</a> to provide far more strict assertions on the configuration object.</p>
+<p>One other key Hapi feature is it&apos;s <a href="http://hapijs.com/api?ref=chrisdecairos.ca#serverinjectoptions-callback">inject function</a>, which lets you simulate receiving a request. It is invaluable when testing, because it enables you to do very cool things like providing credentials that step over the authentication of your routes.</p>
+<iframe src="https://gist.github.com/cadecairos/56c4a5f79ee296576e6f.pibb" class="post-iframe"></iframe>
+<h4 id="plugins">Plugins</h4>
+<p>Hapi provides a plugin API, which makes separating your application into independent units <em>very easy</em>. This separation consequently makes testing really easy too. In your tests, you can register the plugin on a bare Hapi server, with whatever test specific configuration you desire, and test it&apos;s behaviour in isolation.</p>
+<iframe src="https://gist.github.com/cadecairos/cf22b634c94e047b84c2.pibb" class="post-iframe"></iframe>
+<h4 id="servermethods">Server Methods</h4>
+<p>In the last gist I embedded, I added something called a <a href="http://hapijs.com/tutorials/server-methods?ref=chrisdecairos.ca">server method</a>. Server methods are a way to expose functions on your server object, which removes the need to require a common module everywhere a function is needed. Basically, if you define your server methods in a plugin, you register it once, and it&apos;s available everywhere!</p>
+<p>Another really handy feature that server methods have is caching. Hapi is compatible with <a href="https://www.npmjs.com/package/catbox?ref=chrisdecairos.ca">catbox</a>, a multi-strategy key-value store, and Hapi leverages it for easy caching. This is extremely useful if the server method requests data from a database:</p>
+<iframe src="https://gist.github.com/cadecairos/1218c4ba12d34c1d9ea8.pibb" class="post-iframe"></iframe>
+<h4 id="validation">Validation</h4>
+<p>Hapi provides an interface for enforcing strict rules on the data coming into your application. This validation functionality works perfectly with the <a href="https://www.npmjs.com/package/joi?ref=chrisdecairos.ca">Joi</a> library. It can be applied to route params (<code>/foo/{bar}</code>) request payload (<code>{foo: &apos;bar&apos;}</code>) or query params (<code>/foo/bar?fizz=buzz</code>).</p>
+<iframe src="https://gist.github.com/cadecairos/8350e329c1f656e4c889.pibb" class="post-iframe"></iframe>
+<p>In summary, I&apos;m very impressed with Hapi. With it (and with the help of a couple other great libraries called <a href="http://sinonjs.org/?ref=chrisdecairos.ca">sinon</a> and <a href="https://github.com/pgte/nock?ref=chrisdecairos.ca#nock">nock</a>), I was able to achieve <a href="https://coveralls.io/r/mozilla/api.webmaker.org?ref=chrisdecairos.ca">100% test coverage</a> on api.webmaker.org. All without having any external dependencies (other than PostgreSQL, but I can live with that, since the tests feel more real if they use an actual database)</p>
+<p>Here&apos;s the part where I engage with you:</p>
+<p><strong>Do you use Hapi?</strong> <br><br>
+<strong>What do you think of it?</strong> <br><br>
+<strong>What are your favourite features or tricks when developing applications with Hapi?</strong></p>
+<p>edit: I didn&apos;t realize until this morning that a recent theme update disabled disqus. It&apos;s working now, should you wish to chat.</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[One Time Passwords (Part Two)]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p><a href="https://chrisdecairos.ca/one-time-passwords">In my previous post</a>, I wrote about the new login system we&apos;re working on for Webmaker. In short, the new system facilitates the authentication of a user by generating a one time use password and sending it to the user&apos;s email account. The user can then</p>]]></description><link>https://chrisdecairos.ca/one-time-passwords-pt-2/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2552</guid><category><![CDATA[Mozilla]]></category><category><![CDATA[Mozilla Foundation]]></category><category><![CDATA[open-source]]></category><category><![CDATA[webmaker]]></category><category><![CDATA[Security]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Thu, 18 Sep 2014 03:22:15 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p><a href="https://chrisdecairos.ca/one-time-passwords">In my previous post</a>, I wrote about the new login system we&apos;re working on for Webmaker. In short, the new system facilitates the authentication of a user by generating a one time use password and sending it to the user&apos;s email account. The user can then click a link in the email to log them in right away (either for the session only or for one year).</p>
+<p>After getting <a href="https://twitter.com/davidascher/status/505451947566972929?ref=chrisdecairos.ca">some great feedback</a> about my last post, I&apos;m going to try and outline the protocol with less noise and more of the important details.</p>
+<h4 id="whatsnew">What&apos;s new</h4>
+<p>The latest implementation of the system adds in several things that weren&apos;t in the previous iteration.</p>
+<p>Most notably, we&apos;ve chosen to provide users with the option to disable one time passwords and use a custom set password. You can read more about how these are implemented in the Protocol section below.</p>
+<p>Secondly, I&apos;ve updated the OTP generation process to create ten character, pronounceable tokens. This new method aids users if they need to type the token on one device, while reading from another.</p>
+<p>Lastly, I have put in rate limiting middleware on the login server routes that handle the new protocol. It is backed by redis, and provides a simple way to control how often someone can use the routes.</p>
+<p>Here&apos;s how it works:</p>
+<ol>
+<li>A request comes in!</li>
+<li>Data about rate limits is stored in redis, keyed on <code>&quot;{API_route}:{IP_Address}:{uid}&quot;</code>. The middleware queries redis to see if this IP and uid have been here recently, and if so, increments the hit count <strong>OR</strong> The rate limiting middleware stores the hit count(1) in redis, using the key pattern described, and the key is set to expire after some amount of time.</li>
+<li>Should further requests be made from the same source, the count stored in the key is incremented</li>
+<li>If the count in the key reaches some max value before it expires, any further requests get a 429 response from the API server (until the key expires).</li>
+</ol>
+<h4 id="highleveloverview">High Level Overview</h4>
+<p>I&apos;ve put together four high level flow charts that show the new actions in the system. For more detail about the  actions, read the Protocol section below.</p>
+<ol>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Create_Account_Flow.png">Create Account Flow</a></li>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Sign_In_Flow.png">Sign In Flow</a></li>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Enable_Disable_Password.png">Enable and Disable Password Flow</a></li>
+<li><a href="https://chrisdecairos.ca/content/images/otp/Reset_Password_Flow.png">Password Reset Flow</a></li>
+</ol>
+<h4 id="protocol">Protocol</h4>
+<h5 id="creatingatoken">Creating a token</h5>
+<ol>
+<li>A request is made to <code>/api/v2/user/request</code> with a JSON post body containing a uid (username or email)</li>
+<li>The server generates 4 random bytes using node&apos;s <a href="http://nodejs.org/api/crypto.html?ref=chrisdecairos.ca#crypto_crypto_randombytes_size_callback">crypto.randomBytes function</a></li>
+<li>A module called <a href="https://github.com/deoxxa/proquint?ref=chrisdecairos.ca">proquint</a> turns the random bytes into a pronouncable string, i.e: &quot;joban-ladim&quot;</li>
+<li>The string is stored in the database, and an login email is dispatched</li>
+</ol>
+<h5 id="signinwithtoken">Sign in with Token</h5>
+<ol>
+<li>The user enters clicks a link in a login email. The link includes the following query parameters:
+<ul>
+<li>username=&lt;username&gt;</li>
+<li>token=&lt;OTP&gt;</li>
+<li>validFor=&lt;&apos;session&apos; or &apos;one-year&apos;&gt;</li>
+</ul>
+</li>
+<li>The page issues a post request to <code>/api/v2/user/authenticateToken</code> with the query params as JSON in the body</li>
+<li>The token is verified, and marked as used.</li>
+<li>The server sends a set-cookie header in the response to the client, that either expires when the browser session ends (public/shared computers), or one that will not expire for one year (for trusted computers)</li>
+</ol>
+<h5 id="signinwithpassword">Sign in with Password</h5>
+<ol>
+<li>The user enters in their uid (email or username) and their password, which are posted to <code>/api/v2/user/verify-password</code></li>
+<li>The server looks up the user&apos;s salted and hashed password, and verifies that the provided password produces the same output from <a href="https://github.com/ncb000gt/node.bcrypt.js?ref=chrisdecairos.ca">bcrypt</a></li>
+<li>The server sends a set-cookie header containing the user&apos;s session object, which can expire after the session or in one year.</li>
+</ol>
+<h5 id="enablepasswords">Enable Passwords</h5>
+<ol>
+<li>A logged in user provides a unique, secure password (ideally) which is send in to <code>api/v2/user/enable-passwords</code> in the post body.</li>
+<li>The server uses <a href="https://github.com/ncb000gt/node.bcrypt.js?ref=chrisdecairos.ca">bcrypt</a> to salt and hash the password (12 rounds, to slow things down a bit)</li>
+<li>The salt and hash are stored in the database</li>
+</ol>
+<h5 id="disablepasswords">Disable Passwords</h5>
+<ol>
+<li>A logged in user causes the site to post to <code>/api/v2/user/remove-password</code></li>
+<li>The user&apos;s password is removed from the database, enabling OTP for the user once again.</li>
+</ol>
+<h5 id="resetpasswordrequest">Reset Password Request</h5>
+<ol>
+<li>A user provides a uid (email or username) which is posted to <code>/api/v2/user/request-reset-code</code></li>
+<li>The server uses <a href="https://github.com/substack/node-hat?ref=chrisdecairos.ca">Hat</a> to generate 256 random bits, which is base 16 encoded, creating a 64 character long string.</li>
+<li>The string is saved to the database and an email is dispatched to the account owner.</li>
+</ol>
+<h5 id="resetpassword">Reset Password</h5>
+<ol>
+<li>A user clicks the reset password link in a reset request email, which links to something like <code>/reset-account?uid={username}&amp;code={reset_code}</code></li>
+<li>The user enters a unique, secure password (every time, right?)</li>
+<li>The code, uid, and password are posted to <code>/api/v2/user/reset-password</code></li>
+<li>The reset code is validated</li>
+<li>The same steps described above are followed to salt and hash the password, which is then stored in the database.</li>
+</ol>
+<h4 id="wrapup">Wrap-up</h4>
+<p>The system we&apos;ve been working on is an effort to make the sign up and sign on experience on Webmaker easier for our users. We think we&apos;ve nailed it with the dead-easy sign up flow. However, getting sign in to not suck isn&apos;t as easy. As we roll out the new system in the near future, we&apos;re going to be watching closely and gathering data about the various ways people interact with the new system. This data will help inform our decisions moving forward as we try to make the Webmaker experience better for everyone.</p>
+<p>If you&apos;ve made it this far, congratulations! Do you have an opinon on the new system? We&apos;d love to hear from you! There are many ways to get in touch:</p>
+<ol>
+<li>Use the Disqus comments at the end of this post</li>
+<li><a href="https://twitter.com/@ChrisDecairos?ref=chrisdecairos.ca">Tweet @ me</a></li>
+<li>Come talk to us in IRC - <a href="irc://irc.mozilla.org/#webmaker">irc://irc.mozilla.org/#webmaker</a> (I&apos;m &quot;cade&quot;)</li>
+</ol>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[One Time Passwords]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p><a href="https://webmaker.org/?ref=chrisdecairos.ca">Webmaker</a> users currently sign in to their accounts using <a href="https://persona.org/?ref=chrisdecairos.ca">Persona</a>, Mozilla&apos;s privacy respecting authentication system. It&apos;s fairly simple, and has worked really well since our <a href="https://chrisdecairos.ca/webmaker-sso">rewrite this past march</a>. You can read the details of the implementation in the blog post I&apos;ve just linked.</p>]]></description><link>https://chrisdecairos.ca/one-time-passwords/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2551</guid><category><![CDATA[Mozilla]]></category><category><![CDATA[open-source]]></category><category><![CDATA[webmaker]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Fri, 29 Aug 2014 18:46:30 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p><a href="https://webmaker.org/?ref=chrisdecairos.ca">Webmaker</a> users currently sign in to their accounts using <a href="https://persona.org/?ref=chrisdecairos.ca">Persona</a>, Mozilla&apos;s privacy respecting authentication system. It&apos;s fairly simple, and has worked really well since our <a href="https://chrisdecairos.ca/webmaker-sso">rewrite this past march</a>. You can read the details of the implementation in the blog post I&apos;ve just linked.</p>
+<p>Today, we&apos;re experimenting with alternative methods for users to log in and sign up. One such method, which <a href="https://github.com/xmatthewx?ref=chrisdecairos.ca">Matthew Wilse</a> has <a href="http://xmatthewx.github.io/webmaker-login/?ref=chrisdecairos.ca">built prototypes for</a>, has been called the &quot;Passwordless&quot; or &quot;Handshake&quot; method. I would argue that calling the system passwordless is a bit misleading and that handshake is not clear about what it really is, so I&apos;ll refer to it from here on out as the One Time Password(OTP) system.</p>
+<p>For the past several weeks I&apos;ve been building this system into existing Webmaker applications. We&apos;re hoping to deploy it to a limited number of people and gather some feedback and statistics, particularly whether or not it improves successful signup/signins (Persona is great, but <em>a lot</em> of users just give up trying to make it work).</p>
+<p>Another benefit of the work I&apos;ve been doing is a huge improvement on the account creation process. Here&apos;s some background on how it currently works:</p>
+<p>1: A user clicks &quot;Sign Up&quot; somewhere on Webmaker<br>
+2: A persona pop-up appears<br>
+3: A user who does not have a Persona account must now create one. <strong>If they have one already, Go To 5</strong><br>
+4: Verify email with Persona.org<br>
+5: Sign into Persona<br>
+6: A new user modal pops up, Asks for a username, among other things.<br>
+7: Yay, a new user!</p>
+<p>At every step above number 7, some significant percentage of users just simply gives up. I don&apos;t blame them, it&apos;s incredibly confusing to have to create two accounts as well as verify an email address.</p>
+<p>Matthew&apos;s prototypes provided a sign-up flow that looked a little bit like this:</p>
+<ol>
+<li>A user clicks &quot;Sign Up&quot; somewhere on Webmaker</li>
+<li>They provide an email and a username</li>
+<li>Yay, a new user!</li>
+</ol>
+<p>Wow, that sounds really nice! So I&apos;<img src="https://chrisdecairos.ca/content/images/sign-up.gif" alt="Sign up GIF" loading="lazy">](<strong>GHOST_URL</strong>/content/images/sign-up.gif)</p>
+<p>I&apos;ve also made the OTP sig<img src="https://chrisdecairos.ca/content/images/sign-in.gif" alt="Sign In GIF" loading="lazy">](<strong>GHOST_URL</strong>/content/images/sign-in.gif)</p>
+<p>During the early stages of this work, I build the front end bits as best I could, but my CSS-Fu has never been that strong. Recently, <a href="http://vazquez.io/?ref=chrisdecairos.ca">Ricardo Vazquez</a> has come on board the login train to make the prototype modal dialogs beautiful to see and use. Stay tuned to my blog and Webmaker demos in the near future to see the project evolve!</p>
+<h4 id="howotpswork">How OTP&apos;s work</h4>
+<p>Here&apos;s a list of steps that describes the whole One Time Password protocol (shown above, second image), from start to end.</p>
+<ol>
+<li>The User-Agent POSTs: <code>{ email: &quot;chris@example.com&quot; }</code> to <code>/auth/v2/request</code> on the app server (lets use webmaker.org)</li>
+<li>The Webmaker.org server should forward the post body to the Basic Auth protected route <code>/auth/v2/request</code> on login.webmaker.org</li>
+<li>The login server will look up the user account by the provided email address. If none is found, responds to the request with a 400: &quot;User not found&quot;</li>
+<li>A one time password is generated using <a href="https://github.com/substack/node-hat?ref=chrisdecairos.ca">Hat</a>.</li>
+<li>The password is 24 random bits and is converted to base 36. This generates a five character string of letters and/or digits.</li>
+<li>The password is set to expire thirty minutes after creation, and is passed to Webmaker&apos;s event processing queue <a href="https://github.com/mozilla/sawmill?ref=chrisdecairos.ca">Sawmill</a>. Its powered by Amazon&apos;s Simple Queue Service (SQS), and messages are sent using <a href="https://github.com/jbuck/hatchet?ref=chrisdecairos.ca">Hatchet</a>, which uses <a href="https://github.com/aws/aws-sdk-js?ref=chrisdecairos.ca">Amazon&apos;s aws-sdk module</a>.</li>
+<li>From Sawmill, The event is converted into an email using a template, and is forwarded to lumberyard</li>
+<li>Lumberyard sends the email to the one stored in User account the OTP was generated for. This uses the aws-sdk and Amazon&apos;s Simple Email Service (SES)</li>
+<li>Once the User gives the User-Agent the OTP it POSTs: <code>{ email: &quot;chris@example.com&quot;, token: &quot;s34xa&quot; }</code> to <code>/auth/v2/authenticateToken</code> on the app server</li>
+<li>The Server will forward the post body to <code>/auth/v2/authenticateToken</code> on login.webmaker.org</li>
+<li>The login server will attempt to fetch the user and login token from the database, ensuring that the fetched token was 1. created no more that thirty minutes from the system time on the server and 2. has not been used to log in already.</li>
+<li>Should the criteria not be met, a 401 reponse it returned to the app server, who should not issue a session cookie.</li>
+<li>If all criteria is met, the token is marked used and saved, and the user account object is serialized into session format and returned to the app server.</li>
+<li>The app server should then send a SET-COOKIE header to the User-Agent. It should be set to https only and be encrypted with a session secret.</li>
+</ol>
+<h1 id="whatnow">What Now?</h1>
+<p>With the code in a working state, it&apos;s just a matter of iteration. Code review, fixes + optimizations, repeat. We also have folks working on copy for the emails and modal dialogs. One thing that I think is going to be the most challenging for us when we roll out the new system is clearly communicating to users the new changes. Whether it be through email comms, banners on the homepage or a first-run log-in experience, I feel it&apos;s incredibly important to get this right.</p>
+<p>We&apos;ve been thinking about keeping Persona as an optional log-in method (+1) and implementing an opt-in, run-of-the-mill password login system (I have implemented this fully, but it was cut from this iteration D:). I&apos;ve also experimented (successfully) with turning login.webmaker.org into an OAuth2 provider - but havent actually gotten any resources or scopes set up to work with the oauth tokens I can generate.</p>
+<p>I&apos;ve also reached out to the security gurus in the organization, with the goal of going over the new protocol with them and getting feedback on the right and the wrong.</p>
+<p>That said, what do you think? Have you had experience with log-in flow like this? What challenges did you face or forsee this flow facing? Feel free to use the comment section below, drop some comments in the <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1049943&amp;ref=chrisdecairos.ca">Bugzilla bug</a> or <a href="mailto:cade@mozillafoundation.org">email me</a></p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Windows And Webmaker Events]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>Webmaker is a very large project, with dozens of parts that all come together at <a href="https://webmaker.org/?ref=chrisdecairos.ca">https://webmaker.org</a>. One of the hardest things for new contributors is getting everything set up properly. This problem multiplies ten-fold when the desired platform of the developer is Windows. Recently, I put together a</p>]]></description><link>https://chrisdecairos.ca/windows-and-webmaker-events/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2550</guid><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Wed, 30 Jul 2014 20:05:00 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p>Webmaker is a very large project, with dozens of parts that all come together at <a href="https://webmaker.org/?ref=chrisdecairos.ca">https://webmaker.org</a>. One of the hardest things for new contributors is getting everything set up properly. This problem multiplies ten-fold when the desired platform of the developer is Windows. Recently, I put together a guide for a new contributor, explaining the steps it takes to set up a Windows 7 computer for development of Webmaker projects (specifically, the events platform). It&apos;s a long, complicated, and frustrating process, which I&apos;d like to share here, so that should anyone need to do this, they won&apos;t have to look very far.</p>
+<h2 id="dependencyinstallation">Dependency Installation</h2>
+<h4 id="git">Git</h4>
+<p>We use <a href="http://git-scm.com/?ref=chrisdecairos.ca">Git</a> for version control, and <a href="http://github.com/?ref=chrisdecairos.ca">Github</a> for hosting our code repos publicly.</p>
+<p>You can install Git from <a href="http://git-scm.com/download/win?ref=chrisdecairos.ca">http://git-scm.com/download/win</a>. That site should automatically prompt you to download the latest version of Git available for Windows. Once it is downloaded, run the executable to begin the installation. I used all the default settings.</p>
+<h4 id="node">Node</h4>
+<p>Basically all of Webmakers servers are written in JavaScript, and use <a href="http://nodejs.org/?ref=chrisdecairos.ca">NodeJS</a>.</p>
+<p>Download the latest installation executable from <a href="http://nodejs.org/download?ref=chrisdecairos.ca">http://nodejs.org/download</a> and run the installer once the download completes. Node Package Manager (npm) will be installed as well.</p>
+<h4 id="python">Python</h4>
+<p>Some modules included as dependencies will require Python 2.7 to be installed.</p>
+<p>You can download the installer from <a href="https://www.python.org/download/releases/2.7.8/?ref=chrisdecairos.ca">https://www.python.org/download/releases/2.7.8/</a>. During the installation make sure to specify that you want python.exe added to your PATH.</p>
+<h4 id="visualstudio2010">Visual Studio 2010</h4>
+<p>This is where things get stupid. Npm depends on something called node-gyp, a so-called &quot;cross-platform&quot; tool for compiling native addons. The problem is, its a pain in the ass to get it running on a Windows machine. I&apos;ll share what I did to get it running, but in the end, you might have to do something different, depending on your machine.</p>
+<ul>
+<li>
+<p>First, I installed Visual C++ 2010 Express from <a href="http://www.microsoft.com/visualstudio/eng/downloads?ref=chrisdecairos.ca#d-2010-express">microsoft.com</a>.</p>
+</li>
+<li>
+<p>I then installed the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=8279&amp;ref=chrisdecairos.ca">Windows SDK 7.1</a></p>
+</li>
+<li>
+<p>Next up was <a href="http://www.microsoft.com/en-us/download/details.aspx?id=23691&amp;ref=chrisdecairos.ca">SP1 for Visual Studio 2010</a></p>
+</li>
+<li>
+<p>Lastly, I installed the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=4422&amp;ref=chrisdecairos.ca">Visual C++ 2010 SP1 Compiler Update for the Windows SDK 7.1</a></p>
+</li>
+</ul>
+<p>Installing the four items above didn&apos;t quite cut it for me though. Here&apos;s the last few steps I took:</p>
+<ul>
+<li>
+<p>I ran git bash (you can find it in your start menu) and ran the command <code>npm install -g node-gyp</code> to install the node-gyp package globally.</p>
+</li>
+<li>
+<p>I then opened the file <code>C:\Users\cade\.node-gyp\0.10.29 \common.gypi</code> - obviously, substitute your username and the version of node-gyp you install.</p>
+</li>
+<li>
+<p>The file contains configuration settings in JSON format. Navigate to <code>target_defaults.msvs_settings.VCLinkerTool</code> and add <code>&apos;AdditionalLibraryDirectories&apos;: &apos;c:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib\\x64&apos;,</code> to the object <code>VCLinkerTool</code></p>
+</li>
+</ul>
+<p>If you&apos;re as lucky as I was, node-gyp might now work for you!</p>
+<h4 id="gruntcliandbower">Grunt-cli and bower</h4>
+<p><a href="http://gruntjs.com/?ref=chrisdecairos.ca">Grunt</a> is a task runner, used maily for building resources. <a href="http://bower.io/?ref=chrisdecairos.ca">Bower</a> is a front-end package manager. We&apos;re going to install these globally using npm, so that the <code>grunt</code> and <code>bower</code> commands will be added to your PATH, making life easier. To do this run: <code>npm install -g grunt-cli bower</code></p>
+<h2 id="settingupwebmakerevents">Setting up Webmaker Events</h2>
+<h4 id="loginwebmakerorg">Login.webmaker.org</h4>
+<p>This is the Login server for webmaker. It manages Webmaker accounts through the Login API, and is required for log-in functionality to work. The code can be found at <a href="https://github.com/mozilla/login.webmaker.org?ref=chrisdecairos.ca">https://github.com/mozilla/login.webmaker.org</a></p>
+<ol>
+<li>
+<p>In Git Bash, change into the directory you would like to clone the code into.</p>
+</li>
+<li>
+<p>Run <code>git clone https://github.com/your_user_name/login.webmaker.org</code> to clone your fork of the code to your machine. Git will set your Github fork up as the remote named &quot;origin&quot;, so you can push code changes and branches back up to the website.</p>
+</li>
+<li>
+<p>Change into the login.webmaker.org folder and run <code>cp env.sample .env</code>. This will create a configuration file for the server from the default one provided in the repo. It&apos;s configured to work &quot;out of the box&quot; with other Webmaker sites and services you will run locally.</p>
+</li>
+<li>
+<p>Now we need to install npm and bower dependencies. Do this by running <code>npm install; bower install</code></p>
+</li>
+<li>
+<p>You should now be able to start the server with <code>node app</code>. If Windows prompts you to grant permissions for Node, accept them.</p>
+</li>
+</ol>
+<h4 id="eventsfrontend">Events Front End</h4>
+<p>This is the Front-End for The Webmaker Events platform. It&apos;s an Angular app that is served using Express. The source code is at <a href="https://github.com/mozilla/webmaker-events-2?ref=chrisdecairos.ca">https://github.com/mozilla/webmaker-events-2</a>. Don&apos;t ask about webmaker-events, we don&apos;t talk about it anymore.</p>
+<ol>
+<li>
+<p>In Git Bash, change into the directory you would like to clone the code into.</p>
+</li>
+<li>
+<p>Run <code>git clone https://github.com/your_user_name/webmaker-events-2</code> to clone your fork of the code to your machine. Git will set your Github fork up as the remote named &quot;origin&quot;, so you can push code changes and branches back up to the website.</p>
+</li>
+<li>
+<p>Change into the webmaker-events-2 folder and run <code>cp .env-dist .env</code>. This will create a configuration file for the server from the default one provided in the repo. It&apos;s configured to work &quot;out of the box&quot; with other Webmaker sites and services you will run locally.</p>
+</li>
+<li>
+<p>Now we need to install npm and bower dependencies. Do this by running <code>npm install; bower install</code></p>
+</li>
+<li>
+<p>Before we can run the server we need to compile the CSS. Do so by running <code>grunt build</code></p>
+</li>
+<li>
+<p>You should now be able to start the server with <code>node server/server.js</code>. If Windows prompts you to grant permissions for Node, accept them.</p>
+</li>
+</ol>
+<h4 id="eventsservice">Events Service</h4>
+<p>This is the Events API, which provides RESTful read/write access to the events database. The source code can be found at <a href="https://github.com/mozilla/webmaker-events-service?ref=chrisdecairos.ca">https://github.com/mozilla/webmaker-events-service</a>.</p>
+<ol>
+<li>
+<p>In Git Bash, change into the directory you would like to clone the code into.</p>
+</li>
+<li>
+<p>Run <code>git clone https://github.com/your_user_name/webmaker-events-service</code> to clone your fork of the code to your machine. Git will set your Github fork up as the remote named &quot;origin&quot;, so you can push code changes and branches back up to the website.</p>
+</li>
+<li>
+<p>Change into the webmaker-events-service folder and run <code>cp .env-dist .env</code>. This will create a configuration file for the server from the default one provided in the repo. It&apos;s configured to work &quot;out of the box&quot; with other Webmaker sites and services you will run locally.</p>
+</li>
+<li>
+<p>Now we need to install the npm dependencies. Do this by running <code>npm install</code></p>
+</li>
+<li>
+<p>You should now be able to start the server with <code>node server/server.js</code>. If Windows prompts you to grant permissions for Node, accept them.</p>
+</li>
+</ol>
+<h2 id="summary">Summary</h2>
+<p>Developing on windows with NPM <em><strong>sucks</strong></em>, but it&apos;s not impossible. If the above helped, I&apos;m glad. The steps for the above set-ups for login, events and the events-service can be applied to most other Webmaker sites and tools. Be sure to always check the README files for details about set-up and running a particular project.</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Oh noes.]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p><strong>I somehow managed to break my blog</strong>...</p>
+<p><strong>Update: Blog online, data missing. I&apos;m currently working on recovering it.</strong></p>
+<h1 id="updateasof1015pmedttheblogisbackonline">update: As of 10:15 PM EDT, the blog is back online!</h1>
+<p>What happened? Well, It all started when I decided it would be a great idea to update my</p>]]></description><link>https://chrisdecairos.ca/oh-noes/</link><guid isPermaLink="false">6213d91efa1a311a1f5d2508</guid><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Mon, 30 Jun 2014 23:51:46 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p><strong>I somehow managed to break my blog</strong>...</p>
+<p><strong>Update: Blog online, data missing. I&apos;m currently working on recovering it.</strong></p>
+<h1 id="updateasof1015pmedttheblogisbackonline">update: As of 10:15 PM EDT, the blog is back online!</h1>
+<p>What happened? Well, It all started when I decided it would be a great idea to update my Ghost installation to 0.4.2. I&apos;d done an upgrade before without much trouble so I thought everything would be okay. Unfortunately, Ghost wasn&apos;t on board with my plan.</p>
+<p>I started out by checking out the latest version of ghost on my server, which went smoothly. Next, I ran <code>sudo sh -c &quot;npm install; bower install; grunt; grunt prod&quot;</code> to get all the dependencies and build all the assets. This went off without a hitch. I restarted my Ghost service and verified it was running.</p>
+<p>This is where things get strange. My blog&apos;s content seemed to be just fine. But when I attempted to log into the admin console, it would reject the username and password for my account. I was a little annoyed, but not too concerned. I figured I could just reset the password. Nope. Upon trying to send a reset email, I was given an error message claiming that the Gmail account I configured for reset emails couldn&apos;t be authenticated. Thats when it hit me: The account was a dummy account I created with the sole purpose of sendign me password reset emails. The very same dummy account that I had gotten an email from Google about one week prior stating it was being closed due to TOS violations. -.-</p>
+<p>A simple fix really. Just have to update those settings! Since I have a nice new AWS account with a bunch of credit to burn through, I figured I&apos;d hook it up to SES. I logged into my console, and generated the creds to send emails using SES. I plugged them in, rebooted the service, fired up the forgotten password page and.... Nope! More errors. This time something about bad credentials. AWS is great, but it can be incredibly picky about permissions. After some more fiddling and prodding though, I did manage to get password reset emails working.</p>
+<p>I clicked the link in the email from my blog, and it brought me to the password reset page. I filled in a new password and hit submit. Navigating back to the login screen, I proceeded to enter in the new login and password. Upon hitting submit, I was greeted with a lovely error about it <strong>not being the right username/password</strong> ......WAT?!?</p>
+<p>Something&apos;s not right, I thought. I&apos;m going to run the service manually and take a peek at the output. What I saw was pretty disturbing (for me at least). Something along the lines of &quot;Your database is incompatible with this version of Ghost - You will have to create a new one&quot;. No problem, I though, I&apos;ll just switch back to the old version!</p>
+<p>I checked out the previous version I was running, ran the scripts to set everything up and booted up the service manually. I loaded my home page, which displayed perfectly. I then tried to get to the login screen. This is when I really started to sweat... It wouldn&apos;t load! I would wait for a dozen seconds or so, and nginx (used for proxying) would 502 me! Looking in the console, I saw a message along the lines of &quot;Unhandled exception: session table doesn&apos;t exist&quot;. I had no idea what was up.</p>
+<p>Things didn&apos;t look good for chrisdecairos.ca... I decided my only option was to copy my contents directory (contains the sqlite db file, images, and themes directory) and my configuration file somewhere safe so that I could wipe the slate clean on my ghost installation. I downloaded the official release zip of ghost 0.4.2 and replaced my installation with its contents. I double checked that all the dependencies were in plave and that all assets were built. I copied over my config file, and started up the service.</p>
+<p>It worked. I was able to log into a new account and regain access to the admin tools. I re-instated all the themes settings to get the look and feel of the blog back. With everything back up and running, the only thing left for me was to migrate all my posts and tags into the new db file. With a bit of research, I found what I needed:</p>
+<p><code>sqlite3 ghost.db .dump &gt; ghost.sql</code></p>
+<p>Which dumps the sql to create your DB into a file. I opened up that file and deleted all the statements that weren&apos;t related to posts, tags and posts_tags. I also removed the create sytax for those tables. I should mention that I compared the schemas between the old db file and the new, and they were identical. This meant that once I ran the script, I should be back in business. Anyways, I scp&apos;ed the script to my server, logged in and ran:</p>
+<p><code>sqlite3 content/data/ghost.db &lt; ~/ghost.sql</code></p>
+<p>and crossed my fingers.....</p>
+<p>When I reloaded my blog, <strong>everything was back to normal!</strong> I had succeeded! I had also lost most of my evening -.-</p>
+<p>The takeaways from this are two:</p>
+<ol>
+<li>Back up your database, you dummy!</li>
+<li>Git checkout is a horrible way to update blog software.</li>
+</ol>
+<p>But hey, at least I know how to recover my blog in situations like this.</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Make List API]]></title><description><![CDATA[<!--kg-card-begin: markdown--><p>Since the creation of <a href="https://webmaker.org/?ref=chrisdecairos.ca">Webmaker.org</a> and the <a href="https://github.com/mozilla/MakeAPI?ref=chrisdecairos.ca">MakeAPI</a>, the recommended strategy for creating and curating galleries of makes was to use tagging.</p>
+<p>For example, one can tag ten makes with <code>gallery</code> and surface that collection of makes using a tag search. If there was a need for order in</p>]]></description><link>https://chrisdecairos.ca/make-lists/</link><guid isPermaLink="false">6213d91efa1a311a1f5d254f</guid><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Thu, 01 May 2014 19:20:43 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><p>Since the creation of <a href="https://webmaker.org/?ref=chrisdecairos.ca">Webmaker.org</a> and the <a href="https://github.com/mozilla/MakeAPI?ref=chrisdecairos.ca">MakeAPI</a>, the recommended strategy for creating and curating galleries of makes was to use tagging.</p>
+<p>For example, one can tag ten makes with <code>gallery</code> and surface that collection of makes using a tag search. If there was a need for order in the data, a second unique tag must be given to each make as an indication of its order in the set. For example: <code>gallery-1</code> all the way to <code>gallery-10</code>, then they must be sorted manually after fetching the set.</p>
+<p>The downsides of this for the regular user are numerous:</p>
+<ol>
+<li>If someone else uses the same tag on an unrelated make, it will &quot;pollute&quot; the gallery</li>
+<li>The logic required to order the gallery is needlessly complex.</li>
+<li>It&apos;s a pain in the ass to apply tags to a set of existing makes</li>
+<li>It&apos;s a pain in the ass to update a gallery without screwing something up horribly (i.e. duplicate ordering tags)</li>
+</ol>
+<p>Galleries and collections are a heavily used feature across the Webmaker universe, and the horrible system we force people to use to build these galleries is a crime.</p>
+<p>In order to rectify this crime against the world, I identified some goals that would have to be met in order for this to be considered fixed.</p>
+<ol>
+<li>A gallery should not be defined by tags</li>
+<li>Gallery order should not be defined by tags, and should not require additional logic at the point of the consumer to sort the gallery data</li>
+<li>Fetching Make data from a gallery should be simple, and act as a drop in replacement old style of gallery searches.</li>
+<li>Every Webmaker User should be able to create and maintain their own galleries of Makes</li>
+</ol>
+<p>Enter the Make List API. It is a collection of server endpoints that allow Webmaker apps to manage a newly defined data model built right into the Make API server.</p>
+<p>Essentially, a Make List (&quot;List&quot;) is a Mongoose model that stores an Array of Make ID&apos;s.</p>
+<p><strong>Goal 1 Completed!</strong></p>
+<p>Order in the array determines positioning wherever the List is to consumed.</p>
+<p>When a List is fetched, The Make API will automatically fetch the Makes from ElasticSearch, sort them, and return the Make JSON to the client. The data is identical to the data returned by make searches.</p>
+<p><strong>Goal 2 and 3 Completed!</strong></p>
+<p>Lastly, every list is associated with a Webmaker account and only an owner of an List can modify it.</p>
+<p><strong>Goal 4 completed!</strong></p>
+<p>So the TL;DR; of this is that <em>any</em> user can create and curate any number of Lists (my favourites, top tens, best of makerparty, etc). These lists can be built into any number of places - The front page, the webmaker gallery, top webmaker teaching kits, webmaker profile, webmaker events, ALL THE THINGS!</p>
+<p>If I had this running somewhere live I would link it, but I do not. For the time being, you can follow the development in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=997329&amp;ref=chrisdecairos.ca">Bug 997329</a> on Bugzilla.</p>
+<p>Below is a Youtube Video of the <a href="https://github.com/cadecairos/MakeLister?ref=chrisdecairos.ca">Demo Application</a> I built to show off the API:</p>
+<iframe width="560" height="315" src="//www.youtube.com/embed/Xg0notQGUBk" frameborder="0" allowfullscreen></iframe>
+<p>If you have cool ideas about what this can be used for, or have questions about if it could be used for something, drop me a line!</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item><item><title><![CDATA[Exciting News!]]></title><description><![CDATA[<!--kg-card-begin: markdown--><h2 id="imgoingtobeadad">I&apos;m going to be a dad!!!</h2>
+<p>I&apos;m proud to announce that Sarah and I will be welcoming a new member into our family this November!!</p>
+<!--kg-card-end: markdown-->]]></description><link>https://chrisdecairos.ca/exciting-news/</link><guid isPermaLink="false">6213d91efa1a311a1f5d254e</guid><category><![CDATA[baby]]></category><dc:creator><![CDATA[Chris DeCairos]]></dc:creator><pubDate>Thu, 27 Mar 2014 23:59:00 GMT</pubDate><content:encoded><![CDATA[<!--kg-card-begin: markdown--><h2 id="imgoingtobeadad">I&apos;m going to be a dad!!!</h2>
+<p>I&apos;m proud to announce that Sarah and I will be welcoming a new member into our family this November!!</p>
+<!--kg-card-end: markdown-->]]></content:encoded></item></channel></rss>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>How To: Mass S3 Object Creation with Terraform</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <meta name="description" content="How to efficiently create lots of objects in AWS S3 with the correct content types using Terraform.">
+    <link rel="canonical" href="https://chrisdecairos.ca/s3-objects-terraform/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How To: Mass S3 Object Creation with Terraform">
+    <meta property="og:description" content="How to efficiently create lots of objects in AWS S3 with the correct content types using Terraform.">
+    <meta property="og:url" content="https://chrisdecairos.ca/s3-objects-terraform/">
+    <meta property="article:published_time" content="2020-07-30T20:18:41.000Z">
+    <meta property="article:modified_time" content="2020-07-30T20:18:41.000Z">
+    <meta property="article:tag" content="terraform">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How To: Mass S3 Object Creation with Terraform">
+    <meta name="twitter:description" content="How to efficiently create lots of objects in AWS S3 with the correct content types using Terraform.">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/s3-objects-terraform/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="terraform">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "How To: Mass S3 Object Creation with Terraform",
+    "url": "https://chrisdecairos.ca/s3-objects-terraform/",
+    "datePublished": "2020-07-30T20:18:41.000Z",
+    "dateModified": "2020-07-30T20:18:41.000Z",
+    "keywords": "terraform",
+    "description": "I&#x27;ve been working a bit with Terraform recently to support managing some of our\ninfrastructure at the Mozilla Foundation. In doing so I came across a problem I\ncouldn&#x27;t find a documented solution for, so today I&#x27;m going to publish a bit of\na how-to in the hopes that folks in similar problems might find it helpful.\n\nLet&#x27;s say you have one hundred files in the &quot;src&quot; directory, and you need to\nupload them to S3. You could add a resource entry for each file, but that would\nbe tedious and repetitive:",
+    "mainEntityOfPage": "https://chrisdecairos.ca/s3-objects-terraform/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template tag-terraform">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post tag-terraform no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2020-07-30">30 Jul 2020</time> on <a href="/tag/terraform/">terraform</a></span>
+
+        <h1 class="post-title">How To: Mass S3 Object Creation with Terraform</h1>
+
+        <section class="post-content">
+            <p>I've been working a bit with Terraform recently to support managing some of our infrastructure at the Mozilla Foundation. In doing so I came across a problem I couldn't find a documented solution for, so today I'm going to publish a bit of a how-to in the hopes that folks in similar problems might find it helpful.</p><p>Let's say you have one hundred files in the "src" directory, and you need to upload them to S3. You could add a resource entry for each file, but that would be tedious and repetitive:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">
+locals {
+  src_dir      = &quot;${path.module}/src&quot;
+}
+
+
+resource &quot;aws_s3_bucket_object&quot; &quot;index&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;index.html&quot;
+  source        = &quot;${local.src_dir}/index.html&quot;
+  content_type  = &quot;text/html&quot;l
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;about&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;about.html&quot;
+  source        = &quot;${local.src_dir}/about.html&quot;
+  content_type  = &quot;text/html&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;main_css&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;main.css&quot;
+  source        = &quot;${local.src_dir}/main.css&quot;
+  content_type  = &quot;text/css&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;javascript&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;main.js&quot;
+  source        = &quot;${local.src_dir}/main.js&quot;
+  content_type  = &quot;application/javascript&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;favicon&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;favicon.ico&quot;
+  source        = &quot;${local.src_dir}/favicon.ico&quot;
+  content_type  = &quot;image/x-icon&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;header_image&quot; {
+  bucket        = local.my_bucket_id
+  key           = &quot;header.png&quot;
+  source        = &quot;${local.src_dir}/header.png&quot;
+  content_type  = &quot;image/png&quot;
+}
+
+# and so on, 90+ more times
+
+</code></pre>
+<!--kg-card-end: markdown--><p>Thankfully, Terraform has the <a href="https://www.terraform.io/docs/configuration/resources.html?ref=chrisdecairos.ca#for_each-multiple-resource-instances-defined-by-a-map-or-set-of-strings">for_each meta-argument</a> which lets us pass a map or set of strings to create an instance of a resource for each element in the meta-argument. Pairing this functionality with the <a href="https://www.terraform.io/docs/configuration/functions/fileset.html?ref=chrisdecairos.ca">fileset built-in function</a> allows us to generate all these objects in far fewer lines of configuration:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">
+locals {
+  src_dir      = &quot;${path.module}/src&quot;
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;site_files&quot; {
+  # Enumerate all the files in ./src
+  for_each = fileset(local.src_dir, &quot;**&quot;)
+
+  # Create an object from each
+  bucket        = aws_s3_bucket.bucket.id
+  key           = each.value
+  source        = &quot;${local.src_dir}/${each.value}&quot;
+  
+  # Uh oh, what should we do here?
+  # content_type  = ???
+}
+</code></pre>
+<!--kg-card-end: markdown--><p>There is one small problem though, as indicated above: content_type. How can we set the content type correctly for each file? Well, there's a few built-ins to help us out here. Firstly, there's the <a href="https://www.terraform.io/docs/configuration/functions/lookup.html?ref=chrisdecairos.ca">lookup built-in</a>, which returns the value from a map given a key, and can set a default if no key is found. So, if we define a content type map like so:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">locals {
+  content_type_map = {
+    html        = &quot;text/html&quot;,
+    js          = &quot;application/javascript&quot;,
+    css         = &quot;text/css&quot;,
+    svg         = &quot;image/svg+xml&quot;,
+    jpg         = &quot;image/jpeg&quot;,
+    ico         = &quot;image/x-icon&quot;,
+    png         = &quot;image/png&quot;,
+    gif         = &quot;image/gif&quot;,
+    pdf         = &quot;application/pdf&quot;
+  }
+}
+</code></pre>
+<!--kg-card-end: markdown--><p>We can use lookup get the content type by extracting the file extension from the filename. To accomplish that, we use the <a href="https://www.terraform.io/docs/configuration/functions/regex.html?ref=chrisdecairos.ca">regex built-in function</a>:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">regex(&quot;\\.(?P&lt;extension&gt;[A-Za-z0-9]+)$&quot;, filename).extension
+</code></pre>
+<!--kg-card-end: markdown--><p>So, if we put it all together, we get:</p><!--kg-card-begin: markdown--><pre><code class="language-terraform">locals {
+  src_dir      = &quot;${path.module}/src&quot;,
+  content_type_map = {
+    html        = &quot;text/html&quot;,
+    js          = &quot;application/javascript&quot;,
+    css         = &quot;text/css&quot;,
+    svg         = &quot;image/svg+xml&quot;,
+    jpg         = &quot;image/jpeg&quot;,
+    ico         = &quot;image/x-icon&quot;,
+    png         = &quot;image/png&quot;,
+    gif         = &quot;image/gif&quot;,
+    pdf         = &quot;application/pdf&quot;
+  }
+}
+
+resource &quot;aws_s3_bucket_object&quot; &quot;site_files&quot; {
+  # Enumerate all the files in ./src
+  for_each = fileset(local.src_dir, &quot;**&quot;)
+
+  # Create an object from each
+  bucket        = aws_s3_bucket.bucket.id
+  key           = each.value
+  source        = &quot;${local.src_dir}/${each.value}&quot;
+  
+  content_type  = lookup(local.content_type_map, regex(&quot;\\.(?P&lt;extension&gt;[A-Za-z0-9]+)$&quot;, each.value).extension, &quot;application/octet-stream&quot;)
+}
+</code></pre>
+<!--kg-card-end: markdown--><p>And there you have it! all the files in your "src" directory should now have an associated S3 resource managed using terraform, and each has the appropriate content type, so you can serve the files up via S3's static site functionality or via a CloudFront CDN.</p>
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=How To: Mass S3 Object Creation with Terraform&url=https://chrisdecairos.ca/s3-objects-terraform/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/s3-objects-terraform/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/s3-objects-terraform/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>

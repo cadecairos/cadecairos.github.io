@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Windows And Webmaker Events</title>
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/highlighter/prettify.css?v=3a098a1af2" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?v=3a098a1af2" />
+
+    <script type='text/javascript' src="/assets/js/jquery-3.1.1.min.js?v=3a098a1af2"></script>
+    <link rel="canonical" href="https://chrisdecairos.ca/windows-and-webmaker-events/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Chris DeCairos">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Windows And Webmaker Events">
+    <meta property="og:description" content="Webmaker is a very large project, with dozens of parts that all come together at 
+https://webmaker.org. One of the hardest things for new contributors is getting
+everything set up properly. This problem multiplies ten-fold when the desired
+platform of the developer is Windows. Recently, I put together a">
+    <meta property="og:url" content="https://chrisdecairos.ca/windows-and-webmaker-events/">
+    <meta property="article:published_time" content="2014-07-30T20:05:00.000Z">
+    <meta property="article:modified_time" content="2018-08-22T02:24:40.000Z">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Windows And Webmaker Events">
+    <meta name="twitter:description" content="Webmaker is a very large project, with dozens of parts that all come together at 
+https://webmaker.org. One of the hardest things for new contributors is getting
+everything set up properly. This problem multiplies ten-fold when the desired
+platform of the developer is Windows. Recently, I put together a">
+    <meta name="twitter:url" content="https://chrisdecairos.ca/windows-and-webmaker-events/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Chris DeCairos">
+    <meta name="twitter:site" content="@ChrisDeCairos">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Chris DeCairos",
+        "url": "https://chrisdecairos.ca/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Chris DeCairos",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/5410ec660422c8ea12d4a28ef794a23a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "https://chrisdecairos.ca/author/chris/",
+        "sameAs": []
+    },
+    "headline": "Windows And Webmaker Events",
+    "url": "https://chrisdecairos.ca/windows-and-webmaker-events/",
+    "datePublished": "2014-07-30T20:05:00.000Z",
+    "dateModified": "2018-08-22T02:24:40.000Z",
+    "description": "Webmaker is a very large project, with dozens of parts that all come together at \nhttps://webmaker.org. One of the hardest things for new contributors is getting\neverything set up properly. This problem multiplies ten-fold when the desired\nplatform of the developer is Windows. Recently, I put together a guide for a new\ncontributor, explaining the steps it takes to set up a Windows 7 computer for\ndevelopment of Webmaker projects (specifically, the events platform). It&#x27;s a\nlong, complicated, and f",
+    "mainEntityOfPage": "https://chrisdecairos.ca/windows-and-webmaker-events/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.62">
+    <link rel="alternate" type="application/rss+xml" title="Chris DeCairos" href="https://chrisdecairos.ca/rss/">
+    
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="6155d3cf5dbae2dc7c7242039b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://chrisdecairos.ca/" crossorigin="anonymous"></script>
+    
+    <link href="https://chrisdecairos.ca/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=3a098a1af2"></script><style>:root {--ghost-accent-color: #15171A;}</style>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=3a098a1af2">
+</head>
+<body class="post-template">
+
+    
+
+<main class="content" role="main">
+
+    <article class="post no-image">
+
+        <header class="post-header">
+            <a id="blog-logo" href="https://chrisdecairos.ca">
+                    <img src="https://chrisdecairos.ca/content/images/2020/12/profile--Small-.jpg" alt="Blog Logo" />
+            </a>
+        </header>
+
+
+        <span class="post-meta"><time datetime="2014-07-30">30 Jul 2014</time> </span>
+
+        <h1 class="post-title">Windows And Webmaker Events</h1>
+
+        <section class="post-content">
+            <!--kg-card-begin: markdown--><p>Webmaker is a very large project, with dozens of parts that all come together at <a href="https://webmaker.org/?ref=chrisdecairos.ca">https://webmaker.org</a>. One of the hardest things for new contributors is getting everything set up properly. This problem multiplies ten-fold when the desired platform of the developer is Windows. Recently, I put together a guide for a new contributor, explaining the steps it takes to set up a Windows 7 computer for development of Webmaker projects (specifically, the events platform). It's a long, complicated, and frustrating process, which I'd like to share here, so that should anyone need to do this, they won't have to look very far.</p>
+<h2 id="dependencyinstallation">Dependency Installation</h2>
+<h4 id="git">Git</h4>
+<p>We use <a href="http://git-scm.com/?ref=chrisdecairos.ca">Git</a> for version control, and <a href="http://github.com/?ref=chrisdecairos.ca">Github</a> for hosting our code repos publicly.</p>
+<p>You can install Git from <a href="http://git-scm.com/download/win?ref=chrisdecairos.ca">http://git-scm.com/download/win</a>. That site should automatically prompt you to download the latest version of Git available for Windows. Once it is downloaded, run the executable to begin the installation. I used all the default settings.</p>
+<h4 id="node">Node</h4>
+<p>Basically all of Webmakers servers are written in JavaScript, and use <a href="http://nodejs.org/?ref=chrisdecairos.ca">NodeJS</a>.</p>
+<p>Download the latest installation executable from <a href="http://nodejs.org/download?ref=chrisdecairos.ca">http://nodejs.org/download</a> and run the installer once the download completes. Node Package Manager (npm) will be installed as well.</p>
+<h4 id="python">Python</h4>
+<p>Some modules included as dependencies will require Python 2.7 to be installed.</p>
+<p>You can download the installer from <a href="https://www.python.org/download/releases/2.7.8/?ref=chrisdecairos.ca">https://www.python.org/download/releases/2.7.8/</a>. During the installation make sure to specify that you want python.exe added to your PATH.</p>
+<h4 id="visualstudio2010">Visual Studio 2010</h4>
+<p>This is where things get stupid. Npm depends on something called node-gyp, a so-called &quot;cross-platform&quot; tool for compiling native addons. The problem is, its a pain in the ass to get it running on a Windows machine. I'll share what I did to get it running, but in the end, you might have to do something different, depending on your machine.</p>
+<ul>
+<li>
+<p>First, I installed Visual C++ 2010 Express from <a href="http://www.microsoft.com/visualstudio/eng/downloads?ref=chrisdecairos.ca#d-2010-express">microsoft.com</a>.</p>
+</li>
+<li>
+<p>I then installed the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=8279&ref=chrisdecairos.ca">Windows SDK 7.1</a></p>
+</li>
+<li>
+<p>Next up was <a href="http://www.microsoft.com/en-us/download/details.aspx?id=23691&ref=chrisdecairos.ca">SP1 for Visual Studio 2010</a></p>
+</li>
+<li>
+<p>Lastly, I installed the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=4422&ref=chrisdecairos.ca">Visual C++ 2010 SP1 Compiler Update for the Windows SDK 7.1</a></p>
+</li>
+</ul>
+<p>Installing the four items above didn't quite cut it for me though. Here's the last few steps I took:</p>
+<ul>
+<li>
+<p>I ran git bash (you can find it in your start menu) and ran the command <code>npm install -g node-gyp</code> to install the node-gyp package globally.</p>
+</li>
+<li>
+<p>I then opened the file <code>C:\Users\cade\.node-gyp\0.10.29 \common.gypi</code> - obviously, substitute your username and the version of node-gyp you install.</p>
+</li>
+<li>
+<p>The file contains configuration settings in JSON format. Navigate to <code>target_defaults.msvs_settings.VCLinkerTool</code> and add <code>'AdditionalLibraryDirectories': 'c:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Lib\\x64',</code> to the object <code>VCLinkerTool</code></p>
+</li>
+</ul>
+<p>If you're as lucky as I was, node-gyp might now work for you!</p>
+<h4 id="gruntcliandbower">Grunt-cli and bower</h4>
+<p><a href="http://gruntjs.com/?ref=chrisdecairos.ca">Grunt</a> is a task runner, used maily for building resources. <a href="http://bower.io/?ref=chrisdecairos.ca">Bower</a> is a front-end package manager. We're going to install these globally using npm, so that the <code>grunt</code> and <code>bower</code> commands will be added to your PATH, making life easier. To do this run: <code>npm install -g grunt-cli bower</code></p>
+<h2 id="settingupwebmakerevents">Setting up Webmaker Events</h2>
+<h4 id="loginwebmakerorg">Login.webmaker.org</h4>
+<p>This is the Login server for webmaker. It manages Webmaker accounts through the Login API, and is required for log-in functionality to work. The code can be found at <a href="https://github.com/mozilla/login.webmaker.org?ref=chrisdecairos.ca">https://github.com/mozilla/login.webmaker.org</a></p>
+<ol>
+<li>
+<p>In Git Bash, change into the directory you would like to clone the code into.</p>
+</li>
+<li>
+<p>Run <code>git clone https://github.com/your_user_name/login.webmaker.org</code> to clone your fork of the code to your machine. Git will set your Github fork up as the remote named &quot;origin&quot;, so you can push code changes and branches back up to the website.</p>
+</li>
+<li>
+<p>Change into the login.webmaker.org folder and run <code>cp env.sample .env</code>. This will create a configuration file for the server from the default one provided in the repo. It's configured to work &quot;out of the box&quot; with other Webmaker sites and services you will run locally.</p>
+</li>
+<li>
+<p>Now we need to install npm and bower dependencies. Do this by running <code>npm install; bower install</code></p>
+</li>
+<li>
+<p>You should now be able to start the server with <code>node app</code>. If Windows prompts you to grant permissions for Node, accept them.</p>
+</li>
+</ol>
+<h4 id="eventsfrontend">Events Front End</h4>
+<p>This is the Front-End for The Webmaker Events platform. It's an Angular app that is served using Express. The source code is at <a href="https://github.com/mozilla/webmaker-events-2?ref=chrisdecairos.ca">https://github.com/mozilla/webmaker-events-2</a>. Don't ask about webmaker-events, we don't talk about it anymore.</p>
+<ol>
+<li>
+<p>In Git Bash, change into the directory you would like to clone the code into.</p>
+</li>
+<li>
+<p>Run <code>git clone https://github.com/your_user_name/webmaker-events-2</code> to clone your fork of the code to your machine. Git will set your Github fork up as the remote named &quot;origin&quot;, so you can push code changes and branches back up to the website.</p>
+</li>
+<li>
+<p>Change into the webmaker-events-2 folder and run <code>cp .env-dist .env</code>. This will create a configuration file for the server from the default one provided in the repo. It's configured to work &quot;out of the box&quot; with other Webmaker sites and services you will run locally.</p>
+</li>
+<li>
+<p>Now we need to install npm and bower dependencies. Do this by running <code>npm install; bower install</code></p>
+</li>
+<li>
+<p>Before we can run the server we need to compile the CSS. Do so by running <code>grunt build</code></p>
+</li>
+<li>
+<p>You should now be able to start the server with <code>node server/server.js</code>. If Windows prompts you to grant permissions for Node, accept them.</p>
+</li>
+</ol>
+<h4 id="eventsservice">Events Service</h4>
+<p>This is the Events API, which provides RESTful read/write access to the events database. The source code can be found at <a href="https://github.com/mozilla/webmaker-events-service?ref=chrisdecairos.ca">https://github.com/mozilla/webmaker-events-service</a>.</p>
+<ol>
+<li>
+<p>In Git Bash, change into the directory you would like to clone the code into.</p>
+</li>
+<li>
+<p>Run <code>git clone https://github.com/your_user_name/webmaker-events-service</code> to clone your fork of the code to your machine. Git will set your Github fork up as the remote named &quot;origin&quot;, so you can push code changes and branches back up to the website.</p>
+</li>
+<li>
+<p>Change into the webmaker-events-service folder and run <code>cp .env-dist .env</code>. This will create a configuration file for the server from the default one provided in the repo. It's configured to work &quot;out of the box&quot; with other Webmaker sites and services you will run locally.</p>
+</li>
+<li>
+<p>Now we need to install the npm dependencies. Do this by running <code>npm install</code></p>
+</li>
+<li>
+<p>You should now be able to start the server with <code>node server/server.js</code>. If Windows prompts you to grant permissions for Node, accept them.</p>
+</li>
+</ol>
+<h2 id="summary">Summary</h2>
+<p>Developing on windows with NPM <em><strong>sucks</strong></em>, but it's not impossible. If the above helped, I'm glad. The steps for the above set-ups for login, events and the events-service can be applied to most other Webmaker sites and tools. Be sure to always check the README files for details about set-up and running a particular project.</p>
+<!--kg-card-end: markdown-->
+        </section>
+
+        <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Chris DeCairos</h4>
+                    <p></p>
+                </section>
+
+            <section class="share">
+                <h4>Share this</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Windows And Webmaker Events&url=https://chrisdecairos.ca/windows-and-webmaker-events/">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://chrisdecairos.ca/windows-and-webmaker-events/">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://chrisdecairos.ca/windows-and-webmaker-events/">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="https://chrisdecairos.ca/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="/">Chris DeCairos</a> &copy; 2024 &bull; All rights reserved.</section>
+        </div>
+    </footer>
+
+    
+
+    <script type='text/javascript' src="/assets/highlighter/prettify.js?v=3a098a1af2"></script>
+    <script type='text/javascript' src="/assets/js/shell.js?v=3a098a1af2"></script>
+</body>
+</html>
